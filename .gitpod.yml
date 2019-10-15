@@ -9,3 +9,7 @@ ports:
 tasks:
 - init: echo 'init script' # runs during prebuild
   command: echo 'start script'
+
+vscode:
+  extensions:
+    - gabrielbb.vscode-lombok
