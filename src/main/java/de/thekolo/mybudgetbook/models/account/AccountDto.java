@@ -1,16 +1,16 @@
-package de.thekolo.mybudgetbook.models;
+package de.thekolo.mybudgetbook.models.account;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 
-import javax.validation.constraints.NotBlank;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountDto {
@@ -19,7 +19,7 @@ public class AccountDto {
     private String id;
 
     @JsonProperty(value = "name", required = true)
-    @NotBlank(message = "Name can not be empty")
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
     @JsonProperty("created")
