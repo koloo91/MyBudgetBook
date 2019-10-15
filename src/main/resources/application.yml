@@ -4,6 +4,5 @@ spring:
     username: postgres
     password:
     driverClassName: org.postgresql.Driver
-  jpa:
-    hibernate.ddl-auto: update
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:liquibase/changelog-master.xml

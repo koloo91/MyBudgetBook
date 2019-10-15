@@ -22,12 +22,4 @@ class MybudgetbookApplicationTests extends Specification {
     def setup() {
         accountRepository.deleteAll()
     }
-
-    def "dummy spec"() {
-        when:
-        true
-
-        then:
-        true
-    }
 }
