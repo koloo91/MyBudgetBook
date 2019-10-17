@@ -6,10 +6,10 @@ create table accounts
     updated timestamp default now() not null
 );
 
-create unique index accounts_id_uindex
+create unique index accounts_id_idx
     on accounts (id);
 
-create unique index accounts_name_uindex
+create unique index accounts_name_idx
     on accounts (name);
 
 alter table accounts

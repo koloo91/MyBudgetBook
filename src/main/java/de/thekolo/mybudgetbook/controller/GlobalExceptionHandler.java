@@ -1,5 +1,6 @@
 package de.thekolo.mybudgetbook.controller;
 
+import de.thekolo.mybudgetbook.exceptions.DuplicateAccountNameException;
 import de.thekolo.mybudgetbook.models.error.ErrorDto;
 import de.thekolo.mybudgetbook.models.error.ErrorsDto;
 import lombok.extern.slf4j.Slf4j;
@@ -30,5 +31,14 @@ public class GlobalExceptionHandler {
         });
 
         return new ErrorsDto(errors);
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateAccountNameException.class)
+    public ErrorsDto exceptionHandler(DuplicateAccountNameException e) {
+        log.info("Account with name '{}' already exists", e.getAccountName(), e);
+
+        return new ErrorsDto(List.of(new ErrorDto("", String.format("Account with name '%s' already exists", e.getAccountName()))));
     }
 }
