@@ -7,6 +7,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -88,10 +89,36 @@ class AccountControllerTest extends MybudgetbookApplicationTests {
                 .content(JsonOutput.toJson(body)))
 
         then:
-        resultTwo.andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest())
+        resultTwo.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("\$.errors.length()").value(1))
                 .andExpect(jsonPath("\$.errors[0].fieldName").value(""))
                 .andExpect(jsonPath("\$.errors[0].message").value("Account with name 'Mein Konto' already exists"))
+    }
+
+    def "should return a paged list of accounts"() {
+        given:
+        (0..1).forEach {
+            accountRepository.save(Account.builder().name("$it").build())
+        }
+
+        when:
+        ResultActions result = mockMvc.perform(get("/api/accounts")
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
+
+        then:
+        result.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+                .andExpect(jsonPath("\$.content.length()").value(2))
+                .andExpect(jsonPath("\$.totalElements").value(2))
+                .andExpect(jsonPath("\$.size").value(20))
+                .andExpect(jsonPath("\$.totalPages").value(1))
+                .andExpect(jsonPath("\$.content[0].id").exists())
+                .andExpect(jsonPath("\$.content[0].name").value("0"))
+                .andExpect(jsonPath("\$.content[0].created").exists())
+                .andExpect(jsonPath("\$.content[0].updated").exists())
+                .andExpect(jsonPath("\$.content[1].id").exists())
+                .andExpect(jsonPath("\$.content[1].name").value("1"))
+                .andExpect(jsonPath("\$.content[1].created").exists())
+                .andExpect(jsonPath("\$.content[1].updated").exists())
     }
 
 }
