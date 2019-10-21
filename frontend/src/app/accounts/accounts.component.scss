@@ -1,0 +1,17 @@
+.container {
+
+}
+
+:host {
+  flex: 1;
+}
+
+.add-account-button {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+}
+
+.account {
+  color: black;
+}
