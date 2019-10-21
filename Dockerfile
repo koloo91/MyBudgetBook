@@ -10,7 +10,7 @@ COPY . .
 COPY --from=node /app/dist/frontend/ src/main/resources/static/
 RUN ./gradlew build
 
-FROM openjdk:11-jre-slim as java
+FROM openjdk:11-jre-slim
 WORKDIR /app
 COPY --from=java /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java","-jar","app.jar"]
