@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Konto anlegen</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput [(ngModel)]="accountName">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Abbrechen</button>
+  <button mat-button (click)="createAccount()" cdkFocusInitial>Anlegen</button>
+</div>
