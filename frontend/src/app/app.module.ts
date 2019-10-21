@@ -12,11 +12,17 @@ import {MatListModule} from '@angular/material/list';
 import {AccountsComponent} from './accounts/accounts.component';
 import {HttpClientModule} from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {CreateAccountDialogComponent} from './accounts/create-account-dialog/create-account-dialog.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {FormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AccountsComponent
+    AccountsComponent,
+    CreateAccountDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +34,14 @@ import {FlexLayoutModule} from '@angular/flex-layout';
     MatSidenavModule,
     MatButtonModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule
+  ],
+  entryComponents: [
+    CreateAccountDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
