@@ -1,6 +1,7 @@
 FROM node:10.16-alpine as node
 WORKDIR /app
 COPY frontend/ .
+RUN npm config set unsafe-perm true
 RUN npm install -g @angular/cli
 RUN npm install && npm run build
 
