@@ -38,5 +38,7 @@ func main() {
 		accounts.POST("", controller.CreateAccount(db))
 	}
 
+	router.Static("/", "./assets")
+
 	log.Fatal(router.Run())
 }
