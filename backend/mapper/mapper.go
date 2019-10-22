@@ -8,19 +8,21 @@ import (
 
 func AccountVoToEntity(vo model.AccountVo) model.Account {
 	return model.Account{
-		Id:      uuid.New().String(),
-		Name:    vo.Name,
-		Created: time.Now(),
-		Updated: time.Now(),
+		Id:              uuid.New().String(),
+		Name:            vo.Name,
+		StartingBalance: vo.StartingBalance,
+		Created:         time.Now(),
+		Updated:         time.Now(),
 	}
 }
 
 func AccountEntityToVo(entity model.Account) model.AccountVo {
 	return model.AccountVo{
-		Id:      entity.Id,
-		Name:    entity.Name,
-		Created: entity.Created,
-		Updated: entity.Updated,
+		Id:              entity.Id,
+		Name:            entity.Name,
+		StartingBalance: entity.StartingBalance,
+		Created:         entity.Created,
+		Updated:         entity.Updated,
 	}
 }
 

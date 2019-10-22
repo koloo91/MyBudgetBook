@@ -10,6 +10,7 @@ import {AccountService} from '../../services/account.service';
 export class CreateAccountDialogComponent implements OnInit {
 
   accountName: string;
+  startingBalance: number;
 
   constructor(public dialogRef: MatDialogRef<CreateAccountDialogComponent>,
               private accountService: AccountService) {
@@ -24,7 +25,7 @@ export class CreateAccountDialogComponent implements OnInit {
 
   createAccount() {
     console.log(this.accountName);
-    this.accountService.createAccount(this.accountName).subscribe(account => {
+    this.accountService.createAccount(this.accountName, this.startingBalance).subscribe(account => {
       console.log(account);
       this.dialogRef.close({success: true});
     }, err => {

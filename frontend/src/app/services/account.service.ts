@@ -16,7 +16,7 @@ export class AccountService {
     return this.http.get<PagedEntity<Account>>(`${environment.host}/api/accounts`)
   }
 
-  createAccount(name: string): Observable<Account> {
-    return this.http.post<Account>(`${environment.host}/api/accounts`, {name});
+  createAccount(name: string, startingBalance: number): Observable<Account> {
+    return this.http.post<Account>(`${environment.host}/api/accounts`, {name, startingBalance});
   }
 }

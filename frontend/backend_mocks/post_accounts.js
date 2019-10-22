@@ -6,6 +6,7 @@ module.exports = {
   template: {
     id: faker.random.uuid(),
     name: faker.lorem.word(),
+    startingBalance: 12.01,
     created: faker.date.recent(),
     updated: faker.date.recent()
   }
