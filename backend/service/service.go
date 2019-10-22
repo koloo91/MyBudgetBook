@@ -11,3 +11,11 @@ func CreateAccount(db *gorm.DB, account model.Account) (model.Account, error) {
 	}
 	return account, nil
 }
+
+func GetAccounts(db *gorm.DB) ([]model.Account, error) {
+	accounts := make([]model.Account, 0)
+	if err := db.Find(&accounts).Error; err != nil {
+		return nil, err
+	}
+	return accounts, nil
+}

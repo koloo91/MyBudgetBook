@@ -1,8 +1,6 @@
 package model
 
 import (
-	"github.com/google/uuid"
-	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -20,18 +18,10 @@ type Account struct {
 	Updated time.Time
 }
 
-func (account *Account) BeforeCreate(scope *gorm.Scope) error {
-	scope.SetColumn("id", uuid.New().String())
-	scope.SetColumn("created", time.Now())
-	scope.SetColumn("updated", time.Now())
-	return nil
-}
-
-func (account *Account) BeforeUpdate(scope *gorm.Scope) error {
-	scope.SetColumn("updated", time.Now())
-	return nil
-}
-
 type ErrorVo struct {
 	Error string `json:"error"`
+}
+
+type AccountsVo struct {
+	Content []AccountVo `json:"content"`
 }

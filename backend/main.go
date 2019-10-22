@@ -44,9 +44,10 @@ func main() {
 	{
 		accounts := router.Group("/api/accounts")
 		accounts.POST("", controller.CreateAccount(db))
+		accounts.GET("", controller.GetAccounts(db))
 	}
 
-	router.Static("/", "./assets")
+	router.Static("/app", "./assets")
 
 	log.Fatal(router.Run())
 }

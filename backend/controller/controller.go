@@ -26,3 +26,16 @@ func CreateAccount(db *gorm.DB) gin.HandlerFunc {
 		ctx.JSON(http.StatusCreated, mapper.AccountEntityToVo(createdAccount))
 	}
 }
+
+func GetAccounts(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		accounts, err := service.GetAccounts(db)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusCreated, model.AccountsVo{Content: mapper.AccountEntitiesToVos(accounts)})
+	}
+}
