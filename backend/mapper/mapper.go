@@ -25,7 +25,7 @@ func AccountEntityToVo(entity model.Account) model.AccountVo {
 }
 
 func AccountEntitiesToVos(entities []model.Account) []model.AccountVo {
-	vos := make([]model.AccountVo, len(entities))
+	vos := make([]model.AccountVo, 0, len(entities))
 	for _, entity := range entities {
 		vos = append(vos, AccountEntityToVo(entity))
 	}
