@@ -1,7 +1,7 @@
-export class Account {
+export class Category {
   id: string;
+  parentId: string;
   name: string;
-  startingBalance: number;
   created: string;
   updated: string;
 }
