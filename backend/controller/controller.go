@@ -39,3 +39,34 @@ func GetAccounts(db *gorm.DB) gin.HandlerFunc {
 		ctx.JSON(http.StatusCreated, model.AccountsVo{Content: mapper.AccountEntitiesToVos(accounts)})
 	}
 }
+
+func CreateCategory(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var categoryVo model.CategoryVo
+		if err := ctx.ShouldBindJSON(&categoryVo); err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		createdCategory, err := service.CreateCategory(db, mapper.CategoryVoToEntity(categoryVo))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusCreated, mapper.CategoryEntityToVo(createdCategory))
+	}
+}
+
+func GetCategories(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		categories, err := service.GetCategories(db)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusCreated, model.CategoriesVo{Content: mapper.CategoryEntitiesToVos(categories)})
+	}
+}

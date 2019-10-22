@@ -19,3 +19,18 @@ func GetAccounts(db *gorm.DB) ([]model.Account, error) {
 	}
 	return accounts, nil
 }
+
+func CreateCategory(db *gorm.DB, category model.Category) (model.Category, error) {
+	if err := db.Create(&category).Error; err != nil {
+		return model.Category{}, err
+	}
+	return category, nil
+}
+
+func GetCategories(db *gorm.DB) ([]model.Category, error) {
+	categories := make([]model.Category, 0)
+	if err := db.Find(&categories).Error; err != nil {
+		return nil, err
+	}
+	return categories, nil
+}

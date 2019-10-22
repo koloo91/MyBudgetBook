@@ -47,6 +47,12 @@ func main() {
 		accounts.GET("", controller.GetAccounts(db))
 	}
 
+	{
+		categories := router.Group("/api/categories")
+		categories.POST("", controller.CreateCategory(db))
+		categories.GET("", controller.GetCategories(db))
+	}
+
 	router.Static("/app", "./assets")
 
 	log.Fatal(router.Run())
