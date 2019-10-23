@@ -18,6 +18,9 @@ var (
 	dbUser     = getEnvOrDefault("DB_USER", "postgres")
 	dbPassword = getEnvOrDefault("DB_PASSWORD", "")
 	dbName     = getEnvOrDefault("DB_NAME", "postgres")
+
+	appUser         = getEnvOrDefault("APP_USER", "kolo")
+	appUserPassword = getEnvOrDefault("APP_USER_PASSWORD", "Pass00")
 )
 
 func main() {
@@ -40,15 +43,18 @@ func main() {
 	}
 
 	router := gin.Default()
+	authorized := router.Group("", gin.BasicAuth(gin.Accounts{
+		appUser: appUserPassword,
+	}))
 
 	{
-		accounts := router.Group("/api/accounts")
+		accounts := authorized.Group("/api/accounts")
 		accounts.POST("", controller.CreateAccount(db))
 		accounts.GET("", controller.GetAccounts(db))
 	}
 
 	{
-		categories := router.Group("/api/categories")
+		categories := authorized.Group("/api/categories")
 		categories.POST("", controller.CreateCategory(db))
 		categories.GET("", controller.GetCategories(db))
 	}

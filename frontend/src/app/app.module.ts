@@ -10,7 +10,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 import {AccountsComponent} from './accounts/accounts.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {CreateAccountDialogComponent} from './accounts/create-account-dialog/create-account-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -20,6 +20,9 @@ import {MatInputModule} from '@angular/material/input';
 import {CategoriesComponent} from './categories/categories.component';
 import {CreateCategoryDialogComponent} from './categories/create-category-dialog/create-category-dialog.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {BasicAuthInterceptor} from './helper/basic-auth.interceptor';
+import {ErrorInterceptor} from './helper/error.interceptor';
+import {LoginComponent} from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     AccountsComponent,
     CreateAccountDialogComponent,
     CreateCategoryDialogComponent,
-    CategoriesComponent
+    CategoriesComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -50,8 +54,16 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     CreateAccountDialogComponent,
     CreateCategoryDialogComponent
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
+
 }
