@@ -25,6 +25,7 @@ import {ErrorInterceptor} from './helper/error.interceptor';
 import {LoginComponent} from './login/login.component';
 import {HomeComponent} from './home/home.component';
 import {MatCardModule} from '@angular/material/card';
+import {BookingsComponent} from './bookings/bookings.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {MatCardModule} from '@angular/material/card';
     CreateCategoryDialogComponent,
     CategoriesComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    BookingsComponent
   ],
   imports: [
     BrowserModule,

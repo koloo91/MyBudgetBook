@@ -5,6 +5,7 @@ import {CategoriesComponent} from './categories/categories.component';
 import {LoginComponent} from './login/login.component';
 import {HomeComponent} from './home/home.component';
 import {AuthGuard} from './helper/auth.guard';
+import {BookingsComponent} from './bookings/bookings.component';
 
 
 const routes: Routes = [
@@ -13,6 +14,10 @@ const routes: Routes = [
     component: HomeComponent,
     canActivate: [AuthGuard],
     children: [
+      {
+        path: 'bookings',
+        component: BookingsComponent
+      },
       {
         path: 'accounts',
         component: AccountsComponent

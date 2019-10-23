@@ -1,0 +1,13 @@
+<div class="container" fxFlex="1 1 auto">
+  <mat-list *ngFor="let booking of (bookings | async)">
+    <mat-list-item class="account">
+      <h2 matLine>{{booking.title}}</h2>
+      <p matLine>{{booking.amount}}</p>
+      <p matLine>{{booking.date}}</p>
+    </mat-list-item>
+  </mat-list>
+
+  <button mat-fab color="primary" class="add-booking-button" (click)="showCreateDialog()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
