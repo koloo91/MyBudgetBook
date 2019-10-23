@@ -47,6 +47,8 @@ func main() {
 		appUser: appUserPassword,
 	}))
 
+	authorized.GET("/api/ping", controller.Ping())
+
 	{
 		accounts := authorized.Group("/api/accounts")
 		accounts.POST("", controller.CreateAccount(db))

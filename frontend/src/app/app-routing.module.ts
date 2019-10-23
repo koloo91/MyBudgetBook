@@ -3,20 +3,29 @@ import {RouterModule, Routes} from '@angular/router';
 import {AccountsComponent} from './accounts/accounts.component';
 import {CategoriesComponent} from './categories/categories.component';
 import {LoginComponent} from './login/login.component';
+import {HomeComponent} from './home/home.component';
+import {AuthGuard} from './helper/auth.guard';
 
 
 const routes: Routes = [
   {
+    path: '',
+    component: HomeComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'accounts',
+        component: AccountsComponent
+      },
+      {
+        path: 'categories',
+        component: CategoriesComponent
+      }
+    ]
+  },
+  {
     path: 'login',
     component: LoginComponent
-  },
-  {
-    path: 'accounts',
-    component: AccountsComponent
-  },
-  {
-    path: 'categories',
-    component: CategoriesComponent
   },
   {
     path: '**',

@@ -23,6 +23,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {BasicAuthInterceptor} from './helper/basic-auth.interceptor';
 import {ErrorInterceptor} from './helper/error.interceptor';
 import {LoginComponent} from './login/login.component';
+import {HomeComponent} from './home/home.component';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import {LoginComponent} from './login/login.component';
     CreateAccountDialogComponent,
     CreateCategoryDialogComponent,
     CategoriesComponent,
-    LoginComponent
+    LoginComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,8 @@ import {LoginComponent} from './login/login.component';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatCardModule
   ],
   entryComponents: [
     CreateAccountDialogComponent,

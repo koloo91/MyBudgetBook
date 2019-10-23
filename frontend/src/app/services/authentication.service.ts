@@ -3,6 +3,7 @@ import {environment} from '../../environments/environment';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../models/user.model';
+import {map} from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
@@ -18,14 +19,15 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
 
-  login(username: string, password: string) {
+  login(username: string, password: string): Observable<User> {
     const header = {Authorization: `Basic ${window.btoa(username + ':' + password)}`};
     return this.http.get(`${environment.host}/api/ping`, {headers: header})
-      .subscribe(() => {
+      .pipe(map(() => {
         let user = new User(username, window.btoa(username + ':' + password));
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
-      });
+        return user;
+      }));
   }
 
   logout() {
