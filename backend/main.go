@@ -43,6 +43,11 @@ func main() {
 	}
 
 	router := gin.Default()
+
+	router.NoRoute(func(ctx *gin.Context) {
+		ctx.File("./assets/index.html")
+	})
+
 	authorized := router.Group("", gin.BasicAuth(gin.Accounts{
 		appUser: appUserPassword,
 	}))
