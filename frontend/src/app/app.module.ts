@@ -26,6 +26,8 @@ import {LoginComponent} from './login/login.component';
 import {HomeComponent} from './home/home.component';
 import {MatCardModule} from '@angular/material/card';
 import {BookingsComponent} from './bookings/bookings.component';
+import {CreateBookingDialogComponent} from './bookings/create-booking-dialog/create-booking-dialog.component';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import {BookingsComponent} from './bookings/bookings.component';
     AccountsComponent,
     CreateAccountDialogComponent,
     CreateCategoryDialogComponent,
+    CreateBookingDialogComponent,
     CategoriesComponent,
     LoginComponent,
     HomeComponent,
@@ -54,11 +57,13 @@ import {BookingsComponent} from './bookings/bookings.component';
     MatInputModule,
     FormsModule,
     MatProgressSpinnerModule,
-    MatCardModule
+    MatCardModule,
+    MatSelectModule
   ],
   entryComponents: [
     CreateAccountDialogComponent,
-    CreateCategoryDialogComponent
+    CreateCategoryDialogComponent,
+    CreateBookingDialogComponent
   ],
   providers: [
     {

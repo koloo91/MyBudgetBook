@@ -1,0 +1,45 @@
+<div *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="!isLoading">
+  <h1 mat-dialog-title>Buchung anlegen</h1>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <input matInput [(ngModel)]="title" placeholder="Titel">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [(ngModel)]="comment" placeholder="Kommentar">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [(ngModel)]="date" placeholder="Datum">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="number" [(ngModel)]="amount" placeholder="Wert">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Kategorie</mat-label>
+      <mat-select [(value)]="categoryId">
+        <mat-option *ngFor="let category of (categories |async)" [value]="category.id">
+          {{category.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Konto</mat-label>
+      <mat-select [(value)]="accountId">
+        <mat-option *ngFor="let account of (accounts |async)" [value]="account.id">
+          {{account.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-button (click)="onNoClick()">Abbrechen</button>
+    <button mat-button (click)="createBooking()" cdkFocusInitial>Anlegen</button>
+  </div>
+</div>
