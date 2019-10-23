@@ -32,19 +32,17 @@ type (
 
 type (
 	Category struct {
-		Id       string
-		ParentId string
-		Name     string
-		Created  time.Time
-		Updated  time.Time
+		Id      string
+		Name    string
+		Created time.Time
+		Updated time.Time
 	}
 
 	CategoryVo struct {
-		Id       string    `json:"id"`
-		ParentId string    `json:"parentId"`
-		Name     string    `json:"name" binding:"required"`
-		Created  time.Time `json:"created"`
-		Updated  time.Time `json:"updated"`
+		Id      string    `json:"id"`
+		Name    string    `json:"name" binding:"required"`
+		Created time.Time `json:"created"`
+		Updated time.Time `json:"updated"`
 	}
 
 	CategoriesVo struct {

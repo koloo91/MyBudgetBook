@@ -36,21 +36,19 @@ func AccountEntitiesToVos(entities []model.Account) []model.AccountVo {
 
 func CategoryVoToEntity(vo model.CategoryVo) model.Category {
 	return model.Category{
-		Id:       uuid.New().String(),
-		ParentId: vo.ParentId,
-		Name:     vo.Name,
-		Created:  time.Now(),
-		Updated:  time.Now(),
+		Id:      uuid.New().String(),
+		Name:    vo.Name,
+		Created: time.Now(),
+		Updated: time.Now(),
 	}
 }
 
 func CategoryEntityToVo(entity model.Category) model.CategoryVo {
 	return model.CategoryVo{
-		Id:       entity.Id,
-		ParentId: entity.ParentId,
-		Name:     entity.Name,
-		Created:  entity.Created,
-		Updated:  entity.Updated,
+		Id:      entity.Id,
+		Name:    entity.Name,
+		Created: entity.Created,
+		Updated: entity.Updated,
 	}
 }
 

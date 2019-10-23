@@ -18,12 +18,15 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {CategoriesComponent} from './categories/categories.component';
+import {CreateCategoryDialogComponent} from './categories/create-category-dialog/create-category-dialog.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
     AppComponent,
     AccountsComponent,
     CreateAccountDialogComponent,
+    CreateCategoryDialogComponent,
     CategoriesComponent
   ],
   imports: [
@@ -40,10 +43,12 @@ import {CategoriesComponent} from './categories/categories.component';
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    MatProgressSpinnerModule
   ],
   entryComponents: [
-    CreateAccountDialogComponent
+    CreateAccountDialogComponent,
+    CreateCategoryDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

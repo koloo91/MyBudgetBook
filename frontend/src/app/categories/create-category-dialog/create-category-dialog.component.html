@@ -2,14 +2,10 @@
   <mat-spinner></mat-spinner>
 </div>
 <div *ngIf="!isLoading">
-  <h1 mat-dialog-title>Konto anlegen</h1>
+  <h1 mat-dialog-title>Kategorie anlegen</h1>
   <div mat-dialog-content>
     <mat-form-field>
-      <input matInput [(ngModel)]="accountName" placeholder="Name">
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput type="number" [(ngModel)]="startingBalance" placeholder="Startsaldo">
+      <input matInput [(ngModel)]="categoryName" placeholder="Name">
     </mat-form-field>
   </div>
   <div mat-dialog-actions>

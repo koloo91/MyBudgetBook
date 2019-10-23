@@ -11,6 +11,7 @@ export class CreateAccountDialogComponent implements OnInit {
 
   accountName: string;
   startingBalance: number;
+  isLoading = false;
 
   constructor(public dialogRef: MatDialogRef<CreateAccountDialogComponent>,
               private accountService: AccountService) {
@@ -25,11 +26,11 @@ export class CreateAccountDialogComponent implements OnInit {
 
   createAccount() {
     console.log(this.accountName);
+    this.isLoading = true;
     this.accountService.createAccount(this.accountName, this.startingBalance).subscribe(account => {
-      console.log(account);
-      this.dialogRef.close({success: true});
-    }, err => {
-      console.log(err);
-    });
+        console.log(account);
+        this.dialogRef.close({success: true});
+      }, err => console.log(err),
+      () => this.isLoading = false);
   }
 }

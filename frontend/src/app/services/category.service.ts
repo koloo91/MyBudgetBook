@@ -17,8 +17,8 @@ export class CategoryService {
     return this.http.get<PagedEntity<Category>>(`${environment.host}/api/categories`)
   }
 
-  createAccount(parentId: string | null, name: string): Observable<Category> {
-    return this.http.post<Category>(`${environment.host}/api/categories`, {parentId, name});
+  createCategory(name: string): Observable<Category> {
+    return this.http.post<Category>(`${environment.host}/api/categories`, {name});
   }
 
 }
