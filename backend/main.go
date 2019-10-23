@@ -66,6 +66,12 @@ func main() {
 		categories.GET("", controller.GetCategories(db))
 	}
 
+	{
+		bookings := authorized.Group("/api/bookings")
+		bookings.POST("", controller.CreateBooking(db))
+		bookings.GET("", controller.GetBookings(db))
+	}
+
 	router.Static("/app", "./assets")
 
 	log.Fatal(router.Run())

@@ -76,3 +76,34 @@ func GetCategories(db *gorm.DB) gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, model.CategoriesVo{Content: mapper.CategoryEntitiesToVos(categories)})
 	}
 }
+
+func CreateBooking(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var bookingVo model.BookingVo
+		if err := ctx.ShouldBindJSON(&bookingVo); err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		createdBooking, err := service.CreateBooking(db, mapper.BookingVoToEntity(bookingVo))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusCreated, mapper.BookingEntityToVo(createdBooking))
+	}
+}
+
+func GetBookings(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		bookings, err := service.GetBookings(db)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, model.BookingsVo{Content: mapper.BookingEntitiesToVos(bookings)})
+	}
+}

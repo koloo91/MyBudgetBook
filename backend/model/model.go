@@ -49,3 +49,33 @@ type (
 		Content []CategoryVo `json:"content"`
 	}
 )
+
+type (
+	Booking struct {
+		Id         string
+		Title      string
+		Comment    string
+		Date       time.Time
+		Amount     float64
+		CategoryId string
+		AccountId  string
+		Created    time.Time
+		Updated    time.Time
+	}
+
+	BookingVo struct {
+		Id         string    `json:"id"`
+		Title      string    `json:"title" binding:"required"`
+		Comment    string    `json:"comment"`
+		Date       time.Time `json:"date" binding:"required"`
+		Amount     float64   `json:"amount" binding:"required"`
+		CategoryId string    `json:"categoryId" binding:"required"`
+		AccountId  string    `json:"accountId" binding:"required"`
+		Created    time.Time `json:"created"`
+		Updated    time.Time `json:"updated"`
+	}
+
+	BookingsVo struct {
+		Content []BookingVo `json:"content"`
+	}
+)

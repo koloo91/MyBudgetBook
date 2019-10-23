@@ -34,3 +34,18 @@ func GetCategories(db *gorm.DB) ([]model.Category, error) {
 	}
 	return categories, nil
 }
+
+func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
+	if err := db.Create(&booking).Error; err != nil {
+		return model.Booking{}, err
+	}
+	return booking, nil
+}
+
+func GetBookings(db *gorm.DB) ([]model.Booking, error) {
+	bookings := make([]model.Booking, 0)
+	if err := db.Order("date desc").Find(&bookings).Error; err != nil {
+		return nil, err
+	}
+	return bookings, nil
+}
