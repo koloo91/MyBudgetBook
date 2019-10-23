@@ -36,7 +36,7 @@ func GetAccounts(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		ctx.JSON(http.StatusCreated, model.AccountsVo{Content: mapper.AccountEntitiesToVos(accounts)})
+		ctx.JSON(http.StatusOK, model.AccountsVo{Content: mapper.AccountEntitiesToVos(accounts)})
 	}
 }
 
@@ -67,6 +67,6 @@ func GetCategories(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		ctx.JSON(http.StatusCreated, model.CategoriesVo{Content: mapper.CategoryEntitiesToVos(categories)})
+		ctx.JSON(http.StatusOK, model.CategoriesVo{Content: mapper.CategoryEntitiesToVos(categories)})
 	}
 }
