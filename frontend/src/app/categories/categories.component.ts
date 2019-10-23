@@ -37,7 +37,7 @@ export class CategoriesComponent implements OnInit {
 
   showCreateDialog() {
     const dialogRef = this.dialog.open(CreateCategoryDialogComponent, {
-      width: '250px'
+      width: '600px'
     });
 
     dialogRef.afterClosed().subscribe(result => {

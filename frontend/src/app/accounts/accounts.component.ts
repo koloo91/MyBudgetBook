@@ -28,7 +28,7 @@ export class AccountsComponent implements OnInit {
 
   showCreateDialog() {
     const dialogRef = this.dialog.open(CreateAccountDialogComponent, {
-      width: '250px'
+      width: '600px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
