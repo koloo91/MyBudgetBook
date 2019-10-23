@@ -17,7 +17,7 @@ export class CreateBookingDialogComponent implements OnInit {
 
   title: string;
   comment: string;
-  date: string;
+  date: Date;
   amount: number;
   categoryId: string;
   accountId: string;
@@ -42,9 +42,8 @@ export class CreateBookingDialogComponent implements OnInit {
   }
 
   createBooking() {
-
     this.isLoading = true;
-    this.bookingService.createBooking(this.title, this.comment, this.date, this.amount, this.categoryId, this.accountId)
+    this.bookingService.createBooking(this.title, this.comment, this.date.toISOString(), this.amount, this.categoryId, this.accountId)
       .subscribe(booking => {
           console.log(booking);
           this.dialogRef.close({success: true});

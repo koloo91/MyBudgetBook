@@ -28,6 +28,8 @@ import {MatCardModule} from '@angular/material/card';
 import {BookingsComponent} from './bookings/bookings.component';
 import {CreateBookingDialogComponent} from './bookings/create-booking-dialog/create-booking-dialog.component';
 import {MatSelectModule} from '@angular/material/select';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,9 @@ import {MatSelectModule} from '@angular/material/select';
     FormsModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   entryComponents: [
     CreateAccountDialogComponent,
