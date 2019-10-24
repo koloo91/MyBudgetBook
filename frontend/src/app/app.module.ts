@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -30,6 +30,11 @@ import {CreateBookingDialogComponent} from './bookings/create-booking-dialog/cre
 import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
+import {registerLocaleData} from '@angular/common';
+import localDe from '@angular/common/locales/de';
+import localeDeExtra from '@angular/common/locales/extra/de';
+
+registerLocaleData(localDe, 'de-DE', localeDeExtra)
 
 @NgModule({
   declarations: [
@@ -75,6 +80,9 @@ import {MatNativeDateModule} from '@angular/material/core';
     },
     {
       provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true
+    },
+    {
+      provide: LOCALE_ID, useValue: 'de-DE'
     }
   ],
   bootstrap: [AppComponent]
