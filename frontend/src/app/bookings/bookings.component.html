@@ -1,9 +1,14 @@
 <div class="container" fxFlex="1 1 auto">
-  <mat-list *ngFor="let booking of (bookings | async)">
-    <mat-list-item class="account">
-      <h2 matLine>{{booking.title}}</h2>
-      <p matLine>{{booking.amount}}</p>
-      <p matLine>{{booking.date | date}}</p>
+  <mat-list role="list">
+    <mat-list-item class="account" role="listitem" *ngFor="let booking of (bookings | async)">
+      <div matLine fxLayout="row" fxLayoutAlign="space-between start">
+        <div>{{booking.title}}</div>
+        <div>{{booking.date | date}}</div>
+      </div>
+      <div matLine fxLayout="row" fxLayoutAlign="space-between start">
+        <div>{{getCategory(booking.categoryId) | async}}</div>
+        <div>{{booking.amount}} €</div>
+      </div>
     </mat-list-item>
   </mat-list>
 
