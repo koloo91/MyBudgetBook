@@ -2,7 +2,7 @@
 
   <mat-nav-list>
     <mat-list-item disableRipple="false" class="account mat-list-item" *ngFor="let category of (categories | async)"
-                   (click)="edit()">
+                   (click)="edit(category)">
       <h2 matLine>{{category.name}}</h2>
     </mat-list-item>
   </mat-nav-list>

@@ -46,7 +46,17 @@ export class CategoriesComponent implements OnInit {
     });
   }
 
-  edit() {
+  edit(selectedCategory: Category) {
     console.log('edit');
+    const dialogRef = this.dialog.open(CreateCategoryDialogComponent, {
+      width: '600px',
+      data: selectedCategory
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      this.loadCategories();
+    });
+
   }
 }

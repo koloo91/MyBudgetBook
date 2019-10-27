@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AccountService} from '../../services/account.service';
+import {Account} from '../../models/account.model';
 
 @Component({
   selector: 'app-create-account-dialog',
@@ -14,7 +15,9 @@ export class CreateAccountDialogComponent implements OnInit {
   isLoading = false;
 
   constructor(public dialogRef: MatDialogRef<CreateAccountDialogComponent>,
-              private accountService: AccountService) {
+              private accountService: AccountService,
+              @Inject(MAT_DIALOG_DATA) public data?: Account) {
+    console.log(data);
   }
 
   ngOnInit() {

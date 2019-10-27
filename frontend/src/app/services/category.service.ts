@@ -21,4 +21,8 @@ export class CategoryService {
     return this.http.post<Category>(`${environment.host}/api/categories`, {name});
   }
 
+  updateCategory(id: string, name: string): Observable<Category> {
+    return this.http.put<Category>(`${environment.host}/api/categories/${id}`, {name});
+  }
+
 }

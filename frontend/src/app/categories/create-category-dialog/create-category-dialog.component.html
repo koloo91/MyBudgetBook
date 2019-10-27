@@ -2,7 +2,7 @@
   <mat-spinner></mat-spinner>
 </div>
 <div *ngIf="!isLoading">
-  <h1 mat-dialog-title>Kategorie anlegen</h1>
+  <h1 mat-dialog-title>Kategorie anlegen/bearbeiten</h1>
   <div mat-dialog-content>
     <mat-form-field>
       <input matInput [(ngModel)]="categoryName" placeholder="Name">
@@ -10,6 +10,6 @@
   </div>
   <div mat-dialog-actions align="end">
     <button mat-button (click)="onNoClick()">Abbrechen</button>
-    <button mat-button (click)="createAccount()" cdkFocusInitial>Anlegen</button>
+    <button mat-button (click)="onOkClick()" cdkFocusInitial>Ok</button>
   </div>
 </div>

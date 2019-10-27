@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {CategoryService} from '../../services/category.service';
+import {Category} from '../../models/category.model';
 
 @Component({
   selector: 'app-create-account-dialog',
@@ -13,7 +14,12 @@ export class CreateCategoryDialogComponent implements OnInit {
   isLoading = false;
 
   constructor(public dialogRef: MatDialogRef<CreateCategoryDialogComponent>,
-              private categoryService: CategoryService) {
+              private categoryService: CategoryService,
+              @Inject(MAT_DIALOG_DATA) public data?: Category) {
+    console.log(data);
+    if (data) {
+      this.categoryName = data.name;
+    }
   }
 
   ngOnInit() {
@@ -23,9 +29,25 @@ export class CreateCategoryDialogComponent implements OnInit {
     this.dialogRef.close({success: false});
   }
 
-  createAccount() {
+  onOkClick() {
     this.isLoading = true;
-    console.log(this.categoryName);
+
+    if (this.data) {
+      this.updateAccount();
+    } else {
+      this.createAccount();
+    }
+  }
+
+  updateAccount() {
+    this.categoryService.updateCategory(this.data.id, this.categoryName).subscribe(category => {
+        console.log(category);
+        this.dialogRef.close({success: true});
+      }, err => console.log(err),
+      () => this.isLoading = false);
+  }
+
+  createAccount() {
     this.categoryService.createCategory(this.categoryName).subscribe(category => {
         console.log(category);
         this.dialogRef.close({success: true});
