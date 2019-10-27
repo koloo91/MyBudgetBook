@@ -63,6 +63,7 @@ func main() {
 	{
 		categories := authorized.Group("/api/categories")
 		categories.POST("", controller.CreateCategory(db))
+		categories.PUT("/:id", controller.UpdateCategory(db))
 		categories.GET("", controller.GetCategories(db))
 	}
 

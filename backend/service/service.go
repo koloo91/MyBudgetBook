@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/jinzhu/gorm"
 	"github.com/koloo91/model"
+	"time"
 )
 
 func CreateAccount(db *gorm.DB, account model.Account) (model.Account, error) {
@@ -25,6 +26,22 @@ func CreateCategory(db *gorm.DB, category model.Category) (model.Category, error
 		return model.Category{}, err
 	}
 	return category, nil
+}
+
+func UpdateCategory(db *gorm.DB, id string, category model.Category) (model.Category, error) {
+	var existingCategory model.Category
+	if err := db.Where("id = ?", id).First(&existingCategory).Error; err != nil {
+		return model.Category{}, err
+	}
+
+	existingCategory.Name = category.Name
+	existingCategory.Updated = time.Now()
+
+	if err := db.Save(&existingCategory).Error; err != nil {
+		return model.Category{}, err
+	}
+
+	return existingCategory, nil
 }
 
 func GetCategories(db *gorm.DB) ([]model.Category, error) {

@@ -64,6 +64,25 @@ func CreateCategory(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
+func UpdateCategory(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		var categoryVo model.CategoryVo
+		if err := ctx.ShouldBindJSON(&categoryVo); err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		createdCategory, err := service.UpdateCategory(db, id, mapper.CategoryVoToEntity(categoryVo))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusCreated, mapper.CategoryEntityToVo(createdCategory))
+	}
+}
+
 func GetCategories(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
