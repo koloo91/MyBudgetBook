@@ -16,7 +16,8 @@ import {CategoryService} from '../services/category.service';
 export class BookingsComponent implements OnInit {
 
   bookings: Observable<Booking[]>;
-  categories: Observable<Category[]>;
+  categoriesObservable: Observable<Category[]>;
+  categories?: Category[];
 
   constructor(private bookingService: BookingService,
               private categoryService: CategoryService,
@@ -36,10 +37,12 @@ export class BookingsComponent implements OnInit {
   }
 
   private loadCategories() {
-    this.categories = this.categoryService.getCategories()
+    this.categoriesObservable = this.categoryService.getCategories()
       .pipe(
         map(pagedEntity => pagedEntity.content)
       );
+
+    this.categoriesObservable.subscribe(categories => this.categories = categories);
   }
 
   showCreateDialog() {
@@ -53,10 +56,7 @@ export class BookingsComponent implements OnInit {
     });
   }
 
-  getCategory(categoryId: string): Observable<string> {
-    return this.categories.pipe(
-      map(categories => categories.find(_ => _.id === categoryId)),
-      map(_ => _.id)
-    );
+  getCategory(categoryId: string): string {
+    return this.categories.find(_ => _.id === categoryId).name || 'Unbekannt';
   }
 }

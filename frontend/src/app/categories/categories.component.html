@@ -1,7 +1,7 @@
 <div class="container" fxFlex="1 1 auto">
 
-  <mat-list *ngFor="let category of (categories | async)">
-    <mat-list-item class="account mat-list-item">
+  <mat-list>
+    <mat-list-item class="account mat-list-item" *ngFor="let category of (categories | async)">
       <h2 matLine>{{category.name}}</h2>
     </mat-list-item>
   </mat-list>

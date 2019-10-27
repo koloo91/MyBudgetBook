@@ -6,14 +6,14 @@ module.exports = {
     content: function (params) {
       return [
         {
-          id: faker.random.uuid(),
+          id: '1',
           name: faker.lorem.word(),
           startingBalance: 12,
           created: faker.date.recent(),
           updated: faker.date.recent()
         },
         {
-          id: faker.random.uuid(),
+          id: '2',
           name: faker.lorem.word(),
           startingBalance: 12.01,
           created: faker.date.recent(),

@@ -6,19 +6,19 @@ module.exports = {
     content: function (params) {
       return [
         {
-          id: 'e13fa5e2-5640-48b8-b40e-d96acaa969d5',
+          id: '1',
           name: faker.lorem.word(),
           created: faker.date.recent(),
           updated: faker.date.recent()
         },
         {
-          id: '2cb2572b-3bb9-4912-8167-672de9a5c7a5',
+          id: '2',
           name: faker.lorem.word(),
           created: faker.date.recent(),
           updated: faker.date.recent()
         },
         {
-          id: '6fb7b689-59b1-4255-9c67-9dcfe5cb9858',
+          id: '3',
           name: faker.lorem.word(),
           created: faker.date.recent(),
           updated: faker.date.recent()

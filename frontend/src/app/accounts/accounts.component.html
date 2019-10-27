@@ -1,6 +1,6 @@
 <div class="container" fxFlex="1 1 auto">
-  <mat-list *ngFor="let account of (accounts | async)">
-    <mat-list-item class="account">
+  <mat-list>
+    <mat-list-item class="account" *ngFor="let account of (accounts | async)">
       <h2 matLine>{{account.name}}</h2>
       <p matLine>Startsaldo: {{account.startingBalance}}</p>
     </mat-list-item>

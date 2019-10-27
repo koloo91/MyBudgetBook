@@ -6,7 +6,7 @@
         <div>{{booking.date | date}}</div>
       </div>
       <div matLine fxLayout="row" fxLayoutAlign="space-between start">
-        <div>{{getCategory(booking.categoryId) | async}}</div>
+        <div *ngIf="categories">{{getCategory(booking.categoryId)}}</div>
         <div>{{booking.amount}} €</div>
       </div>
     </mat-list-item>
