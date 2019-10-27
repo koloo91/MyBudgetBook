@@ -8,7 +8,6 @@ import {CreateCategoryDialogComponent} from './create-category-dialog/create-cat
 
 interface CategoryNode {
   id: string;
-  parentId: string;
   name: string;
   children?: CategoryNode[];
 }
