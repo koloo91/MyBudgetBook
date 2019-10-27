@@ -1,10 +1,10 @@
 <div class="container" fxFlex="1 1 auto">
-  <mat-list>
+  <mat-nav-list>
     <mat-list-item class="account" *ngFor="let account of (accounts | async)">
       <h2 matLine>{{account.name}}</h2>
-      <p matLine>Startsaldo: {{account.startingBalance}}</p>
+      <p matLine>Startsaldo: {{account.startingBalance | number: '1.2-2'}} €</p>
     </mat-list-item>
-  </mat-list>
+  </mat-nav-list>
 
   <button mat-fab color="primary" class="add-account-button" (click)="showCreateDialog()">
     <mat-icon>add</mat-icon>

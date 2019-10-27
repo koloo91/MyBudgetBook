@@ -1,10 +1,11 @@
 <div class="container" fxFlex="1 1 auto">
 
-  <mat-list>
-    <mat-list-item class="account mat-list-item" *ngFor="let category of (categories | async)">
+  <mat-nav-list>
+    <mat-list-item disableRipple="false" class="account mat-list-item" *ngFor="let category of (categories | async)"
+                   (click)="edit()">
       <h2 matLine>{{category.name}}</h2>
     </mat-list-item>
-  </mat-list>
+  </mat-nav-list>
 
   <button mat-fab color="primary" class="add-category-button" (click)="showCreateDialog()">
     <mat-icon>add</mat-icon>

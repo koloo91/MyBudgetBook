@@ -46,4 +46,7 @@ export class CategoriesComponent implements OnInit {
     });
   }
 
+  edit() {
+    console.log('edit');
+  }
 }
