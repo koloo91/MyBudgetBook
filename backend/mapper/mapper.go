@@ -62,29 +62,35 @@ func CategoryEntitiesToVos(entities []model.Category) []model.CategoryVo {
 
 func BookingVoToEntity(vo model.BookingVo) model.Booking {
 	return model.Booking{
-		Id:         uuid.New().String(),
-		Title:      vo.Title,
-		Comment:    vo.Comment,
-		Date:       vo.Date,
-		Amount:     vo.Amount,
-		CategoryId: vo.CategoryId,
-		AccountId:  vo.AccountId,
-		Created:    time.Now(),
-		Updated:    time.Now(),
+		Id:                   uuid.New().String(),
+		Title:                vo.Title,
+		Comment:              vo.Comment,
+		Date:                 vo.Date,
+		Amount:               vo.Amount,
+		CategoryId:           vo.CategoryId,
+		AccountId:            vo.AccountId,
+		StandingOrderId:      vo.StandingOrderId,
+		StandingOrderPeriod:  vo.StandingOrderPeriod,
+		StandingOrderLastDay: vo.StandingOrderLastDay,
+		Created:              time.Now(),
+		Updated:              time.Now(),
 	}
 }
 
 func BookingEntityToVo(entity model.Booking) model.BookingVo {
 	return model.BookingVo{
-		Id:         entity.Id,
-		Title:      entity.Title,
-		Comment:    entity.Comment,
-		Date:       entity.Date,
-		Amount:     entity.Amount,
-		CategoryId: entity.CategoryId,
-		AccountId:  entity.AccountId,
-		Created:    entity.Created,
-		Updated:    entity.Updated,
+		Id:                   entity.Id,
+		Title:                entity.Title,
+		Comment:              entity.Comment,
+		Date:                 entity.Date,
+		Amount:               entity.Amount,
+		CategoryId:           entity.CategoryId,
+		AccountId:            entity.AccountId,
+		StandingOrderId:      entity.StandingOrderId,
+		StandingOrderPeriod:  entity.StandingOrderPeriod,
+		StandingOrderLastDay: entity.StandingOrderLastDay,
+		Created:              entity.Created,
+		Updated:              entity.Updated,
 	}
 }
 

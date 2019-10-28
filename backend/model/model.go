@@ -52,27 +52,33 @@ type (
 
 type (
 	Booking struct {
-		Id         string
-		Title      string
-		Comment    string
-		Date       time.Time
-		Amount     float64
-		CategoryId string
-		AccountId  string
-		Created    time.Time
-		Updated    time.Time
+		Id                   string
+		Title                string
+		Comment              string
+		Date                 time.Time
+		Amount               float64
+		CategoryId           string
+		AccountId            string
+		StandingOrderId      string
+		StandingOrderPeriod  string
+		StandingOrderLastDay time.Time
+		Created              time.Time
+		Updated              time.Time
 	}
 
 	BookingVo struct {
-		Id         string    `json:"id"`
-		Title      string    `json:"title" binding:"required"`
-		Comment    string    `json:"comment"`
-		Date       time.Time `json:"date" binding:"required"`
-		Amount     float64   `json:"amount" binding:"required"`
-		CategoryId string    `json:"categoryId" binding:"required"`
-		AccountId  string    `json:"accountId" binding:"required"`
-		Created    time.Time `json:"created"`
-		Updated    time.Time `json:"updated"`
+		Id                   string    `json:"id"`
+		Title                string    `json:"title" binding:"required"`
+		Comment              string    `json:"comment"`
+		Date                 time.Time `json:"date" binding:"required"`
+		Amount               float64   `json:"amount" binding:"required"`
+		CategoryId           string    `json:"categoryId" binding:"required"`
+		AccountId            string    `json:"accountId" binding:"required"`
+		StandingOrderId      string    `json:"standingOrderId"`
+		StandingOrderPeriod  string    `json:"standingOrderPeriod"`
+		StandingOrderLastDay time.Time `json:"standingOrderLastDay"`
+		Created              time.Time `json:"created"`
+		Updated              time.Time `json:"updated"`
 	}
 
 	BookingsVo struct {
