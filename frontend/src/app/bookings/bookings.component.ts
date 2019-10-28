@@ -59,4 +59,15 @@ export class BookingsComponent implements OnInit {
   getCategory(categoryId: string): string {
     return this.categories.find(_ => _.id === categoryId).name || 'Unbekannt';
   }
+
+  updateBooking(selectedBooking: Booking) {
+    const dialogRef = this.dialog.open(CreateBookingDialogComponent, {
+      width: '600px',
+      data: selectedBooking
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.loadBookings();
+    });
+  }
 }

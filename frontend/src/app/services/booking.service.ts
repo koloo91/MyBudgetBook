@@ -27,4 +27,15 @@ export class BookingService {
       accountId
     });
   }
+
+  updateBooking(id: string, title: string, comment: string, date: string, amount: number, categoryId: string, accountId: string) {
+    return this.http.put<Booking>(`${environment.host}/api/bookings/${id}`, {
+      title,
+      comment,
+      date,
+      amount,
+      categoryId,
+      accountId
+    });
+  }
 }

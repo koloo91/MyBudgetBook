@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AccountService} from '../../services/account.service';
 import {CategoryService} from '../../services/category.service';
 import {BookingService} from '../../services/booking.service';
@@ -7,6 +7,7 @@ import {Observable} from 'rxjs';
 import {Category} from '../../models/category.model';
 import {map} from 'rxjs/operators';
 import {Account} from '../../models/account.model';
+import {Booking} from '../../models/booking.model';
 
 @Component({
   selector: 'app-create-account-dialog',
@@ -17,7 +18,7 @@ export class CreateBookingDialogComponent implements OnInit {
 
   title: string;
   comment: string;
-  date: Date;
+  date: Date = new Date();
   amount: number;
   categoryId: string;
   accountId: string;
@@ -29,7 +30,17 @@ export class CreateBookingDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<CreateBookingDialogComponent>,
               private accountService: AccountService,
               private categoryService: CategoryService,
-              private bookingService: BookingService) {
+              private bookingService: BookingService,
+              @Inject(MAT_DIALOG_DATA) public data?: Booking) {
+
+    if (data) {
+      this.title = data.title;
+      this.comment = data.comment;
+      this.date = new Date(data.date);
+      this.amount = data.amount;
+      this.categoryId = data.categoryId;
+      this.accountId = data.accountId;
+    }
   }
 
   ngOnInit() {
@@ -41,8 +52,26 @@ export class CreateBookingDialogComponent implements OnInit {
     this.dialogRef.close({success: false});
   }
 
-  createBooking() {
+  onOkClick() {
     this.isLoading = true;
+
+    if (this.data) {
+      this.updateBooking();
+    } else {
+      this.createBooking();
+    }
+  }
+
+  updateBooking() {
+    this.bookingService.updateBooking(this.data.id, this.title, this.comment, this.date.toISOString(), this.amount, this.categoryId, this.accountId)
+      .subscribe(booking => {
+          console.log(booking);
+          this.dialogRef.close({success: true});
+        }, err => console.log(err),
+        () => this.isLoading = false);
+  }
+
+  createBooking() {
     this.bookingService.createBooking(this.title, this.comment, this.date.toISOString(), this.amount, this.categoryId, this.accountId)
       .subscribe(booking => {
           console.log(booking);

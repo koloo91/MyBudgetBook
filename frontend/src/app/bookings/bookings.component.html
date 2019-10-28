@@ -1,6 +1,7 @@
 <div class="container" fxFlex="1 1 auto">
   <mat-nav-list>
-    <mat-list-item class="account" role="listitem" *ngFor="let booking of (bookings | async)">
+    <mat-list-item class="account" role="listitem" *ngFor="let booking of (bookings | async)"
+                   (click)="updateBooking(booking)">
       <div matLine fxLayout="row" fxLayoutAlign="space-between start">
         <div>{{booking.title}}</div>
         <div class="mat-small date">{{booking.date | date}}</div>

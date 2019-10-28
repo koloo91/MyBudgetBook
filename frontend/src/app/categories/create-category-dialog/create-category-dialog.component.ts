@@ -16,7 +16,6 @@ export class CreateCategoryDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<CreateCategoryDialogComponent>,
               private categoryService: CategoryService,
               @Inject(MAT_DIALOG_DATA) public data?: Category) {
-    console.log(data);
     if (data) {
       this.categoryName = data.name;
     }
