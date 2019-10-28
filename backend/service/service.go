@@ -15,7 +15,7 @@ func CreateAccount(db *gorm.DB, account model.Account) (model.Account, error) {
 
 func GetAccounts(db *gorm.DB) ([]model.Account, error) {
 	accounts := make([]model.Account, 0)
-	if err := db.Find(&accounts).Error; err != nil {
+	if err := db.Order("name asc").Find(&accounts).Error; err != nil {
 		return nil, err
 	}
 	return accounts, nil
@@ -46,7 +46,7 @@ func UpdateCategory(db *gorm.DB, id string, category model.Category) (model.Cate
 
 func GetCategories(db *gorm.DB) ([]model.Category, error) {
 	categories := make([]model.Category, 0)
-	if err := db.Find(&categories).Error; err != nil {
+	if err := db.Order("name asc").Find(&categories).Error; err != nil {
 		return nil, err
 	}
 	return categories, nil
