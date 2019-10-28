@@ -15,6 +15,12 @@ func Ping() gin.HandlerFunc {
 	}
 }
 
+func Alive() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		ctx.String(http.StatusNoContent, "")
+	}
+}
+
 func CreateAccount(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var accountVo model.AccountVo

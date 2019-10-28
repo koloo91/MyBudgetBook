@@ -73,6 +73,8 @@ func main() {
 		bookings.GET("", controller.GetBookings(db))
 	}
 
+	router.GET("/api/alive", controller.Alive())
+
 	router.Static("/app", "./assets")
 
 	log.Fatal(router.Run())
