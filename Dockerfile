@@ -17,5 +17,4 @@ COPY --from=goBuilder /builder/mbb /app/
 RUN ls -l
 COPY --from=nodeBuilder /app/dist/frontend/ assets/
 COPY backend/migrations/ migrations/
-HEALTHCHECK --interval=30s --timeout=3s --retries=5 CMD curl --fail http://localhost:8080/api/alive || exit 1
 ENTRYPOINT ["./mbb"]
