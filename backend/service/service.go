@@ -59,6 +59,27 @@ func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
 	return booking, nil
 }
 
+func UpdateBooking(db *gorm.DB, id string, booking model.Booking) (model.Booking, error) {
+	var existingBooking model.Booking
+	if err := db.Where("id = ?", id).First(&existingBooking).Error; err != nil {
+		return model.Booking{}, err
+	}
+
+	existingBooking.Title = booking.Title
+	existingBooking.Comment = booking.Comment
+	existingBooking.Amount = booking.Amount
+	existingBooking.Date = booking.Date
+	existingBooking.CategoryId = booking.CategoryId
+	existingBooking.AccountId = booking.AccountId
+	existingBooking.Updated = time.Now()
+
+	if err := db.Save(&existingBooking).Error; err != nil {
+		return model.Booking{}, err
+	}
+
+	return existingBooking, nil
+}
+
 func GetBookings(db *gorm.DB) ([]model.Booking, error) {
 	bookings := make([]model.Booking, 0)
 	if err := db.Order("date desc").Find(&bookings).Error; err != nil {

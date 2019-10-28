@@ -79,13 +79,13 @@ func UpdateCategory(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		createdCategory, err := service.UpdateCategory(db, id, mapper.CategoryVoToEntity(categoryVo))
+		updatedCategory, err := service.UpdateCategory(db, id, mapper.CategoryVoToEntity(categoryVo))
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
 		}
 
-		ctx.JSON(http.StatusCreated, mapper.CategoryEntityToVo(createdCategory))
+		ctx.JSON(http.StatusCreated, mapper.CategoryEntityToVo(updatedCategory))
 	}
 }
 
@@ -117,6 +117,25 @@ func CreateBooking(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusCreated, mapper.BookingEntityToVo(createdBooking))
+	}
+}
+
+func UpdateBooking(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		var bookingVo model.BookingVo
+		if err := ctx.ShouldBindJSON(&bookingVo); err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		updatedBooking, err := service.UpdateBooking(db, id, mapper.BookingVoToEntity(bookingVo))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusCreated, mapper.BookingEntityToVo(updatedBooking))
 	}
 }
 

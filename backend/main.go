@@ -70,6 +70,7 @@ func main() {
 	{
 		bookings := authorized.Group("/api/bookings")
 		bookings.POST("", controller.CreateBooking(db))
+		bookings.PUT("/:id", controller.UpdateBooking(db))
 		bookings.GET("", controller.GetBookings(db))
 	}
 
