@@ -7,8 +7,7 @@
       </div>
       <div matLine fxLayout="row" fxLayoutAlign="space-between start">
         <div *ngIf="categories" class="mat-small category">{{getCategory(booking.categoryId)}}</div>
-        <div [className]="booking.amount >= 0 ? 'income' : 'outcome'"
-             class="mat-display-1">{{booking.amount | number: '1.2-2'}} €
+        <div [className]="booking.amount >= 0 ? 'income' : 'outcome'">{{booking.amount | number: '1.2-2'}} €
         </div>
       </div>
     </mat-list-item>
