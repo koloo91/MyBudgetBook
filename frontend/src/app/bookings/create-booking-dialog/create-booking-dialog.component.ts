@@ -27,6 +27,9 @@ export class CreateBookingDialogComponent implements OnInit {
   categories: Observable<Category[]>;
   accounts: Observable<Account[]>;
 
+  isStandingOrder: boolean = false;
+  standingOrderPeriod: string = 'MONTHLY';
+
   constructor(public dialogRef: MatDialogRef<CreateBookingDialogComponent>,
               private accountService: AccountService,
               private categoryService: CategoryService,
@@ -72,7 +75,14 @@ export class CreateBookingDialogComponent implements OnInit {
   }
 
   createBooking() {
-    this.bookingService.createBooking(this.title, this.comment, this.date.toISOString(), this.amount, this.categoryId, this.accountId)
+    this.bookingService.createBooking(
+      this.title,
+      this.comment,
+      this.date.toISOString(),
+      this.amount,
+      this.categoryId,
+      this.accountId,
+      this.isStandingOrder ? this.standingOrderPeriod : null)
       .subscribe(booking => {
           console.log(booking);
           this.dialogRef.close({success: true});

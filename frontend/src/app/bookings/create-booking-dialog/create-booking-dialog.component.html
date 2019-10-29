@@ -40,6 +40,21 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-checkbox [(ngModel)]="isStandingOrder">Dauerauftrag</mat-checkbox>
+
+    <div *ngIf="isStandingOrder">
+      <mat-form-field>
+        <mat-label>Periode</mat-label>
+        <mat-select [(value)]="standingOrderPeriod">
+          <mat-option value="WEEKLY">wöchentlich</mat-option>
+          <mat-option value="MONTHLY">monatlich</mat-option>
+          <mat-option value="QUARTERLY">quartalsweise</mat-option>
+          <mat-option value="HALF_YEARLY">halb jährlich</mat-option>
+          <mat-option value="YEARLY">jährlich</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </div>
   <div mat-dialog-actions align="end">
     <button mat-button (click)="onNoClick()">Abbrechen</button>

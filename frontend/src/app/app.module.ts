@@ -33,6 +33,8 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {registerLocaleData} from '@angular/common';
 import localDe from '@angular/common/locales/de';
 import localeDeExtra from '@angular/common/locales/extra/de';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 registerLocaleData(localDe, 'de-DE', localeDeExtra)
 
@@ -67,7 +69,9 @@ registerLocaleData(localDe, 'de-DE', localeDeExtra)
     MatCardModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatCheckboxModule,
+    MatExpansionModule
   ],
   entryComponents: [
     CreateAccountDialogComponent,
