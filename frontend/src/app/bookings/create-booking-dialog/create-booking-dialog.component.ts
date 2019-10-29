@@ -66,7 +66,14 @@ export class CreateBookingDialogComponent implements OnInit {
   }
 
   updateBooking() {
-    this.bookingService.updateBooking(this.data.id, this.title, this.comment, this.date.toISOString(), this.amount, this.categoryId, this.accountId)
+    this.bookingService.updateBooking(
+      this.data.id,
+      this.title,
+      this.comment,
+      this.addTimeToSelectedDate(this.date).toISOString(),
+      this.amount,
+      this.categoryId,
+      this.accountId)
       .subscribe(booking => {
           console.log(booking);
           this.dialogRef.close({success: true});
@@ -78,7 +85,7 @@ export class CreateBookingDialogComponent implements OnInit {
     this.bookingService.createBooking(
       this.title,
       this.comment,
-      this.date.toISOString(),
+      this.addTimeToSelectedDate(this.date).toISOString(),
       this.amount,
       this.categoryId,
       this.accountId,
@@ -88,5 +95,11 @@ export class CreateBookingDialogComponent implements OnInit {
           this.dialogRef.close({success: true});
         }, err => console.log(err),
         () => this.isLoading = false);
+  }
+
+  addTimeToSelectedDate(date: Date): Date {
+    let now = new Date();
+    now.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    return now;
   }
 }
