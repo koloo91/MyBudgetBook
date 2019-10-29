@@ -82,11 +82,11 @@ func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
 			}
 
 			daysToAdd := daysToAddForWeekday(newBooking.Date.Weekday())
-			newBooking.Date.AddDate(0, 0, daysToAdd)
+			newBooking.Date = newBooking.Date.AddDate(0, 0, daysToAdd)
 			if err := db.Create(&newBooking).Error; err != nil {
 				return model.Booking{}, err
 			}
-			newBooking.Date.AddDate(0, 0, -daysToAdd)
+			newBooking.Date = newBooking.Date.AddDate(0, 0, -daysToAdd)
 		}
 	}
 
