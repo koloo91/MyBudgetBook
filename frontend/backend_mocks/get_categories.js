@@ -22,6 +22,72 @@ module.exports = {
           name: faker.lorem.word(),
           created: faker.date.recent(),
           updated: faker.date.recent()
+        },
+        {
+          id: '3',
+          name: faker.lorem.word(),
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '3',
+          name: faker.lorem.word(),
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '3',
+          name: faker.lorem.word(),
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '3',
+          name: faker.lorem.word(),
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '3',
+          name: faker.lorem.word(),
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '3',
+          name: faker.lorem.word(),
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '3',
+          name: faker.lorem.word(),
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '3',
+          name: faker.lorem.word(),
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '3',
+          name: faker.lorem.word(),
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '3',
+          name: faker.lorem.word(),
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '3',
+          name: faker.lorem.word(),
+          created: faker.date.recent(),
+          updated: faker.date.recent()
         }
       ]
     }
