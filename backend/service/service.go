@@ -77,14 +77,16 @@ func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
 		for {
 			newBooking.Id = uuid.New().String()
 			newBooking.Date = newBooking.Date.AddDate(years, months, days)
-			// newBooking.Date.Weekday()
 			if newBooking.Date.After(endDate) {
 				break
 			}
 
+			daysToAdd := daysToAddForWeekday(newBooking.Date.Weekday())
+			newBooking.Date.AddDate(0, 0, daysToAdd)
 			if err := db.Create(&newBooking).Error; err != nil {
 				return model.Booking{}, err
 			}
+			newBooking.Date.AddDate(0, 0, -daysToAdd)
 		}
 	}
 
@@ -93,30 +95,6 @@ func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
 	}
 
 	return booking, nil
-}
-
-func yearsMonthsDaysToAdd(period string) (years int, months int, days int, err error) {
-	years = 0
-	months = 0
-	days = 0
-	err = nil
-
-	switch period {
-	case weekly:
-		days = 7
-	case monthly:
-		months = 1
-	case quarterly:
-		months = 3
-	case halfYearly:
-		months = 6
-	case yearly:
-		years = 1
-	default:
-		err = fmt.Errorf("invalid order period '%s'", period)
-	}
-
-	return
 }
 
 func UpdateBooking(db *gorm.DB, id string, booking model.Booking) (model.Booking, error) {
@@ -146,4 +124,39 @@ func GetBookings(db *gorm.DB) ([]model.Booking, error) {
 		return nil, err
 	}
 	return bookings, nil
+}
+
+func yearsMonthsDaysToAdd(period string) (years int, months int, days int, err error) {
+	years = 0
+	months = 0
+	days = 0
+	err = nil
+
+	switch period {
+	case weekly:
+		days = 7
+	case monthly:
+		months = 1
+	case quarterly:
+		months = 3
+	case halfYearly:
+		months = 6
+	case yearly:
+		years = 1
+	default:
+		err = fmt.Errorf("invalid order period '%s'", period)
+	}
+
+	return
+}
+
+func daysToAddForWeekday(bookingWeekday time.Weekday) int {
+	switch bookingWeekday {
+	case time.Saturday:
+		return 2
+	case time.Sunday:
+		return 1
+	default:
+		return 0
+	}
 }
