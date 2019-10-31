@@ -9,12 +9,10 @@ FROM golang:1.13.2-alpine AS goBuilder
 WORKDIR /builder
 ADD backend/ .
 RUN go build -o mbb
-RUN ls -l
 
 FROM alpine
 WORKDIR /app
 COPY --from=goBuilder /builder/mbb /app/
-RUN ls -l
 COPY --from=nodeBuilder /app/dist/frontend/ assets/
 COPY backend/migrations/ migrations/
 ENTRYPOINT ["./mbb"]
