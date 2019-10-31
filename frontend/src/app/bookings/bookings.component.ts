@@ -30,7 +30,7 @@ export class BookingsComponent implements OnInit {
   ngOnInit() {
     const now = new Date();
     this.startDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
-    this.endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+    this.endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
 
     this.loadBookings();
     this.loadCategories();
@@ -84,6 +84,18 @@ export class BookingsComponent implements OnInit {
 
   onEndDateChange() {
     this.endDate.setHours(23, 59, 59);
+    this.loadBookings();
+  }
+
+  selectPreviousMonth() {
+    this.endDate = new Date(this.startDate.getFullYear(), this.startDate.getMonth(), 0, 23, 59, 59);
+    this.startDate = new Date(this.startDate.getFullYear(), this.startDate.getMonth() - 1, 1, 0, 0, 0)
+    this.loadBookings();
+  }
+
+  selectNextMonth() {
+    this.startDate = new Date(this.endDate.getFullYear(), this.endDate.getMonth() + 1, 1, 0, 0, 0)
+    this.endDate = new Date(this.startDate.getFullYear(), this.startDate.getMonth() + 1, 0, 23, 59, 59);
     this.loadBookings();
   }
 }

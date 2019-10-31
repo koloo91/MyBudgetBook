@@ -1,5 +1,9 @@
 <div class="container" fxFlex="1 1 auto">
   <div fxLayout="row" fxLayoutAlign="space-evenly center" style="margin-top: 8px">
+    <button mat-icon-button aria-label="Previous month" (click)="selectPreviousMonth()">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+
     <mat-form-field style="display: none;">
       <input matInput [(ngModel)]="startDate" [matDatepicker]="startDatePicker" placeholder="Von"
              (dateChange)="onStartDateChange()">
@@ -15,6 +19,10 @@
       <mat-datepicker touchUi #endDatePicker></mat-datepicker>
     </mat-form-field>
     <button mat-raised-button (click)="endDatePicker.open()"> Bis {{endDate | date: 'shortDate'}}</button>
+
+    <button mat-icon-button aria-label="Next month" (click)="selectNextMonth()">
+      <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
   </div>
   <mat-nav-list>
     <mat-list-item class="account" role="listitem" *ngFor="let booking of (bookings | async)"

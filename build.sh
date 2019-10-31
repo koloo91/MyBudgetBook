@@ -3,7 +3,7 @@
 CURRENT_VERSION="$(cat version)"
 ./increment_version.sh -m "$CURRENT_VERSION" > version
 
-echo "Building new version $CURRENT_VERSION"
+echo "Building new version $(cat version)"
 
 docker build -t koloooo/mbb:"$(cat version)" .
 echo "Docker image build"
