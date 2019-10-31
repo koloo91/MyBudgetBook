@@ -19,18 +19,25 @@ export class BookingsComponent implements OnInit {
   categoriesObservable: Observable<Category[]>;
   categories?: Category[];
 
+  startDate: Date = new Date();
+  endDate: Date = new Date();
+
   constructor(private bookingService: BookingService,
               private categoryService: CategoryService,
               public dialog: MatDialog) {
   }
 
   ngOnInit() {
+    const now = new Date();
+    this.startDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
+    this.endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+
     this.loadBookings();
     this.loadCategories();
   }
 
   private loadBookings() {
-    this.bookings = this.bookingService.getBookings()
+    this.bookings = this.bookingService.getBookings(this.startDate, this.endDate)
       .pipe(
         map(pagedEntity => pagedEntity.content)
       );
@@ -69,5 +76,14 @@ export class BookingsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.loadBookings();
     });
+  }
+
+  onStartDateChange() {
+    this.loadBookings();
+  }
+
+  onEndDateChange() {
+    this.endDate.setHours(23, 59, 59);
+    this.loadBookings();
   }
 }

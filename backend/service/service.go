@@ -118,9 +118,9 @@ func UpdateBooking(db *gorm.DB, id string, booking model.Booking) (model.Booking
 	return existingBooking, nil
 }
 
-func GetBookings(db *gorm.DB) ([]model.Booking, error) {
+func GetBookings(db *gorm.DB, startDate time.Time, endDate time.Time) ([]model.Booking, error) {
 	bookings := make([]model.Booking, 0)
-	if err := db.Order("date desc").Find(&bookings).Error; err != nil {
+	if err := db.Where("date BETWEEN ? AND ?", startDate, endDate).Order("date desc").Find(&bookings).Error; err != nil {
 		return nil, err
 	}
 	return bookings, nil
@@ -159,4 +159,42 @@ func daysToAddForWeekday(bookingWeekday time.Weekday) int {
 	default:
 		return 0
 	}
+}
+
+func BeginningOfMonth() time.Time {
+	y, m, _ := time.Now().Date()
+	return time.Date(y, m, 1, 0, 0, 0, 0, time.Now().Location())
+}
+
+func BeginningOfQuarter() time.Time {
+	month := BeginningOfMonth()
+	offset := (int(month.Month()) - 1) % 3
+	return month.AddDate(0, -offset, 0)
+}
+
+func BeginningOfHalf() time.Time {
+	month := BeginningOfMonth()
+	offset := (int(month.Month()) - 1) % 6
+	return month.AddDate(0, -offset, 0)
+}
+
+func BeginningOfYear() time.Time {
+	y, _, _ := time.Now().Date()
+	return time.Date(y, time.January, 1, 0, 0, 0, 0, time.Now().Location())
+}
+
+func EndOfMonth() time.Time {
+	return BeginningOfMonth().AddDate(0, 1, 0).Add(-time.Nanosecond)
+}
+
+func EndOfQuarter() time.Time {
+	return BeginningOfQuarter().AddDate(0, 3, 0).Add(-time.Nanosecond)
+}
+
+func EndOfHalf() time.Time {
+	return BeginningOfHalf().AddDate(0, 6, 0).Add(-time.Nanosecond)
+}
+
+func EndOfYear() time.Time {
+	return BeginningOfYear().AddDate(1, 0, 0).Add(-time.Nanosecond)
 }

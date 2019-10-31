@@ -7,6 +7,7 @@ import (
 	"github.com/koloo91/model"
 	"github.com/koloo91/service"
 	"net/http"
+	"time"
 )
 
 func Ping() gin.HandlerFunc {
@@ -141,8 +142,22 @@ func UpdateBooking(db *gorm.DB) gin.HandlerFunc {
 
 func GetBookings(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		startDateString := ctx.DefaultQuery("startDate", service.BeginningOfMonth().Format(time.RFC3339))
+		endDateString := ctx.DefaultQuery("endDate", service.EndOfMonth().Format(time.RFC3339))
 
-		bookings, err := service.GetBookings(db)
+		startDate, err := time.Parse(time.RFC3339, startDateString)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		endDate, err := time.Parse(time.RFC3339, endDateString)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		bookings, err := service.GetBookings(db, startDate, endDate)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return

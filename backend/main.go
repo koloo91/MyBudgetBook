@@ -42,6 +42,8 @@ func main() {
 		log.Println(err.Error())
 	}
 
+	db.LogMode(true)
+
 	router := gin.Default()
 
 	router.NoRoute(func(ctx *gin.Context) {

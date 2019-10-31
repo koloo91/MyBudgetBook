@@ -13,8 +13,12 @@ export class BookingService {
   constructor(private http: HttpClient) {
   }
 
-  getBookings(): Observable<PagedEntity<Booking>> {
-    return this.http.get<PagedEntity<Booking>>(`${environment.host}/api/bookings`)
+  getBookings(startDate: Date, endDate: Date): Observable<PagedEntity<Booking>> {
+    let params = {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString()
+    };
+    return this.http.get<PagedEntity<Booking>>(`${environment.host}/api/bookings`, {params: params})
   }
 
   createBooking(title: string, comment: string, date: string, amount: number, categoryId: string, accountId: string, standingOrderPeriod?: string): Observable<Booking> {

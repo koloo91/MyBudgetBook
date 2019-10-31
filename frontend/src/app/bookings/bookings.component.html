@@ -1,4 +1,21 @@
 <div class="container" fxFlex="1 1 auto">
+  <div fxLayout="row" fxLayoutAlign="space-evenly center" style="margin-top: 8px">
+    <mat-form-field style="display: none;">
+      <input matInput [(ngModel)]="startDate" [matDatepicker]="startDatePicker" placeholder="Von"
+             (dateChange)="onStartDateChange()">
+      <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker touchUi #startDatePicker></mat-datepicker>
+    </mat-form-field>
+    <button mat-raised-button (click)="startDatePicker.open()">Vom {{startDate | date: 'shortDate'}}</button>
+
+    <mat-form-field style="display: none;">
+      <input matInput [(ngModel)]="endDate" [matDatepicker]="endDatePicker" placeholder="Bis"
+             (dateChange)="onEndDateChange()">
+      <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker touchUi #endDatePicker></mat-datepicker>
+    </mat-form-field>
+    <button mat-raised-button (click)="endDatePicker.open()"> Bis {{endDate | date: 'shortDate'}}</button>
+  </div>
   <mat-nav-list>
     <mat-list-item class="account" role="listitem" *ngFor="let booking of (bookings | async)"
                    (click)="updateBooking(booking)">
