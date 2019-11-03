@@ -63,6 +63,7 @@ func GetCategories(db *gorm.DB) ([]model.Category, error) {
 }
 
 func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
+	// TODO: start transaction
 	if len(booking.StandingOrderPeriod) > 0 {
 		years, months, days, err := yearsMonthsDaysToAdd(booking.StandingOrderPeriod)
 		if err != nil {
@@ -126,6 +127,26 @@ func GetBookings(db *gorm.DB, startDate time.Time, endDate time.Time) ([]model.B
 	return bookings, nil
 }
 
+func GetBalances(db *gorm.DB) ([]model.AccountBalance, error) {
+	rows, err := db.Raw("SELECT account_id, SUM(amount) + (SELECT starting_balance FROM accounts WHERE id = b.account_id) as balance FROM bookings b JOIN accounts on b.account_id = accounts.id WHERE date <= ? GROUP BY account_id;", EndOfDay()).Rows()
+	if err != nil {
+		return []model.AccountBalance{}, err
+	}
+
+	result := make([]model.AccountBalance, 0)
+	var accountId string
+	var balance float64
+
+	defer rows.Close()
+	for rows.Next() {
+		if err := rows.Scan(&accountId, &balance); err != nil {
+			return []model.AccountBalance{}, err
+		}
+	}
+
+	return result, nil
+}
+
 func yearsMonthsDaysToAdd(period string) (years int, months int, days int, err error) {
 	years = 0
 	months = 0
@@ -181,6 +202,11 @@ func BeginningOfHalf() time.Time {
 func BeginningOfYear() time.Time {
 	y, _, _ := time.Now().Date()
 	return time.Date(y, time.January, 1, 0, 0, 0, 0, time.Now().Location())
+}
+
+func EndOfDay() time.Time {
+	y, m, d := time.Now().Date()
+	return time.Date(y, m, d, 23, 59, 59, 59, time.Now().Location())
 }
 
 func EndOfMonth() time.Time {

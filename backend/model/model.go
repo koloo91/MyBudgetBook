@@ -85,3 +85,15 @@ type (
 		Content []BookingVo `json:"content"`
 	}
 )
+
+type (
+	AccountBalance struct {
+		AccountId string
+		Balance   float64
+	}
+
+	AccountBalanceVo struct {
+		AccountId string  `json:"accountId"`
+		Balance   float64 `json:"balance"`
+	}
+)

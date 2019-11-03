@@ -101,3 +101,18 @@ func BookingEntitiesToVos(entities []model.Booking) []model.BookingVo {
 	}
 	return vos
 }
+
+func AccountBalanceEntityToVo(entity model.AccountBalance) model.AccountBalanceVo {
+	return model.AccountBalanceVo{
+		AccountId: entity.AccountId,
+		Balance:   entity.Balance,
+	}
+}
+
+func AccountBalanceEntitiesToVos(entities []model.AccountBalance) []model.AccountBalanceVo {
+	vos := make([]model.AccountBalanceVo, 0, len(entities))
+	for _, entity := range entities {
+		vos = append(vos, AccountBalanceEntityToVo(entity))
+	}
+	return vos
+}
