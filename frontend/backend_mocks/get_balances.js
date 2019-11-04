@@ -7,10 +7,12 @@ module.exports = {
       return [
         {
           accountId: '1',
+          name: 'Sparkasse',
           balance: 5432
         },
         {
           accountId: '2',
+          name: 'Konto',
           balance: 31000.23
         }
       ]

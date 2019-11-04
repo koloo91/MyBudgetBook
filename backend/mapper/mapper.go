@@ -105,6 +105,7 @@ func BookingEntitiesToVos(entities []model.Booking) []model.BookingVo {
 func AccountBalanceEntityToVo(entity model.AccountBalance) model.AccountBalanceVo {
 	return model.AccountBalanceVo{
 		AccountId: entity.AccountId,
+		Name:      entity.Name,
 		Balance:   entity.Balance,
 	}
 }

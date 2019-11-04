@@ -128,23 +128,24 @@ func GetBookings(db *gorm.DB, startDate time.Time, endDate time.Time) ([]model.B
 }
 
 func GetBalances(db *gorm.DB) ([]model.AccountBalance, error) {
-	rows, err := db.Raw("SELECT account_id, SUM(amount) + (SELECT starting_balance FROM accounts WHERE id = b.account_id) as balance FROM bookings b JOIN accounts on b.account_id = accounts.id WHERE date <= ? GROUP BY account_id;", EndOfDay().UTC()).Rows()
+	rows, err := db.Raw("SELECT account_id, name, SUM(amount) + (SELECT starting_balance FROM accounts WHERE id = b.account_id) as balance FROM bookings b JOIN accounts on b.account_id = accounts.id WHERE date <= ? GROUP BY account_id, name;", EndOfDay().UTC()).Rows()
 	if err != nil {
 		return []model.AccountBalance{}, err
 	}
 
 	result := make([]model.AccountBalance, 0)
-	var accountId string
+	var accountId, name string
 	var balance float64
 
 	defer rows.Close()
 	for rows.Next() {
-		if err := rows.Scan(&accountId, &balance); err != nil {
+		if err := rows.Scan(&accountId, &name, &balance); err != nil {
 			return []model.AccountBalance{}, err
 		}
 
 		result = append(result, model.AccountBalance{
 			AccountId: accountId,
+			Name:      name,
 			Balance:   balance,
 		})
 	}

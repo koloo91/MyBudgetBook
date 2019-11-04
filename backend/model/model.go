@@ -89,11 +89,13 @@ type (
 type (
 	AccountBalance struct {
 		AccountId string
+		Name      string
 		Balance   float64
 	}
 
 	AccountBalanceVo struct {
 		AccountId string  `json:"accountId"`
+		Name      string  `json:"name"`
 		Balance   float64 `json:"balance"`
 	}
 

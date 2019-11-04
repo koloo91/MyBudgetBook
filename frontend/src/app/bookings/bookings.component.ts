@@ -7,6 +7,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {CreateBookingDialogComponent} from './create-booking-dialog/create-booking-dialog.component';
 import {Category} from '../models/category.model';
 import {CategoryService} from '../services/category.service';
+import {Balance} from '../models/balance.model';
+import {BalanceService} from '../services/balance.service';
 
 @Component({
   selector: 'app-bookings',
@@ -16,14 +18,15 @@ import {CategoryService} from '../services/category.service';
 export class BookingsComponent implements OnInit {
 
   bookings: Observable<Booking[]>;
-  categoriesObservable: Observable<Category[]>;
   categories?: Category[];
+  balances?: Balance[];
 
   startDate: Date = new Date();
   endDate: Date = new Date();
 
   constructor(private bookingService: BookingService,
               private categoryService: CategoryService,
+              private balanceService: BalanceService,
               public dialog: MatDialog) {
   }
 
@@ -34,6 +37,7 @@ export class BookingsComponent implements OnInit {
 
     this.loadBookings();
     this.loadCategories();
+    this.loadBalances();
   }
 
   private loadBookings() {
@@ -44,12 +48,15 @@ export class BookingsComponent implements OnInit {
   }
 
   private loadCategories() {
-    this.categoriesObservable = this.categoryService.getCategories()
-      .pipe(
-        map(pagedEntity => pagedEntity.content)
-      );
+    this.categoryService.getCategories().subscribe(pagedCategories => {
+      this.categories = pagedCategories.content;
+    });
+  }
 
-    this.categoriesObservable.subscribe(categories => this.categories = categories);
+  private loadBalances() {
+    this.balanceService.getBalances().subscribe(pagedBalances => {
+      this.balances = pagedBalances.content;
+    })
   }
 
   showCreateDialog() {
@@ -97,5 +104,9 @@ export class BookingsComponent implements OnInit {
     this.startDate = new Date(this.endDate.getFullYear(), this.endDate.getMonth() + 1, 1, 0, 0, 0)
     this.endDate = new Date(this.startDate.getFullYear(), this.startDate.getMonth() + 1, 0, 23, 59, 59);
     this.loadBookings();
+  }
+
+  balancesClicked() {
+    console.log('balances');
   }
 }
