@@ -166,3 +166,16 @@ func GetBookings(db *gorm.DB) gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, model.BookingsVo{Content: mapper.BookingEntitiesToVos(bookings)})
 	}
 }
+
+func GetBalances(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		balances, err := service.GetBalances(db)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, model.AccountBalancesVo{Content: mapper.AccountBalanceEntitiesToVos(balances)})
+	}
+}

@@ -76,6 +76,11 @@ func main() {
 		bookings.GET("", controller.GetBookings(db))
 	}
 
+	{
+		balances := authorized.Group("/api/balances")
+		balances.GET("", controller.GetBalances(db))
+	}
+
 	router.GET("/api/alive", controller.Alive())
 
 	router.Static("/app", "./assets")

@@ -96,4 +96,8 @@ type (
 		AccountId string  `json:"accountId"`
 		Balance   float64 `json:"balance"`
 	}
+
+	AccountBalancesVo struct {
+		Content []AccountBalanceVo `json:"content"`
+	}
 )
