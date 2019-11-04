@@ -26,6 +26,105 @@ module.exports = {
           accountId: '2',
           created: faker.date.recent(),
           updated: faker.date.recent()
+        },
+        {
+          id: '2',
+          title: faker.lorem.word(),
+          comment: '',
+          amount: -50.00,
+          date: '2019-10-23T23:17:12.0Z',
+          categoryId: '2',
+          accountId: '2',
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '2',
+          title: faker.lorem.word(),
+          comment: '',
+          amount: -50.00,
+          date: '2019-10-23T23:17:12.0Z',
+          categoryId: '2',
+          accountId: '2',
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '2',
+          title: faker.lorem.word(),
+          comment: '',
+          amount: -50.00,
+          date: '2019-10-23T23:17:12.0Z',
+          categoryId: '2',
+          accountId: '2',
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '2',
+          title: faker.lorem.word(),
+          comment: '',
+          amount: -50.00,
+          date: '2019-10-23T23:17:12.0Z',
+          categoryId: '2',
+          accountId: '2',
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '2',
+          title: faker.lorem.word(),
+          comment: '',
+          amount: -50.00,
+          date: '2019-10-23T23:17:12.0Z',
+          categoryId: '2',
+          accountId: '2',
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '2',
+          title: faker.lorem.word(),
+          comment: '',
+          amount: -50.00,
+          date: '2019-10-23T23:17:12.0Z',
+          categoryId: '2',
+          accountId: '2',
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '2',
+          title: faker.lorem.word(),
+          comment: '',
+          amount: -50.00,
+          date: '2019-10-23T23:17:12.0Z',
+          categoryId: '2',
+          accountId: '2',
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '2',
+          title: faker.lorem.word(),
+          comment: '',
+          amount: -50.00,
+          date: '2019-10-23T23:17:12.0Z',
+          categoryId: '2',
+          accountId: '2',
+          created: faker.date.recent(),
+          updated: faker.date.recent()
+        },
+        {
+          id: '2',
+          title: faker.lorem.word(),
+          comment: '',
+          amount: -50.00,
+          date: '2019-10-23T23:17:12.0Z',
+          categoryId: '2',
+          accountId: '2',
+          created: faker.date.recent(),
+          updated: faker.date.recent()
         }
       ]
     },

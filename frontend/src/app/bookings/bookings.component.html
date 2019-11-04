@@ -1,5 +1,5 @@
-<div class="container" fxLayout="column" fxLayoutAlign="space-around stretch">
-  <div fxLayout="row" fxLayoutAlign="space-evenly center" style="margin-top: 8px">
+<div class="container" fxLayout="column" fxLayoutAlign="center stretch">
+  <div fxFlex="10" fxLayout="row" fxLayoutAlign="space-evenly center" style="margin-top: 8px">
     <button mat-icon-button aria-label="Previous month" (click)="selectPreviousMonth()">
       <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
@@ -24,7 +24,7 @@
       <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
   </div>
-  <mat-nav-list>
+  <mat-nav-list fxFlex="80">
     <mat-list-item class="account" role="listitem" *ngFor="let booking of (bookings | async)"
                    (click)="updateBooking(booking)">
       <div matLine fxLayout="row" fxLayoutAlign="space-between start">
@@ -39,8 +39,10 @@
     </mat-list-item>
   </mat-nav-list>
 
-  <div class="balance">
-
+  <div fxFlex="10" class="balance" fxLayout="column" fxLayoutAlign="center center">
+    <div>
+      Test €
+    </div>
   </div>
 
   <button mat-fab color="primary" class="add-booking-button" (click)="showCreateDialog()">
