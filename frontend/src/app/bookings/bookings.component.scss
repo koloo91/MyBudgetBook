@@ -1,7 +1,3 @@
-:host {
-  flex: 1;
-}
-
 .add-booking-button {
   position: absolute;
   bottom: 16px;
@@ -22,4 +18,8 @@
 
 .date {
   color: grey;
+}
+
+.balance {
+  background: #4caf50;
 }
