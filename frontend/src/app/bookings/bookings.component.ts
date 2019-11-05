@@ -67,6 +67,7 @@ export class BookingsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
       this.loadBookings();
+      this.loadBalances();
     });
   }
 
@@ -82,6 +83,7 @@ export class BookingsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.loadBookings();
+      this.loadBalances();
     });
   }
 
