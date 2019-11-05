@@ -111,4 +111,8 @@ export class BookingsComponent implements OnInit {
   balancesClicked() {
     console.log('balances');
   }
+
+  deleteBooking(bookingId: string) {
+    console.log(bookingId);
+  }
 }
