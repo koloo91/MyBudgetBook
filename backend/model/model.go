@@ -54,7 +54,6 @@ type (
 	Booking struct {
 		Id                   string
 		Title                string
-		Comment              string
 		Date                 time.Time
 		Amount               float64
 		CategoryId           string
@@ -69,7 +68,6 @@ type (
 	BookingVo struct {
 		Id                   string    `json:"id"`
 		Title                string    `json:"title" binding:"required"`
-		Comment              string    `json:"comment"`
 		Date                 time.Time `json:"date" binding:"required"`
 		Amount               float64   `json:"amount" binding:"required"`
 		CategoryId           string    `json:"categoryId" binding:"required"`

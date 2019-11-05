@@ -1,7 +1,6 @@
 export class Booking {
   id: string;
   title: string;
-  comment: string;
   date: string;
   amount: number;
   categoryId: string;

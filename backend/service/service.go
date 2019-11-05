@@ -105,7 +105,6 @@ func UpdateBooking(db *gorm.DB, id string, booking model.Booking) (model.Booking
 	}
 
 	existingBooking.Title = booking.Title
-	existingBooking.Comment = booking.Comment
 	existingBooking.Amount = booking.Amount
 	existingBooking.Date = booking.Date
 	existingBooking.CategoryId = booking.CategoryId

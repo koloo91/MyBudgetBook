@@ -6,7 +6,6 @@ module.exports = {
   template: {
     id: faker.random.uuid(),
     title: faker.lorem.word(),
-    comment: '',
     amount: 12,
     date: '2019-10-23T23:17:12.0Z',
     categoryId: faker.random.uuid(),

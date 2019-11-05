@@ -17,7 +17,6 @@ import {Booking} from '../../models/booking.model';
 export class CreateBookingDialogComponent implements OnInit {
 
   title: string;
-  comment: string;
   date: Date = new Date();
   amount: number;
   categoryId: string;
@@ -38,7 +37,6 @@ export class CreateBookingDialogComponent implements OnInit {
 
     if (data) {
       this.title = data.title;
-      this.comment = data.comment;
       this.date = new Date(data.date);
       this.amount = data.amount;
       this.categoryId = data.categoryId;
@@ -69,7 +67,6 @@ export class CreateBookingDialogComponent implements OnInit {
     this.bookingService.updateBooking(
       this.data.id,
       this.title,
-      this.comment,
       this.addTimeToSelectedDate(this.date).toISOString(),
       this.amount,
       this.categoryId,
@@ -84,7 +81,6 @@ export class CreateBookingDialogComponent implements OnInit {
   createBooking() {
     this.bookingService.createBooking(
       this.title,
-      this.comment,
       this.addTimeToSelectedDate(this.date).toISOString(),
       this.amount,
       this.categoryId,

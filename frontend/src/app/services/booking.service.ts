@@ -21,10 +21,9 @@ export class BookingService {
     return this.http.get<PagedEntity<Booking>>(`${environment.host}/api/bookings`, {params: params})
   }
 
-  createBooking(title: string, comment: string, date: string, amount: number, categoryId: string, accountId: string, standingOrderPeriod?: string): Observable<Booking> {
+  createBooking(title: string, date: string, amount: number, categoryId: string, accountId: string, standingOrderPeriod?: string): Observable<Booking> {
     return this.http.post<Booking>(`${environment.host}/api/bookings`, {
       title,
-      comment,
       date,
       amount,
       categoryId,
@@ -33,10 +32,9 @@ export class BookingService {
     });
   }
 
-  updateBooking(id: string, title: string, comment: string, date: string, amount: number, categoryId: string, accountId: string) {
+  updateBooking(id: string, title: string, date: string, amount: number, categoryId: string, accountId: string) {
     return this.http.put<Booking>(`${environment.host}/api/bookings/${id}`, {
       title,
-      comment,
       date,
       amount,
       categoryId,

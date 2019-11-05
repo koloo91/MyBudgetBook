@@ -64,7 +64,6 @@ func BookingVoToEntity(vo model.BookingVo) model.Booking {
 	return model.Booking{
 		Id:                   uuid.New().String(),
 		Title:                vo.Title,
-		Comment:              vo.Comment,
 		Date:                 vo.Date,
 		Amount:               vo.Amount,
 		CategoryId:           vo.CategoryId,
@@ -81,7 +80,6 @@ func BookingEntityToVo(entity model.Booking) model.BookingVo {
 	return model.BookingVo{
 		Id:                   entity.Id,
 		Title:                entity.Title,
-		Comment:              entity.Comment,
 		Date:                 entity.Date,
 		Amount:               entity.Amount,
 		CategoryId:           entity.CategoryId,
