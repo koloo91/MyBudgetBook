@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {Category} from '../models/category.model';
 import {map} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
-import {CreateCategoryDialogComponent} from './create-category-dialog/create-category-dialog.component';
+import {CreateCategoryDialogComponent} from '../dialogs/create-category-dialog/create-category-dialog.component';
 
 interface CategoryNode {
   id: string;

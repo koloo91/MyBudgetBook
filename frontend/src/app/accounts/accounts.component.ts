@@ -3,7 +3,7 @@ import {AccountService} from '../services/account.service';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
-import {CreateAccountDialogComponent} from './create-account-dialog/create-account-dialog.component';
+import {CreateAccountDialogComponent} from '../dialogs/create-account-dialog/create-account-dialog.component';
 import {Account} from '../models/account.model';
 
 @Component({
