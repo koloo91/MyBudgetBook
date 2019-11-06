@@ -30,6 +30,8 @@ WORKDIR $HOME
 # custom Bash prompt
 RUN { echo && echo "PS1='\[\e]0;\u \w\a\]\[\033[01;32m\]\u\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \\\$ '" ; } >> .bashrc
 
+USER root
+
 ### Go ###
 ENV GO_VERSION=1.13.4 \
     GOPATH=$HOME/go-packages \
