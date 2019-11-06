@@ -4,11 +4,12 @@ import {BookingService} from '../services/booking.service';
 import {Observable} from 'rxjs';
 import {Booking} from '../models/booking.model';
 import {MatDialog} from '@angular/material/dialog';
-import {CreateBookingDialogComponent} from './create-booking-dialog/create-booking-dialog.component';
+import {CreateBookingDialogComponent} from '../dialogs/create-booking-dialog/create-booking-dialog.component';
 import {Category} from '../models/category.model';
 import {CategoryService} from '../services/category.service';
 import {Balance} from '../models/balance.model';
 import {BalanceService} from '../services/balance.service';
+import {UpdateBookingDialogComponent} from '../dialogs/update-booking-dialog/update-booking-dialog.component';
 
 @Component({
   selector: 'app-bookings',
@@ -76,9 +77,23 @@ export class BookingsComponent implements OnInit {
   }
 
   updateBooking(selectedBooking: Booking) {
+    if (selectedBooking.standingOrderId) {
+      const dialogRef = this.dialog.open(UpdateBookingDialogComponent, {
+        width: '600px'
+      });
+
+      dialogRef.afterClosed().subscribe(updateAll => {
+        this.displayUpdateBookingDialog(selectedBooking, updateAll);
+      });
+    } else {
+      this.displayUpdateBookingDialog(selectedBooking, false);
+    }
+  }
+
+  displayUpdateBookingDialog(booking: Booking, updateAll: boolean) {
     const dialogRef = this.dialog.open(CreateBookingDialogComponent, {
       width: '600px',
-      data: selectedBooking
+      data: {booking, updateAll}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -110,9 +125,5 @@ export class BookingsComponent implements OnInit {
 
   balancesClicked() {
     console.log('balances');
-  }
-
-  deleteBooking(bookingId: string) {
-    console.log(bookingId);
   }
 }

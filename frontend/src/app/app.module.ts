@@ -26,7 +26,7 @@ import {LoginComponent} from './login/login.component';
 import {HomeComponent} from './home/home.component';
 import {MatCardModule} from '@angular/material/card';
 import {BookingsComponent} from './bookings/bookings.component';
-import {CreateBookingDialogComponent} from './bookings/create-booking-dialog/create-booking-dialog.component';
+import {CreateBookingDialogComponent} from './dialogs/create-booking-dialog/create-booking-dialog.component';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -35,6 +35,7 @@ import localDe from '@angular/common/locales/de';
 import localeDeExtra from '@angular/common/locales/extra/de';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {UpdateBookingDialogComponent} from './dialogs/update-booking-dialog/update-booking-dialog.component';
 
 registerLocaleData(localDe, 'de-DE', localeDeExtra)
 
@@ -48,7 +49,8 @@ registerLocaleData(localDe, 'de-DE', localeDeExtra)
     CategoriesComponent,
     LoginComponent,
     HomeComponent,
-    BookingsComponent
+    BookingsComponent,
+    UpdateBookingDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +78,8 @@ registerLocaleData(localDe, 'de-DE', localeDeExtra)
   entryComponents: [
     CreateAccountDialogComponent,
     CreateCategoryDialogComponent,
-    CreateBookingDialogComponent
+    CreateBookingDialogComponent,
+    UpdateBookingDialogComponent
   ],
   providers: [
     {

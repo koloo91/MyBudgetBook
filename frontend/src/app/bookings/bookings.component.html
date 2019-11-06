@@ -26,8 +26,9 @@
   </div>
 
   <mat-nav-list fxFlex="80">
-    <mat-list-item class="account" role="listitem" *ngFor="let booking of (bookings | async)">
-      <div matLine fxLayout="row" fxLayoutAlign="space-between start" (click)="updateBooking(booking)">
+    <mat-list-item class="account" role="listitem" *ngFor="let booking of (bookings | async)"
+                   (click)="updateBooking(booking)">
+      <div matLine fxLayout="row" fxLayoutAlign="space-between start">
         <div>{{booking.title}}</div>
         <div class="mat-small date">{{booking.date | date}}</div>
       </div>
@@ -36,9 +37,6 @@
         <div [className]="booking.amount >= 0 ? 'income' : 'outcome'">{{booking.amount | number: '1.2-2'}} €
         </div>
       </div>
-      <button mat-icon-button (click)="deleteBooking(booking.id)">
-        <mat-icon matListIcon>delete</mat-icon>
-      </button>
     </mat-list-item>
   </mat-nav-list>
 

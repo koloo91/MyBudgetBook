@@ -7,7 +7,6 @@ import {Observable} from 'rxjs';
 import {Category} from '../../models/category.model';
 import {map} from 'rxjs/operators';
 import {Account} from '../../models/account.model';
-import {Booking} from '../../models/booking.model';
 
 @Component({
   selector: 'app-create-account-dialog',
@@ -33,14 +32,15 @@ export class CreateBookingDialogComponent implements OnInit {
               private accountService: AccountService,
               private categoryService: CategoryService,
               private bookingService: BookingService,
-              @Inject(MAT_DIALOG_DATA) public data?: Booking) {
+              @Inject(MAT_DIALOG_DATA) public data?: any) {
 
-    if (data) {
-      this.title = data.title;
-      this.date = new Date(data.date);
-      this.amount = data.amount;
-      this.categoryId = data.categoryId;
-      this.accountId = data.accountId;
+    if (data.booking) {
+      const booking = data.booking;
+      this.title = booking.title;
+      this.date = new Date(booking.date);
+      this.amount = booking.amount;
+      this.categoryId = booking.categoryId;
+      this.accountId = booking.accountId;
     }
   }
 
@@ -56,7 +56,7 @@ export class CreateBookingDialogComponent implements OnInit {
   onOkClick() {
     this.isLoading = true;
 
-    if (this.data) {
+    if (this.data.booking) {
       this.updateBooking();
     } else {
       this.createBooking();
@@ -65,12 +65,13 @@ export class CreateBookingDialogComponent implements OnInit {
 
   updateBooking() {
     this.bookingService.updateBooking(
-      this.data.id,
+      this.data.booking.id,
       this.title,
       this.addTimeToSelectedDate(this.date).toISOString(),
       this.amount,
       this.categoryId,
-      this.accountId)
+      this.accountId,
+      this.data.updateAll)
       .subscribe(booking => {
           console.log(booking);
           this.dialogRef.close({success: true});

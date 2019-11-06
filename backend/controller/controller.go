@@ -124,13 +124,15 @@ func CreateBooking(db *gorm.DB) gin.HandlerFunc {
 func UpdateBooking(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
+		updateStrategy := ctx.DefaultQuery("updateStrategy", service.UpdateStrategyOne)
+
 		var bookingVo model.BookingVo
 		if err := ctx.ShouldBindJSON(&bookingVo); err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
 		}
 
-		updatedBooking, err := service.UpdateBooking(db, id, mapper.BookingVoToEntity(bookingVo))
+		updatedBooking, err := service.UpdateBooking(db, id, mapper.BookingVoToEntity(bookingVo), updateStrategy)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return

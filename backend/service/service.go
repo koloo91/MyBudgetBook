@@ -14,6 +14,9 @@ const (
 	quarterly  = "QUARTERLY"
 	halfYearly = "HALF_YEARLY"
 	yearly     = "YEARLY"
+
+	UpdateStrategyOne = "ONE"
+	UpdateStrategyAll = "ALL"
 )
 
 func CreateAccount(db *gorm.DB, account model.Account) (model.Account, error) {
@@ -98,10 +101,62 @@ func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
 	return booking, nil
 }
 
-func UpdateBooking(db *gorm.DB, id string, booking model.Booking) (model.Booking, error) {
+func UpdateBooking(db *gorm.DB, id string, booking model.Booking, updateStrategy string) (model.Booking, error) {
+	if updateStrategy == UpdateStrategyOne {
+		return updateSingleBooking(db, id, booking)
+	} else if updateStrategy == UpdateStrategyAll {
+		return updateAllBookings(db, id, booking)
+	} else {
+		return model.Booking{}, fmt.Errorf("invalid updateStrategy '%s'", updateStrategy)
+	}
+}
+
+func updateSingleBooking(db *gorm.DB, id string, booking model.Booking) (model.Booking, error) {
 	var existingBooking model.Booking
 	if err := db.Where("id = ?", id).First(&existingBooking).Error; err != nil {
 		return model.Booking{}, err
+	}
+	existingBooking.Title = booking.Title
+	existingBooking.Amount = booking.Amount
+	existingBooking.Date = booking.Date
+	existingBooking.CategoryId = booking.CategoryId
+	existingBooking.AccountId = booking.AccountId
+	existingBooking.Updated = time.Now()
+	if err := db.Save(&existingBooking).Error; err != nil {
+		return model.Booking{}, err
+	}
+	return existingBooking, nil
+}
+
+func updateAllBookings(db *gorm.DB, id string, booking model.Booking) (model.Booking, error) {
+
+	tx := db.Begin()
+	if err := tx.Error; err != nil {
+		return model.Booking{}, err
+	}
+
+	var existingBooking model.Booking
+	if err := tx.Where("id = ?", id).First(&existingBooking).Error; err != nil {
+		tx.Rollback()
+		return model.Booking{}, err
+	}
+
+	bookings := make([]model.Booking, 0)
+	if err := tx.Where("standing_order_id = ? AND date >= ?", existingBooking.StandingOrderId, existingBooking.Date).Find(&bookings).Error; err != nil {
+		tx.Rollback()
+		return model.Booking{}, err
+	}
+
+	for _, bookingToUpdate := range bookings {
+		bookingToUpdate.Title = booking.Title
+		bookingToUpdate.Amount = booking.Amount
+		bookingToUpdate.CategoryId = booking.CategoryId
+		bookingToUpdate.AccountId = booking.AccountId
+		bookingToUpdate.Updated = time.Now()
+		if err := tx.Save(&bookingToUpdate).Error; err != nil {
+			tx.Rollback()
+			return model.Booking{}, err
+		}
 	}
 
 	existingBooking.Title = booking.Title
@@ -111,11 +166,7 @@ func UpdateBooking(db *gorm.DB, id string, booking model.Booking) (model.Booking
 	existingBooking.AccountId = booking.AccountId
 	existingBooking.Updated = time.Now()
 
-	if err := db.Save(&existingBooking).Error; err != nil {
-		return model.Booking{}, err
-	}
-
-	return existingBooking, nil
+	return existingBooking, tx.Commit().Error
 }
 
 func GetBookings(db *gorm.DB, startDate time.Time, endDate time.Time) ([]model.Booking, error) {

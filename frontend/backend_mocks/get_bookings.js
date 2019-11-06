@@ -12,6 +12,7 @@ module.exports = {
           date: '2019-10-23T22:00:00.0Z',
           categoryId: '1',
           accountId: '1',
+          standingOrderId: '1',
           created: faker.date.recent(),
           updated: faker.date.recent()
         },
