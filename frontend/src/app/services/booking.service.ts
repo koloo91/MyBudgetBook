@@ -45,4 +45,13 @@ export class BookingService {
       }
     });
   }
+
+  delete(id: string, updateAll: boolean) {
+    return this.http.delete(`${environment.host}/api/bookings/${id}`,
+      {
+        params: {
+          updateStrategy: updateAll ? 'ALL' : 'ONE'
+        }
+      })
+  }
 }

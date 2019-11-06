@@ -99,4 +99,9 @@ export class CreateBookingDialogComponent implements OnInit {
     now.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
     return now;
   }
+
+  onDeleteClick() {
+    console.log('delete');
+    // TODO: delete
+  }
 }
