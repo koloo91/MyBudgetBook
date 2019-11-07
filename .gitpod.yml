@@ -1,4 +1,3 @@
-# List the ports you want to expose and what to do when they are served. See https://www.gitpod.io/docs/43_config_ports/
 ports:
 - port: 8080
 
@@ -6,3 +5,7 @@ ports:
 tasks:
 - init: echo 'init script' # runs during prebuild
   command: echo 'init script'
+
+vscode:
+  extensions:
+    - ms-vscode.Go@0.11.9:VugxNlIkbA15bsrTzmC3vQ==
