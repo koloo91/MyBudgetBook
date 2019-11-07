@@ -56,7 +56,7 @@ export class CreateBookingDialogComponent implements OnInit {
   onOkClick() {
     this.isLoading = true;
 
-    if (this.data.booking) {
+    if (this.data && this.data.booking) {
       this.updateBooking();
     } else {
       this.createBooking();
