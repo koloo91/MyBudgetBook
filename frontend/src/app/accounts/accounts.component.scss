@@ -1,3 +1,11 @@
+:host {
+  height: 100%;
+}
+
+.container {
+  height: 100%;
+}
+
 .add-account-button {
   position: absolute;
   bottom: 16px;
@@ -6,4 +14,8 @@
 
 .starting-balance {
   color: grey;
+}
+
+.spinner {
+  height: 100%;
 }

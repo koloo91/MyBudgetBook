@@ -46,7 +46,7 @@ export class CreateBookingDialogComponent implements OnInit {
 
   ngOnInit() {
     this.categories = this.categoryService.getCategories().pipe(map(_ => _.content));
-    this.accounts = this.accountService.getAccounts().pipe(map(_ => _.content));
+    this.accounts = this.accountService.getAccounts();
   }
 
   onNoClick() {

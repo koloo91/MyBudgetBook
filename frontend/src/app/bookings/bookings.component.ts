@@ -55,9 +55,10 @@ export class BookingsComponent implements OnInit {
   }
 
   private loadBalances() {
-    this.balanceService.getBalances().subscribe(pagedBalances => {
-      this.balances = pagedBalances.content;
-    })
+    this.balanceService.getBalances()
+      .subscribe(balances => {
+        this.balances = balances;
+      })
   }
 
   showCreateDialog() {

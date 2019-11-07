@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {AccountService} from '../services/account.service';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {forkJoin, Observable} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateAccountDialogComponent} from '../dialogs/create-account-dialog/create-account-dialog.component';
 import {Account} from '../models/account.model';
+import {BalanceService} from '../services/balance.service';
+import {Balance} from '../models/balance.model';
 
 @Component({
   selector: 'app-accounts',
@@ -16,14 +17,18 @@ import {Account} from '../models/account.model';
 })
 export class AccountsComponent implements OnInit {
 
-  accounts: Observable<Account[]>;
+  isLoading: boolean = true;
+  accounts$: Observable<Account[]>;
+  balances$: Observable<Balance[]>;
+  balances: Balance[] = [];
 
   constructor(private accountService: AccountService,
+              private balanceService: BalanceService,
               public dialog: MatDialog) {
   }
 
   ngOnInit() {
-    this.loadAccounts();
+    this.loadData();
   }
 
   showCreateDialog() {
@@ -32,15 +37,26 @@ export class AccountsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      this.loadAccounts();
+      this.loadData();
     });
   }
 
-  private loadAccounts() {
-    this.accounts = this.accountService.getAccounts()
-      .pipe(
-        map(pagedEntity => pagedEntity.content)
+  private loadData() {
+    this.isLoading = true;
+
+    this.accounts$ = this.accountService.getAccounts();
+    this.balances$ = this.balanceService.getBalances();
+
+    forkJoin(this.accounts$, this.balances$)
+      .subscribe(([_, balances]) => {
+          this.balances = balances;
+          this.isLoading = false
+        },
+        () => this.isLoading = false
       );
+  }
+
+  getBalanceForAccount(accountId: string): number {
+    return this.balances.find(_ => _.accountId === accountId).balance;
   }
 }
