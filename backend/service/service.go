@@ -17,6 +17,9 @@ const (
 
 	UpdateStrategyOne = "ONE"
 	UpdateStrategyAll = "ALL"
+
+	DeleteStrategyOne = "ONE"
+	DeleteStrategyAll = "ALL"
 )
 
 func CreateAccount(db *gorm.DB, account model.Account) (model.Account, error) {
@@ -126,6 +129,16 @@ func updateSingleBooking(db *gorm.DB, id string, booking model.Booking) (model.B
 		return model.Booking{}, err
 	}
 	return existingBooking, nil
+}
+
+func DeleteBooking(db *gorm.DB, id string, deleteStrategy string) error {
+	if deleteStrategy == DeleteStrategyOne {
+		return db.Exec("DELETE FROM bookings WHERE id = ?;", id).Error
+	} else if deleteStrategy == DeleteStrategyAll {
+		return db.Exec("DELETE FROM bookings WHERE standing_order_id = (SELECT standing_order_id FROM bookings WHERE id = ?) AND date >= (SELECT date FROM bookings WHERE id = ?)", id, id).Error
+	} else {
+		return fmt.Errorf("invalid deleteStrategy '%s'", deleteStrategy)
+	}
 }
 
 func updateAllBookings(db *gorm.DB, id string, booking model.Booking) (model.Booking, error) {

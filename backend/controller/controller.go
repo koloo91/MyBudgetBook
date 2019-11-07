@@ -169,6 +169,21 @@ func GetBookings(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
+func DeleteBooking(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		deleteStrategy := ctx.DefaultQuery("deleteStrategy", service.DeleteStrategyOne)
+
+		err := service.DeleteBooking(db, id, deleteStrategy)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusNoContent, "")
+	}
+}
+
 func GetBalances(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
