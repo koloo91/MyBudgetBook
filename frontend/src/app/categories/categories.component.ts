@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {CategoryService} from '../services/category.service';
 import {Observable} from 'rxjs';
 import {Category} from '../models/category.model';
-import {map} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateCategoryDialogComponent} from '../dialogs/create-category-dialog/create-category-dialog.component';
 
@@ -30,8 +29,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   loadCategories() {
-    this.categories = this.categoryService.getCategories()
-      .pipe(map(result => result.content));
+    this.categories = this.categoryService.getCategories();
   }
 
   showCreateDialog() {

@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {map} from 'rxjs/operators';
 import {BookingService} from '../services/booking.service';
 import {Observable} from 'rxjs';
 import {Booking} from '../models/booking.model';
@@ -42,16 +41,14 @@ export class BookingsComponent implements OnInit {
   }
 
   private loadBookings() {
-    this.bookings = this.bookingService.getBookings(this.startDate, this.endDate)
-      .pipe(
-        map(pagedEntity => pagedEntity.content)
-      );
+    this.bookings = this.bookingService.getBookings(this.startDate, this.endDate);
   }
 
   private loadCategories() {
-    this.categoryService.getCategories().subscribe(pagedCategories => {
-      this.categories = pagedCategories.content;
-    });
+    this.categoryService.getCategories()
+      .subscribe(categories => {
+        this.categories = categories;
+      });
   }
 
   private loadBalances() {

@@ -5,7 +5,6 @@ import {CategoryService} from '../../services/category.service';
 import {BookingService} from '../../services/booking.service';
 import {Observable} from 'rxjs';
 import {Category} from '../../models/category.model';
-import {map} from 'rxjs/operators';
 import {Account} from '../../models/account.model';
 
 @Component({
@@ -45,7 +44,7 @@ export class CreateBookingDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.categories = this.categoryService.getCategories().pipe(map(_ => _.content));
+    this.categories = this.categoryService.getCategories();
     this.accounts = this.accountService.getAccounts();
   }
 
