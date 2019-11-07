@@ -1,5 +1,7 @@
 FROM buildpack-deps:cosmic
 
+USER root
+
 ### base ###
 RUN yes | unminimize \
     && apt-get install -yq \
@@ -30,8 +32,7 @@ WORKDIR $HOME
 # custom Bash prompt
 RUN { echo && echo "PS1='\[\e]0;\u \w\a\]\[\033[01;32m\]\u\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \\\$ '" ; } >> .bashrc
 
-USER root
-
+USER gitpod
 ### Go ###
 ENV GO_VERSION=1.13.4 \
     GOPATH=$HOME/go-packages \
@@ -50,3 +51,5 @@ RUN curl -fsSL https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install
         && npm config set python /usr/bin/python --global \
         && npm config set python /usr/bin/python \
         && npm install -g typescript"
+        
+USER root
