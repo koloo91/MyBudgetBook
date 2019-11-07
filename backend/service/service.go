@@ -138,16 +138,6 @@ func updateSingleBooking(db *gorm.DB, id string, booking model.Booking) (model.B
 	return existingBooking, nil
 }
 
-func DeleteBooking(db *gorm.DB, id string, deleteStrategy string) error {
-	if deleteStrategy == DeleteStrategyOne {
-		return db.Exec("DELETE FROM bookings WHERE id = ?;", id).Error
-	} else if deleteStrategy == DeleteStrategyAll {
-		return db.Exec("DELETE FROM bookings WHERE standing_order_id = (SELECT standing_order_id FROM bookings WHERE id = ?) AND date >= (SELECT date FROM bookings WHERE id = ?)", id, id).Error
-	} else {
-		return fmt.Errorf("invalid deleteStrategy '%s'", deleteStrategy)
-	}
-}
-
 func updateAllBookings(db *gorm.DB, id string, booking model.Booking) (model.Booking, error) {
 
 	tx := db.Begin()
@@ -195,6 +185,16 @@ func GetBookings(db *gorm.DB, startDate time.Time, endDate time.Time) ([]model.B
 		return nil, err
 	}
 	return bookings, nil
+}
+
+func DeleteBooking(db *gorm.DB, id string, deleteStrategy string) error {
+	if deleteStrategy == DeleteStrategyOne {
+		return db.Exec("DELETE FROM bookings WHERE id = ?;", id).Error
+	} else if deleteStrategy == DeleteStrategyAll {
+		return db.Exec("DELETE FROM bookings WHERE standing_order_id = (SELECT standing_order_id FROM bookings WHERE id = ?) AND date >= (SELECT date FROM bookings WHERE id = ?)", id, id).Error
+	} else {
+		return fmt.Errorf("invalid deleteStrategy '%s'", deleteStrategy)
+	}
 }
 
 func GetBalances(db *gorm.DB) ([]model.AccountBalance, error) {
