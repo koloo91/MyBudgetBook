@@ -69,10 +69,15 @@ func GetCategories(db *gorm.DB) ([]model.Category, error) {
 }
 
 func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
-	// TODO: start transaction
+	tx := db.Begin()
+	if err := tx.Error; err != nil {
+		return model.Booking{}, err
+	}
+
 	if len(booking.StandingOrderPeriod) > 0 {
 		years, months, days, err := yearsMonthsDaysToAdd(booking.StandingOrderPeriod)
 		if err != nil {
+			tx.Rollback()
 			return model.Booking{}, err
 		}
 
@@ -90,18 +95,20 @@ func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
 
 			daysToAdd := daysToAddForWeekday(newBooking.Date.Weekday())
 			newBooking.Date = newBooking.Date.AddDate(0, 0, daysToAdd)
-			if err := db.Create(&newBooking).Error; err != nil {
+			if err := tx.Create(&newBooking).Error; err != nil {
+				tx.Rollback()
 				return model.Booking{}, err
 			}
 			newBooking.Date = newBooking.Date.AddDate(0, 0, -daysToAdd)
 		}
 	}
 
-	if err := db.Create(&booking).Error; err != nil {
+	if err := tx.Create(&booking).Error; err != nil {
+		tx.Rollback()
 		return model.Booking{}, err
 	}
 
-	return booking, nil
+	return booking, tx.Commit().Error
 }
 
 func UpdateBooking(db *gorm.DB, id string, booking model.Booking, updateStrategy string) (model.Booking, error) {
