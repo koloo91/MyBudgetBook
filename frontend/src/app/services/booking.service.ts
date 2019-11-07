@@ -46,11 +46,11 @@ export class BookingService {
     });
   }
 
-  delete(id: string, updateAll: boolean) {
+  delete(id: string, deleteAll: boolean) {
     return this.http.delete(`${environment.host}/api/bookings/${id}`,
       {
         params: {
-          updateStrategy: updateAll ? 'ALL' : 'ONE'
+          deleteStrategy: deleteAll ? 'ALL' : 'ONE'
         }
       })
   }

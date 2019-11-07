@@ -101,7 +101,14 @@ export class CreateBookingDialogComponent implements OnInit {
   }
 
   onDeleteClick() {
-    console.log('delete');
-    // TODO: delete
+    if (!this.data || !this.data.booking) {
+      return;
+    }
+    this.isLoading = true;
+    this.bookingService.delete(this.data.booking.id, this.data.updateAll)
+      .subscribe(() => {
+          this.dialogRef.close({success: true});
+        }, err => console.log(err),
+        () => this.isLoading = false);
   }
 }
