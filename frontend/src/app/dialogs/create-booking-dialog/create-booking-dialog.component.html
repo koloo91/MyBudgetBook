@@ -54,7 +54,7 @@
   </div>
   <div>
     <div mat-dialog-actions align="end">
-      <button mat-button (click)="onDeleteClick()" color="warn">Löschen</button>
+      <button mat-button *ngIf="data && data.booking" (click)="onDeleteClick()" color="warn">Löschen</button>
       <button mat-button (click)="onNoClick()">Abbrechen</button>
       <button mat-button (click)="onOkClick()" cdkFocusInitial>OK</button>
     </div>
