@@ -34,7 +34,7 @@ export class CreateBookingDialogComponent implements OnInit {
               private bookingService: BookingService,
               @Inject(MAT_DIALOG_DATA) public data?: any) {
 
-    if (data.booking) {
+    if (data && data.booking) {
       const booking = data.booking;
       this.title = booking.title;
       this.date = new Date(booking.date);
