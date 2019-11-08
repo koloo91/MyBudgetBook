@@ -44,45 +44,11 @@ func main() {
 
 	db.LogMode(true)
 
-	router := gin.Default()
+	router := controller.SetupRoutes(db, appUser, appUserPassword)
 
 	router.NoRoute(func(ctx *gin.Context) {
 		ctx.File("./assets/index.html")
 	})
-
-	authorized := router.Group("", gin.BasicAuth(gin.Accounts{
-		appUser: appUserPassword,
-	}))
-
-	authorized.GET("/api/ping", controller.Ping())
-
-	{
-		accounts := authorized.Group("/api/accounts")
-		accounts.POST("", controller.CreateAccount(db))
-		accounts.GET("", controller.GetAccounts(db))
-	}
-
-	{
-		categories := authorized.Group("/api/categories")
-		categories.POST("", controller.CreateCategory(db))
-		categories.PUT("/:id", controller.UpdateCategory(db))
-		categories.GET("", controller.GetCategories(db))
-	}
-
-	{
-		bookings := authorized.Group("/api/bookings")
-		bookings.POST("", controller.CreateBooking(db))
-		bookings.PUT("/:id", controller.UpdateBooking(db))
-		bookings.DELETE("/:id", controller.DeleteBooking(db))
-		bookings.GET("", controller.GetBookings(db))
-	}
-
-	{
-		balances := authorized.Group("/api/balances")
-		balances.GET("", controller.GetBalances(db))
-	}
-
-	router.GET("/api/alive", controller.Alive())
 
 	router.Static("/app", "./assets")
 

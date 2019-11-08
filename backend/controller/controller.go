@@ -10,19 +10,59 @@ import (
 	"time"
 )
 
-func Ping() gin.HandlerFunc {
+func SetupRoutes(db *gorm.DB, appUser, appUserPassword string) *gin.Engine {
+	router := gin.Default()
+
+	authorized := router.Group("", gin.BasicAuth(gin.Accounts{
+		appUser: appUserPassword,
+	}))
+
+	authorized.GET("/api/ping", ping())
+
+	{
+		accounts := authorized.Group("/api/accounts")
+		accounts.POST("", createAccount(db))
+		accounts.GET("", getAccounts(db))
+	}
+
+	{
+		categories := authorized.Group("/api/categories")
+		categories.POST("", createCategory(db))
+		categories.PUT("/:id", updateCategory(db))
+		categories.GET("", getCategories(db))
+	}
+
+	{
+		bookings := authorized.Group("/api/bookings")
+		bookings.POST("", createBooking(db))
+		bookings.PUT("/:id", updateBooking(db))
+		bookings.DELETE("/:id", deleteBooking(db))
+		bookings.GET("", getBookings(db))
+	}
+
+	{
+		balances := authorized.Group("/api/balances")
+		balances.GET("", getBalances(db))
+	}
+
+	router.GET("/api/alive", alive())
+
+	return router
+}
+
+func ping() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.String(http.StatusNoContent, "")
 	}
 }
 
-func Alive() gin.HandlerFunc {
+func alive() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.String(http.StatusNoContent, "")
 	}
 }
 
-func CreateAccount(db *gorm.DB) gin.HandlerFunc {
+func createAccount(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var accountVo model.AccountVo
 		if err := ctx.ShouldBindJSON(&accountVo); err != nil {
@@ -40,7 +80,7 @@ func CreateAccount(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func GetAccounts(db *gorm.DB) gin.HandlerFunc {
+func getAccounts(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		accounts, err := service.GetAccounts(db)
@@ -53,7 +93,7 @@ func GetAccounts(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateCategory(db *gorm.DB) gin.HandlerFunc {
+func createCategory(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var categoryVo model.CategoryVo
 		if err := ctx.ShouldBindJSON(&categoryVo); err != nil {
@@ -71,7 +111,7 @@ func CreateCategory(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func UpdateCategory(db *gorm.DB) gin.HandlerFunc {
+func updateCategory(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
 		var categoryVo model.CategoryVo
@@ -90,7 +130,7 @@ func UpdateCategory(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func GetCategories(db *gorm.DB) gin.HandlerFunc {
+func getCategories(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		categories, err := service.GetCategories(db)
@@ -103,7 +143,7 @@ func GetCategories(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func CreateBooking(db *gorm.DB) gin.HandlerFunc {
+func createBooking(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var bookingVo model.BookingVo
 		if err := ctx.ShouldBindJSON(&bookingVo); err != nil {
@@ -121,7 +161,7 @@ func CreateBooking(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func UpdateBooking(db *gorm.DB) gin.HandlerFunc {
+func updateBooking(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
 		updateStrategy := ctx.DefaultQuery("updateStrategy", service.UpdateStrategyOne)
@@ -142,7 +182,7 @@ func UpdateBooking(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func GetBookings(db *gorm.DB) gin.HandlerFunc {
+func getBookings(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		startDateString := ctx.DefaultQuery("startDate", service.BeginningOfMonth().Format(time.RFC3339))
 		endDateString := ctx.DefaultQuery("endDate", service.EndOfMonth().Format(time.RFC3339))
@@ -169,7 +209,7 @@ func GetBookings(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func DeleteBooking(db *gorm.DB) gin.HandlerFunc {
+func deleteBooking(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
 		deleteStrategy := ctx.DefaultQuery("deleteStrategy", service.DeleteStrategyOne)
@@ -184,7 +224,7 @@ func DeleteBooking(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func GetBalances(db *gorm.DB) gin.HandlerFunc {
+func getBalances(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		balances, err := service.GetBalances(db)

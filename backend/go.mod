@@ -10,8 +10,9 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/jinzhu/gorm v1.9.11
 	github.com/json-iterator/go v1.1.8 // indirect
-	github.com/lib/pq v1.2.0 // indirect
+	github.com/lib/pq v1.2.0
 	github.com/mattn/go-isatty v0.0.10 // indirect
+	github.com/stretchr/testify v1.4.0
 	github.com/ugorji/go v1.1.7 // indirect
 	golang.org/x/sys v0.0.0-20191105142833-ac3223d80179 // indirect
 	gopkg.in/yaml.v2 v2.2.5 // indirect
