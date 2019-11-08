@@ -126,7 +126,7 @@ func updateCategory(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		ctx.JSON(http.StatusCreated, mapper.CategoryEntityToVo(updatedCategory))
+		ctx.JSON(http.StatusOK, mapper.CategoryEntityToVo(updatedCategory))
 	}
 }
 
