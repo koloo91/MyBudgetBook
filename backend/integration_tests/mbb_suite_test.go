@@ -1,6 +1,9 @@
 package integration_tests
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -50,7 +53,7 @@ func (suite *MbbTestSuite) SetupSuite() {
 	suite.router = controller.SetupRoutes(db, appUser, appUserPassword)
 }
 
-func (suite *MbbTestSuite) TearDownTest() {
+func (suite *MbbTestSuite) SetupTest() {
 	log.Println("Tear down test")
 
 	_, _ = suite.db.DB().Exec("DELETE FROM bookings;")
@@ -69,4 +72,34 @@ func (suite *MbbTestSuite) TestBasicAuthentication() {
 	suite.router.ServeHTTP(recorder, request)
 
 	suite.Equal(http.StatusUnauthorized, recorder.Code)
+}
+
+func (suite *MbbTestSuite) createAccount(name string, startingBalance float64) string {
+	body := []byte(fmt.Sprintf(`{"name": "%s", "startingBalance": %f}`, name, startingBalance))
+	request, _ := http.NewRequest("POST", "/api/accounts", bytes.NewBuffer(body))
+	request.SetBasicAuth(appUser, appUserPassword)
+	recorder := httptest.NewRecorder()
+	suite.router.ServeHTTP(recorder, request)
+
+	suite.Equal(http.StatusCreated, recorder.Code)
+
+	var response map[string]interface{}
+	_ = json.Unmarshal(recorder.Body.Bytes(), &response)
+
+	return response["id"].(string)
+}
+
+func (suite *MbbTestSuite) createCategory(name string) string {
+	body := []byte(fmt.Sprintf(`{"name": "%s"}`, name))
+	request, _ := http.NewRequest("POST", "/api/categories", bytes.NewBuffer(body))
+	request.SetBasicAuth(appUser, appUserPassword)
+	recorder := httptest.NewRecorder()
+	suite.router.ServeHTTP(recorder, request)
+
+	suite.Equal(http.StatusCreated, recorder.Code)
+
+	var response map[string]interface{}
+	_ = json.Unmarshal(recorder.Body.Bytes(), &response)
+
+	return response["id"].(string)
 }
