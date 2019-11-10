@@ -103,3 +103,18 @@ func (suite *MbbTestSuite) createCategory(name string) string {
 
 	return response["id"].(string)
 }
+
+func (suite *MbbTestSuite) createBooking(title string, amount float64, date string, accountId string, categoryId string) string {
+	body := []byte(fmt.Sprintf(`{"title": "%s", "amount": %f, "date": "%s", "accountId": "%s", "categoryId": "%s"}`, title, amount, date, accountId, categoryId))
+	request, _ := http.NewRequest("POST", "/api/bookings", bytes.NewBuffer(body))
+	request.SetBasicAuth(appUser, appUserPassword)
+	recorder := httptest.NewRecorder()
+	suite.router.ServeHTTP(recorder, request)
+
+	suite.Equal(http.StatusCreated, recorder.Code)
+
+	var response map[string]interface{}
+	_ = json.Unmarshal(recorder.Body.Bytes(), &response)
+
+	return response["id"].(string)
+}

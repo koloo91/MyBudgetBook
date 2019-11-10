@@ -178,7 +178,7 @@ func updateBooking(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		ctx.JSON(http.StatusCreated, mapper.BookingEntityToVo(updatedBooking))
+		ctx.JSON(http.StatusOK, mapper.BookingEntityToVo(updatedBooking))
 	}
 }
 
