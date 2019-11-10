@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/koloo91/mapper"
 	"github.com/koloo91/model"
 	"github.com/koloo91/service"
+	"log"
 	"net/http"
 	"time"
 )
@@ -21,13 +23,13 @@ func SetupRoutes(db *gorm.DB, appUser, appUserPassword string) *gin.Engine {
 
 	{
 		accounts := authorized.Group("/api/accounts")
-		accounts.POST("", createAccount(db))
-		accounts.GET("", getAccounts(db))
+		accounts.POST("", createAccount(db.DB()))
+		accounts.GET("", getAccounts(db.DB()))
 	}
 
 	{
 		categories := authorized.Group("/api/categories")
-		categories.POST("", createCategory(db))
+		categories.POST("", createCategory(db.DB()))
 		categories.PUT("/:id", updateCategory(db))
 		categories.GET("", getCategories(db))
 	}
@@ -62,16 +64,18 @@ func alive() gin.HandlerFunc {
 	}
 }
 
-func createAccount(db *gorm.DB) gin.HandlerFunc {
+func createAccount(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var accountVo model.AccountVo
 		if err := ctx.ShouldBindJSON(&accountVo); err != nil {
+			log.Println(err)
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
 		}
 
-		createdAccount, err := service.CreateAccount(db, mapper.AccountVoToEntity(accountVo))
+		createdAccount, err := service.CreateAccount(ctx.Request.Context(), db, mapper.AccountVoToEntity(accountVo))
 		if err != nil {
+			log.Println(err)
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
 		}
@@ -80,11 +84,12 @@ func createAccount(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func getAccounts(db *gorm.DB) gin.HandlerFunc {
+func getAccounts(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		accounts, err := service.GetAccounts(db)
+		accounts, err := service.GetAccounts(ctx.Request.Context(), db)
 		if err != nil {
+			log.Println(err)
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
 		}
@@ -93,16 +98,18 @@ func getAccounts(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func createCategory(db *gorm.DB) gin.HandlerFunc {
+func createCategory(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var categoryVo model.CategoryVo
 		if err := ctx.ShouldBindJSON(&categoryVo); err != nil {
+			log.Println(err)
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
 		}
 
-		createdCategory, err := service.CreateCategory(db, mapper.CategoryVoToEntity(categoryVo))
+		createdCategory, err := service.CreateCategory(ctx.Request.Context(), db, mapper.CategoryVoToEntity(categoryVo))
 		if err != nil {
+			log.Println(err)
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
 		}

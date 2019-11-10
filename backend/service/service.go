@@ -1,10 +1,13 @@
 package service
 
 import (
+	"context"
+	"database/sql"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"github.com/koloo91/model"
+	"github.com/koloo91/repository"
 	"time"
 )
 
@@ -22,23 +25,19 @@ const (
 	DeleteStrategyAll = "ALL"
 )
 
-func CreateAccount(db *gorm.DB, account model.Account) (model.Account, error) {
-	if err := db.Create(&account).Error; err != nil {
+func CreateAccount(ctx context.Context, db *sql.DB, account model.Account) (model.Account, error) {
+	if err := repository.InsertAccount(ctx, db, account); err != nil {
 		return model.Account{}, err
 	}
 	return account, nil
 }
 
-func GetAccounts(db *gorm.DB) ([]model.Account, error) {
-	accounts := make([]model.Account, 0)
-	if err := db.Order("name asc").Find(&accounts).Error; err != nil {
-		return nil, err
-	}
-	return accounts, nil
+func GetAccounts(ctx context.Context, db *sql.DB) ([]model.Account, error) {
+	return repository.QueryAccounts(ctx, db)
 }
 
-func CreateCategory(db *gorm.DB, category model.Category) (model.Category, error) {
-	if err := db.Create(&category).Error; err != nil {
+func CreateCategory(ctx context.Context, db *sql.DB, category model.Category) (model.Category, error) {
+	if err := repository.InsertCategory(ctx, db, category); err != nil {
 		return model.Category{}, err
 	}
 	return category, nil
