@@ -43,16 +43,8 @@ func CreateCategory(ctx context.Context, db *sql.DB, category model.Category) (m
 	return category, nil
 }
 
-func UpdateCategory(db *gorm.DB, id string, category model.Category) (model.Category, error) {
-	var existingCategory model.Category
-	if err := db.Where("id = ?", id).First(&existingCategory).Error; err != nil {
-		return model.Category{}, err
-	}
-
-	existingCategory.Name = category.Name
-	existingCategory.Updated = time.Now()
-
-	if err := db.Save(&existingCategory).Error; err != nil {
+func UpdateCategory(ctx context.Context, db *sql.DB, id string, category model.Category) (model.Category, error) {
+	if err := repository.UpdateCategory(ctx, db, id, category); err != nil {
 		return model.Category{}, err
 	}
 

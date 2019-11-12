@@ -52,3 +52,11 @@ func InsertCategory(ctx context.Context, db *sql.DB, category model.Category) er
 	}
 	return nil
 }
+
+func UpdateCategory(ctx context.Context, db *sql.DB, id string, category model.Category) error {
+	_, err := db.ExecContext(ctx, "UPDATE categories SET name = $1, updated = $2 WHERE id = $3", category.Name, time.Now(), id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
