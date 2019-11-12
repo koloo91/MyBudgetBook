@@ -30,7 +30,7 @@ func SetupRoutes(db *gorm.DB, appUser, appUserPassword string) *gin.Engine {
 	{
 		categories := authorized.Group("/api/categories")
 		categories.POST("", createCategory(db.DB()))
-		categories.PUT("/:id", updateCategory(db))
+		categories.PUT("/:id", updateCategory(db.DB()))
 		categories.GET("", getCategories(db))
 	}
 
@@ -118,7 +118,7 @@ func createCategory(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
-func updateCategory(db *gorm.DB) gin.HandlerFunc {
+func updateCategory(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
 		var categoryVo model.CategoryVo
@@ -127,7 +127,7 @@ func updateCategory(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		updatedCategory, err := service.UpdateCategory(db, id, mapper.CategoryVoToEntity(categoryVo))
+		updatedCategory, err := service.UpdateCategory(ctx.Request.Context(), db, id, mapper.CategoryVoToEntity(categoryVo))
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return

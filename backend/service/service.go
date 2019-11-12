@@ -47,8 +47,8 @@ func UpdateCategory(ctx context.Context, db *sql.DB, id string, category model.C
 	if err := repository.UpdateCategory(ctx, db, id, category); err != nil {
 		return model.Category{}, err
 	}
-
-	return existingCategory, nil
+	// TODO:
+	return model.Category{}, nil
 }
 
 func GetCategories(db *gorm.DB) ([]model.Category, error) {
