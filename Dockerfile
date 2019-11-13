@@ -4,7 +4,7 @@ COPY frontend/ .
 RUN npm install -g @angular/cli
 RUN npm install && npm run build
 
-FROM golang:1.13.2-alpine AS goBuilder
+FROM golang:1.13.4-alpine AS goBuilder
 WORKDIR /builder
 ADD backend/ .
 RUN go build -o mbb

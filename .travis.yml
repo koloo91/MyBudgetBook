@@ -12,10 +12,8 @@ script:
   - go test -v ./...
 after_success:
   - cd ..
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - ./increment_version.sh -m "$(cat version)" > version
-  - docker build -t koloooo/mbb:"$(cat version)" .
-  - docker push koloooo/mbb:"$(cat version)"
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - docker build -t koloooo/mbb:latest .
   - docker push koloooo/mbb:latest
 env:
   global:
