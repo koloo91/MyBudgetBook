@@ -15,3 +15,8 @@ install:
 
 script:
   - go test -v ./...
+
+after_success:
+  - cd ..
+  - ./increment_version.sh -m "$(cat version)" > version
+  - docker build -t koloooo/mbb:"$(cat version)" .
