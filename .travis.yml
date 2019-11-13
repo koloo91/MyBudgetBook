@@ -14,5 +14,4 @@ install:
   - go get
 
 script:
-  - cd backend
   - go test -v ./...
