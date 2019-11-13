@@ -1,22 +1,20 @@
 language: go
-
 go:
   - 1.13.x
-
 services:
   - docker
-
 before_install:
   - docker run -d -p 127.0.0.1:5432:5432 postgres
-
 install:
   - cd backend
   - go get
-
 script:
   - go test -v ./...
-
 after_success:
   - cd ..
   - ./increment_version.sh -m "$(cat version)" > version
   - docker build -t koloooo/mbb:"$(cat version)" .
+env:
+  global:
+    - secure: BQoc3X/RHI+fb+tKSIRGuoOgZ3bmtRYE6d+sPbjwJlcjG548X18aChsgluo62jv4In4dLr1dJpoj4/4GATG+sBGry4FvYmms2q5oe31Z3FPwreOnCen3GYjJtZ612TOLvgplb8hJRPGhJdyv709i6roMfPzfyrOEkXqVFqakC/l06n0JzE7dYL+1Rf9okqw1gl76DThLZBuYyGi2wXemsqBx+sEkmHao4kkvJ3S7odkXBkoH48cmmbMr9iPBoETAsC56yFVTXzywPAgVgrqsfvVMfkcMcwGafRBcSNjqLT0+XydcHGr4uQpV0o0rT7dHnV4mqYj7CWBosAFQqtROK4mQgyjieV+MYz027GVirHWpDyDW23fX5YH1RNop8PCuzupB2rYu+2+zmFuEsfmRuiwlNMtfeOjPzK7JjBvSzHtekeLz6lGkjNaPldze2y7Zf5d/2HSDA7UWWVcXl0f/D2s8xI6Z82/d82uyGvo5g8DwW/hPL59nTMrjDun94NtS2SWwU6NNQX8kQHYuaEacu9TB4LYcF3GDdWxHXC5GsgJCuLgRlBaz0+EdmVCkxJ41b3j99hkbNmsNpVKzrd0XDBCDUOeCcmyLPZXyve//rL9Ww15WpxGqfn3Ec2uUgOiAldnomFXxR/RGkXyVQbCaaaVWBS5Tn9dEXxnsAu4z6QU=
+    - secure: o9f2+AzJ7yVbxGpqsb7qz8Kjktl731SDygO7ZNj0WtDrZQvJATpJFVEKT1cQTDeLwAtZkWXOrQg7PmnmkwtMGsB/nhzbTzmlQmdDPAFk0YfZOU9mMLLgfP2wiPPQI6/tTxn5jZaYfqgwOBBWqTYqiE27pTZxnoiJKvrYZosy66NVJk/rkvTtkQrivFucY5lSAbXPm3Qy3MgCaFWLX7zXi0vEa0HdLsmsegDddNu8shpkz6DzurGiACrAoZWIC0YkGPo+vGtsiLtGllBFUZwxdvb56jBYMU4jQvYMlhxPrJ1tufPQ5QkzWQZg29QbvZ4HSrwY7pCZN+CkUAY6Zj6qfjhc42SIPEM+Y3UsHVV+HQLznVplP5B73NV4LtCnDeVzWghQ+d50fwtFVMJnry9KDOQ6wJ662MnhJClkrOE3dKzxhz5C2FbsH9v9cLYCHjuMiM5ipCIxqMiqJxisx0kgMfoF25hF8jje4004SN/b0uGtwnEhQRS4igZxz0y6oJnKxZdPs1FPBWXk4nWh2bOHEqXaGfe6cHzb5cMeu6478AQwER3YUedqsx64fFWRP7CfuY7gp0C02BOcdOJ76ADFXruXyWRCUz2EC/v+J1nJxyfD5rxFOdac1r5uTL/bvPULWaPZXAxlUAJ0PF3fmonOhPuijJL2kA5XJrGCRe8rers=
