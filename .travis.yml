@@ -10,7 +10,9 @@ before_install:
   - docker run -d -p 127.0.0.1:5432:5432 postgres
 
 install:
+  - cd backend
   - go get
 
 script:
+  - cd backend
   - go test -v ./...
