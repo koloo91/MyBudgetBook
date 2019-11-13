@@ -16,6 +16,7 @@ after_success:
   - ./increment_version.sh -m "$(cat version)" > version
   - docker build -t koloooo/mbb:"$(cat version)" .
   - docker push koloooo/mbb:"$(cat version)"
+  - docker push koloooo/mbb:latest
 env:
   global:
     - secure: BQoc3X/RHI+fb+tKSIRGuoOgZ3bmtRYE6d+sPbjwJlcjG548X18aChsgluo62jv4In4dLr1dJpoj4/4GATG+sBGry4FvYmms2q5oe31Z3FPwreOnCen3GYjJtZ612TOLvgplb8hJRPGhJdyv709i6roMfPzfyrOEkXqVFqakC/l06n0JzE7dYL+1Rf9okqw1gl76DThLZBuYyGi2wXemsqBx+sEkmHao4kkvJ3S7odkXBkoH48cmmbMr9iPBoETAsC56yFVTXzywPAgVgrqsfvVMfkcMcwGafRBcSNjqLT0+XydcHGr4uQpV0o0rT7dHnV4mqYj7CWBosAFQqtROK4mQgyjieV+MYz027GVirHWpDyDW23fX5YH1RNop8PCuzupB2rYu+2+zmFuEsfmRuiwlNMtfeOjPzK7JjBvSzHtekeLz6lGkjNaPldze2y7Zf5d/2HSDA7UWWVcXl0f/D2s8xI6Z82/d82uyGvo5g8DwW/hPL59nTMrjDun94NtS2SWwU6NNQX8kQHYuaEacu9TB4LYcF3GDdWxHXC5GsgJCuLgRlBaz0+EdmVCkxJ41b3j99hkbNmsNpVKzrd0XDBCDUOeCcmyLPZXyve//rL9Ww15WpxGqfn3Ec2uUgOiAldnomFXxR/RGkXyVQbCaaaVWBS5Tn9dEXxnsAu4z6QU=
