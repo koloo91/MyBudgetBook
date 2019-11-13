@@ -12,7 +12,7 @@ script:
   - go test -v ./...
 after_success:
   - cd ..
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker build -t koloooo/mbb:latest .
   - docker push koloooo/mbb:latest
 env:
