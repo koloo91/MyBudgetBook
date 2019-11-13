@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/jinzhu/gorm"
 	"github.com/koloo91/model"
 	"github.com/koloo91/repository"
 	"time"
@@ -47,21 +46,18 @@ func UpdateCategory(ctx context.Context, db *sql.DB, id string, category model.C
 	if err := repository.UpdateCategory(ctx, db, id, category); err != nil {
 		return model.Category{}, err
 	}
-	// TODO:
-	return model.Category{}, nil
+
+	return repository.GetCategoryById(ctx, db, id)
 }
 
-func GetCategories(db *gorm.DB) ([]model.Category, error) {
-	categories := make([]model.Category, 0)
-	if err := db.Order("name asc").Find(&categories).Error; err != nil {
-		return nil, err
-	}
-	return categories, nil
+func GetCategories(ctx context.Context, db *sql.DB) ([]model.Category, error) {
+	return repository.QueryCategories(ctx, db)
 }
 
-func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
-	tx := db.Begin()
-	if err := tx.Error; err != nil {
+func CreateBooking(ctx context.Context, db *sql.DB, booking model.Booking) (model.Booking, error) {
+	tx, err := db.Begin()
+
+	if err != nil {
 		return model.Booking{}, err
 	}
 
@@ -86,7 +82,7 @@ func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
 
 			daysToAdd := daysToAddForWeekday(newBooking.Date.Weekday())
 			newBooking.Date = newBooking.Date.AddDate(0, 0, daysToAdd)
-			if err := tx.Create(&newBooking).Error; err != nil {
+			if err := repository.InsertBooking(ctx, tx, newBooking); err != nil {
 				tx.Rollback()
 				return model.Booking{}, err
 			}
@@ -94,124 +90,61 @@ func CreateBooking(db *gorm.DB, booking model.Booking) (model.Booking, error) {
 		}
 	}
 
-	if err := tx.Create(&booking).Error; err != nil {
+	if err := repository.InsertBooking(ctx, tx, booking); err != nil {
 		tx.Rollback()
 		return model.Booking{}, err
 	}
 
-	return booking, tx.Commit().Error
+	return booking, tx.Commit()
 }
 
-func UpdateBooking(db *gorm.DB, id string, booking model.Booking, updateStrategy string) (model.Booking, error) {
+func UpdateBooking(ctx context.Context, db *sql.DB, id string, booking model.Booking, updateStrategy string) (model.Booking, error) {
 	if updateStrategy == UpdateStrategyOne {
-		return updateSingleBooking(db, id, booking)
+		return updateSingleBooking(ctx, db, id, booking)
 	} else if updateStrategy == UpdateStrategyAll {
-		return updateAllBookings(db, id, booking)
+		return updateAllBookings(ctx, db, id, booking)
 	} else {
 		return model.Booking{}, fmt.Errorf("invalid updateStrategy '%s'", updateStrategy)
 	}
 }
 
-func updateSingleBooking(db *gorm.DB, id string, booking model.Booking) (model.Booking, error) {
-	var existingBooking model.Booking
-	if err := db.Where("id = ?", id).First(&existingBooking).Error; err != nil {
+func updateSingleBooking(ctx context.Context, db *sql.DB, id string, booking model.Booking) (model.Booking, error) {
+	if err := repository.UpdateBooking(ctx, db, id, booking); err != nil {
 		return model.Booking{}, err
 	}
-	existingBooking.Title = booking.Title
-	existingBooking.Amount = booking.Amount
-	existingBooking.Date = booking.Date
-	existingBooking.CategoryId = booking.CategoryId
-	existingBooking.AccountId = booking.AccountId
-	existingBooking.Updated = time.Now()
-	if err := db.Save(&existingBooking).Error; err != nil {
-		return model.Booking{}, err
-	}
-	return existingBooking, nil
+	return repository.GetBookingById(ctx, db, id)
 }
 
-func updateAllBookings(db *gorm.DB, id string, booking model.Booking) (model.Booking, error) {
+func updateAllBookings(ctx context.Context, db *sql.DB, id string, booking model.Booking) (model.Booking, error) {
 
-	tx := db.Begin()
-	if err := tx.Error; err != nil {
+	existingBooking, err := repository.GetBookingById(ctx, db, id)
+	if err != nil {
 		return model.Booking{}, err
 	}
 
-	var existingBooking model.Booking
-	if err := tx.Where("id = ?", id).First(&existingBooking).Error; err != nil {
-		tx.Rollback()
+	if err := repository.UpdateBookings(ctx, db, existingBooking.StandingOrderId, booking); err != nil {
 		return model.Booking{}, err
 	}
 
-	bookings := make([]model.Booking, 0)
-	if err := tx.Where("standing_order_id = ? AND date >= ?", existingBooking.StandingOrderId, existingBooking.Date).Find(&bookings).Error; err != nil {
-		tx.Rollback()
-		return model.Booking{}, err
-	}
-
-	for _, bookingToUpdate := range bookings {
-		bookingToUpdate.Title = booking.Title
-		bookingToUpdate.Amount = booking.Amount
-		bookingToUpdate.CategoryId = booking.CategoryId
-		bookingToUpdate.AccountId = booking.AccountId
-		bookingToUpdate.Updated = time.Now()
-		if err := tx.Save(&bookingToUpdate).Error; err != nil {
-			tx.Rollback()
-			return model.Booking{}, err
-		}
-	}
-
-	existingBooking.Title = booking.Title
-	existingBooking.Amount = booking.Amount
-	existingBooking.Date = booking.Date
-	existingBooking.CategoryId = booking.CategoryId
-	existingBooking.AccountId = booking.AccountId
-	existingBooking.Updated = time.Now()
-
-	return existingBooking, tx.Commit().Error
+	return repository.GetBookingById(ctx, db, id)
 }
 
-func GetBookings(db *gorm.DB, startDate time.Time, endDate time.Time) ([]model.Booking, error) {
-	bookings := make([]model.Booking, 0)
-	if err := db.Where("date BETWEEN ? AND ?", startDate, endDate).Order("date desc").Find(&bookings).Error; err != nil {
-		return nil, err
-	}
-	return bookings, nil
+func GetBookings(ctx context.Context, db *sql.DB, startDate time.Time, endDate time.Time) ([]model.Booking, error) {
+	return repository.QueryBookings(ctx, db, startDate, endDate)
 }
 
-func DeleteBooking(db *gorm.DB, id string, deleteStrategy string) error {
+func DeleteBooking(ctx context.Context, db *sql.DB, id string, deleteStrategy string) error {
 	if deleteStrategy == DeleteStrategyOne {
-		return db.Exec("DELETE FROM bookings WHERE id = ?;", id).Error
+		return repository.DeleteBooking(ctx, db, id)
 	} else if deleteStrategy == DeleteStrategyAll {
-		return db.Exec("DELETE FROM bookings WHERE standing_order_id = (SELECT standing_order_id FROM bookings WHERE id = ?) AND date >= (SELECT date FROM bookings WHERE id = ?)", id, id).Error
+		return repository.DeleteBookings(ctx, db, id)
 	} else {
 		return fmt.Errorf("invalid deleteStrategy '%s'", deleteStrategy)
 	}
 }
 
-func GetBalances(db *gorm.DB) ([]model.AccountBalance, error) {
-	rows, err := db.Raw("SELECT account_id, name, SUM(amount) + (SELECT starting_balance FROM accounts WHERE id = b.account_id) as balance FROM bookings b JOIN accounts on b.account_id = accounts.id WHERE date <= ? GROUP BY account_id, name;", EndOfDay().UTC()).Rows()
-	if err != nil {
-		return []model.AccountBalance{}, err
-	}
-
-	result := make([]model.AccountBalance, 0)
-	var accountId, name string
-	var balance float64
-
-	defer rows.Close()
-	for rows.Next() {
-		if err := rows.Scan(&accountId, &name, &balance); err != nil {
-			return []model.AccountBalance{}, err
-		}
-
-		result = append(result, model.AccountBalance{
-			AccountId: accountId,
-			Name:      name,
-			Balance:   balance,
-		})
-	}
-
-	return result, nil
+func GetBalances(ctx context.Context, db *sql.DB) ([]model.AccountBalance, error) {
+	return repository.QueryBalances(ctx, db, EndOfDay().UTC())
 }
 
 func yearsMonthsDaysToAdd(period string) (years int, months int, days int, err error) {

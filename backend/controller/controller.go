@@ -31,20 +31,20 @@ func SetupRoutes(db *gorm.DB, appUser, appUserPassword string) *gin.Engine {
 		categories := authorized.Group("/api/categories")
 		categories.POST("", createCategory(db.DB()))
 		categories.PUT("/:id", updateCategory(db.DB()))
-		categories.GET("", getCategories(db))
+		categories.GET("", getCategories(db.DB()))
 	}
 
 	{
 		bookings := authorized.Group("/api/bookings")
-		bookings.POST("", createBooking(db))
-		bookings.PUT("/:id", updateBooking(db))
-		bookings.DELETE("/:id", deleteBooking(db))
-		bookings.GET("", getBookings(db))
+		bookings.POST("", createBooking(db.DB()))
+		bookings.PUT("/:id", updateBooking(db.DB()))
+		bookings.DELETE("/:id", deleteBooking(db.DB()))
+		bookings.GET("", getBookings(db.DB()))
 	}
 
 	{
 		balances := authorized.Group("/api/balances")
-		balances.GET("", getBalances(db))
+		balances.GET("", getBalances(db.DB()))
 	}
 
 	router.GET("/api/alive", alive())
@@ -137,10 +137,10 @@ func updateCategory(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
-func getCategories(db *gorm.DB) gin.HandlerFunc {
+func getCategories(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		categories, err := service.GetCategories(db)
+		categories, err := service.GetCategories(ctx.Request.Context(), db)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
@@ -150,7 +150,7 @@ func getCategories(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func createBooking(db *gorm.DB) gin.HandlerFunc {
+func createBooking(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var bookingVo model.BookingVo
 		if err := ctx.ShouldBindJSON(&bookingVo); err != nil {
@@ -158,7 +158,7 @@ func createBooking(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		createdBooking, err := service.CreateBooking(db, mapper.BookingVoToEntity(bookingVo))
+		createdBooking, err := service.CreateBooking(ctx.Request.Context(), db, mapper.BookingVoToEntity(bookingVo))
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
@@ -168,7 +168,7 @@ func createBooking(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func updateBooking(db *gorm.DB) gin.HandlerFunc {
+func updateBooking(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
 		updateStrategy := ctx.DefaultQuery("updateStrategy", service.UpdateStrategyOne)
@@ -179,7 +179,7 @@ func updateBooking(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		updatedBooking, err := service.UpdateBooking(db, id, mapper.BookingVoToEntity(bookingVo), updateStrategy)
+		updatedBooking, err := service.UpdateBooking(ctx.Request.Context(), db, id, mapper.BookingVoToEntity(bookingVo), updateStrategy)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
@@ -189,7 +189,7 @@ func updateBooking(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func getBookings(db *gorm.DB) gin.HandlerFunc {
+func getBookings(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		startDateString := ctx.DefaultQuery("startDate", service.BeginningOfMonth().Format(time.RFC3339))
 		endDateString := ctx.DefaultQuery("endDate", service.EndOfMonth().Format(time.RFC3339))
@@ -206,7 +206,7 @@ func getBookings(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		bookings, err := service.GetBookings(db, startDate, endDate)
+		bookings, err := service.GetBookings(ctx.Request.Context(), db, startDate, endDate)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
@@ -216,12 +216,12 @@ func getBookings(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func deleteBooking(db *gorm.DB) gin.HandlerFunc {
+func deleteBooking(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
 		deleteStrategy := ctx.DefaultQuery("deleteStrategy", service.DeleteStrategyOne)
 
-		err := service.DeleteBooking(db, id, deleteStrategy)
+		err := service.DeleteBooking(ctx.Request.Context(), db, id, deleteStrategy)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
@@ -231,10 +231,10 @@ func deleteBooking(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func getBalances(db *gorm.DB) gin.HandlerFunc {
+func getBalances(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		balances, err := service.GetBalances(db)
+		balances, err := service.GetBalances(ctx.Request.Context(), db)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
 			return
