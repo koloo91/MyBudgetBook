@@ -3,7 +3,6 @@ package controller
 import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/koloo91/mapper"
 	"github.com/koloo91/model"
 	"github.com/koloo91/service"
@@ -12,7 +11,7 @@ import (
 	"time"
 )
 
-func SetupRoutes(db *gorm.DB, appUser, appUserPassword string) *gin.Engine {
+func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
 	router := gin.Default()
 
 	authorized := router.Group("", gin.BasicAuth(gin.Accounts{
@@ -23,28 +22,28 @@ func SetupRoutes(db *gorm.DB, appUser, appUserPassword string) *gin.Engine {
 
 	{
 		accounts := authorized.Group("/api/accounts")
-		accounts.POST("", createAccount(db.DB()))
-		accounts.GET("", getAccounts(db.DB()))
+		accounts.POST("", createAccount(db))
+		accounts.GET("", getAccounts(db))
 	}
 
 	{
 		categories := authorized.Group("/api/categories")
-		categories.POST("", createCategory(db.DB()))
-		categories.PUT("/:id", updateCategory(db.DB()))
-		categories.GET("", getCategories(db.DB()))
+		categories.POST("", createCategory(db))
+		categories.PUT("/:id", updateCategory(db))
+		categories.GET("", getCategories(db))
 	}
 
 	{
 		bookings := authorized.Group("/api/bookings")
-		bookings.POST("", createBooking(db.DB()))
-		bookings.PUT("/:id", updateBooking(db.DB()))
-		bookings.DELETE("/:id", deleteBooking(db.DB()))
-		bookings.GET("", getBookings(db.DB()))
+		bookings.POST("", createBooking(db))
+		bookings.PUT("/:id", updateBooking(db))
+		bookings.DELETE("/:id", deleteBooking(db))
+		bookings.GET("", getBookings(db))
 	}
 
 	{
 		balances := authorized.Group("/api/balances")
-		balances.GET("", getBalances(db.DB()))
+		balances.GET("", getBalances(db))
 	}
 
 	router.GET("/api/alive", alive())

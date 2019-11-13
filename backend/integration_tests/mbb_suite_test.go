@@ -2,14 +2,13 @@ package integration_tests
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/koloo91/controller"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/suite"
@@ -30,7 +29,7 @@ const (
 
 type MbbTestSuite struct {
 	suite.Suite
-	db     *gorm.DB
+	db     *sql.DB
 	router *gin.Engine
 }
 
@@ -38,12 +37,12 @@ func (suite *MbbTestSuite) SetupSuite() {
 	log.Println("Setup suite")
 
 	//db, err := sql.Open("postgres", connectionString)
-	db, err := gorm.Open("postgres", connectionString)
+	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	driver, _ := postgres.WithInstance(db.DB(), &postgres.Config{})
+	driver, _ := postgres.WithInstance(db, &postgres.Config{})
 	migrator, _ := migrate.NewWithDatabaseInstance("file://../migrations", "postgres", driver)
 	if err := migrator.Up(); err != nil {
 		log.Println(err.Error())
@@ -56,9 +55,9 @@ func (suite *MbbTestSuite) SetupSuite() {
 func (suite *MbbTestSuite) SetupTest() {
 	log.Println("Tear down test")
 
-	_, _ = suite.db.DB().Exec("DELETE FROM bookings;")
-	_, _ = suite.db.DB().Exec("DELETE FROM accounts;")
-	_, _ = suite.db.DB().Exec("DELETE FROM categories;")
+	_, _ = suite.db.Exec("DELETE FROM bookings;")
+	_, _ = suite.db.Exec("DELETE FROM accounts;")
+	_, _ = suite.db.Exec("DELETE FROM categories;")
 }
 
 func TestExampleTestSuite(t *testing.T) {
