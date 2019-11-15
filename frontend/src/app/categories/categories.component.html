@@ -1,6 +1,10 @@
 <div class="container">
-  <mat-nav-list>
-    <mat-list-item disableRipple="false" class="account mat-list-item" *ngFor="let category of (categories | async)"
+  <div *ngIf="isLoading" class="spinner" fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-nav-list *ngIf="!isLoading">
+    <mat-list-item disableRipple="false" class="account mat-list-item" *ngFor="let category of categories"
                    (click)="updateCategory(category)">
       <h2 matLine>{{category.name}}</h2>
     </mat-list-item>

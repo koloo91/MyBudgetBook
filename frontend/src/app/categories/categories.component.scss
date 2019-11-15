@@ -1,5 +1,17 @@
+:host {
+  height: 100%;
+}
+
+.container {
+  height: 100%;
+}
+
 .add-category-button {
   position: absolute;
   bottom: 16px;
   right: 16px;
+}
+
+.spinner {
+  height: 100%;
 }

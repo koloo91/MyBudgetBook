@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {CategoryService} from '../services/category.service';
-import {Observable} from 'rxjs';
 import {Category} from '../models/category.model';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateCategoryDialogComponent} from '../dialogs/create-category-dialog/create-category-dialog.component';
+import {ErrorService} from '../services/error.service';
+import {ErrorVo} from '../models/error.model';
 
 interface CategoryNode {
   id: string;
@@ -17,10 +18,12 @@ interface CategoryNode {
   styleUrls: ['./categories.component.scss']
 })
 export class CategoriesComponent implements OnInit {
+  isLoading: boolean = true;
 
-  categories: Observable<Category[]>;
+  categories: Category[] = [];
 
   constructor(private categoryService: CategoryService,
+              private errorService: ErrorService,
               public dialog: MatDialog) {
   }
 
@@ -29,7 +32,15 @@ export class CategoriesComponent implements OnInit {
   }
 
   loadCategories() {
-    this.categories = this.categoryService.getCategories();
+    this.isLoading = true;
+    this.categoryService.getCategories()
+      .subscribe((categories) => {
+        this.isLoading = false;
+        this.categories = categories;
+      }, (err: ErrorVo) => {
+        this.isLoading = false;
+        this.errorService.showErrorMessage(err.message);
+      });
   }
 
   showCreateDialog() {
