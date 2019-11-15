@@ -6,6 +6,7 @@ import {BookingService} from '../../services/booking.service';
 import {Observable} from 'rxjs';
 import {Category} from '../../models/category.model';
 import {Account} from '../../models/account.model';
+import {ErrorService} from '../../services/error.service';
 
 @Component({
   selector: 'app-create-account-dialog',
@@ -31,6 +32,7 @@ export class CreateBookingDialogComponent implements OnInit {
               private accountService: AccountService,
               private categoryService: CategoryService,
               private bookingService: BookingService,
+              private errorService: ErrorService,
               @Inject(MAT_DIALOG_DATA) public data?: any) {
 
     if (data && data.booking) {
@@ -72,10 +74,10 @@ export class CreateBookingDialogComponent implements OnInit {
       this.accountId,
       this.data.updateAll)
       .subscribe(booking => {
-          console.log(booking);
-          this.dialogRef.close({success: true});
-        }, err => console.log(err),
-        () => this.isLoading = false);
+        this.dialogRef.close({success: true});
+      }, err => {
+        this.errorService.showErrorMessage(err.error);
+      });
   }
 
   createBooking() {
@@ -87,10 +89,11 @@ export class CreateBookingDialogComponent implements OnInit {
       this.accountId,
       this.isStandingOrder ? this.standingOrderPeriod : null)
       .subscribe(booking => {
-          console.log(booking);
-          this.dialogRef.close({success: true});
-        }, err => console.log(err),
-        () => this.isLoading = false);
+        console.log(booking);
+        this.dialogRef.close({success: true});
+      }, err => {
+        this.errorService.showErrorMessage(err.error);
+      });
   }
 
   addTimeToSelectedDate(date: Date): Date {
@@ -106,8 +109,9 @@ export class CreateBookingDialogComponent implements OnInit {
     this.isLoading = true;
     this.bookingService.delete(this.data.booking.id, this.data.updateAll)
       .subscribe(() => {
-          this.dialogRef.close({success: true});
-        }, err => console.log(err),
-        () => this.isLoading = false);
+        this.dialogRef.close({success: true});
+      }, err => {
+        this.errorService.showErrorMessage(err.error);
+      });
   }
 }

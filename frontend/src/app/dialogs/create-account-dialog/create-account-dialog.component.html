@@ -5,11 +5,11 @@
   <h1 mat-dialog-title>Konto anlegen</h1>
   <div mat-dialog-content>
     <mat-form-field>
-      <input matInput [(ngModel)]="accountName" placeholder="Name">
+      <input matInput required [(ngModel)]="accountName" placeholder="Name">
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput type="number" [(ngModel)]="startingBalance" placeholder="Startsaldo">
+      <input matInput required type="number" [(ngModel)]="startingBalance" placeholder="Startsaldo">
     </mat-form-field>
   </div>
   <div mat-dialog-actions align="end">

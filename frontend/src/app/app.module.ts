@@ -36,6 +36,7 @@ import localeDeExtra from '@angular/common/locales/extra/de';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {UpdateBookingDialogComponent} from './dialogs/update-booking-dialog/update-booking-dialog.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 registerLocaleData(localDe, 'de-DE', localeDeExtra)
 
@@ -73,7 +74,8 @@ registerLocaleData(localDe, 'de-DE', localeDeExtra)
     MatDatepickerModule,
     MatNativeDateModule,
     MatCheckboxModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatSnackBarModule
   ],
   entryComponents: [
     CreateAccountDialogComponent,

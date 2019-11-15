@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AccountService} from '../../services/account.service';
 import {Account} from '../../models/account.model';
+import {ErrorService} from '../../services/error.service';
 
 @Component({
   selector: 'app-create-account-dialog',
@@ -16,8 +17,8 @@ export class CreateAccountDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<CreateAccountDialogComponent>,
               private accountService: AccountService,
+              private errorService: ErrorService,
               @Inject(MAT_DIALOG_DATA) public data?: Account) {
-    console.log(data);
   }
 
   ngOnInit() {
@@ -31,9 +32,9 @@ export class CreateAccountDialogComponent implements OnInit {
     console.log(this.accountName);
     this.isLoading = true;
     this.accountService.createAccount(this.accountName, this.startingBalance).subscribe(account => {
-        console.log(account);
-        this.dialogRef.close({success: true});
-      }, err => console.log(err),
-      () => this.isLoading = false);
+      this.dialogRef.close({success: true});
+    }, err => {
+      this.errorService.showErrorMessage(err.error);
+    });
   }
 }

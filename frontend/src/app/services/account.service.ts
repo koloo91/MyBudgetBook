@@ -23,5 +23,9 @@ export class AccountService {
 
   createAccount(name: string, startingBalance: number): Observable<Account> {
     return this.http.post<Account>(`${environment.host}/api/accounts`, {name, startingBalance});
+
+    // .pipe(catchError((error: HttpErrorResponse) => {
+    //     return throwError('');
+    //   }))
   }
 }
