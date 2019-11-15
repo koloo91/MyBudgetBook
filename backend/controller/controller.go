@@ -12,7 +12,9 @@ import (
 )
 
 func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
-	router := gin.Default()
+	router := gin.New()
+	router.Use(gin.Logger())
+	router.Use(unhandledErrorHandler())
 
 	authorized := router.Group("", gin.BasicAuth(gin.Accounts{
 		appUser: appUserPassword,
@@ -51,6 +53,18 @@ func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
 	return router
 }
 
+func unhandledErrorHandler() gin.HandlerFunc {
+	gin.Default()
+	return func(ctx *gin.Context) {
+		defer func() {
+			if err := recover(); err != nil {
+				log.Println(err)
+				ctx.AbortWithStatusJSON(http.StatusBadRequest, model.ErrorVo{Error: "unexpected error"})
+			}
+		}()
+		ctx.Next()
+	}
+}
 func ping() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.String(http.StatusNoContent, "")
