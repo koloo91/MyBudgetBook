@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {BookingService} from '../services/booking.service';
-import {Observable} from 'rxjs';
+import {forkJoin} from 'rxjs';
 import {Booking} from '../models/booking.model';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateBookingDialogComponent} from '../dialogs/create-booking-dialog/create-booking-dialog.component';
@@ -9,6 +9,8 @@ import {CategoryService} from '../services/category.service';
 import {Balance} from '../models/balance.model';
 import {BalanceService} from '../services/balance.service';
 import {UpdateBookingDialogComponent} from '../dialogs/update-booking-dialog/update-booking-dialog.component';
+import {ErrorVo} from '../models/error.model';
+import {ErrorService} from '../services/error.service';
 
 @Component({
   selector: 'app-bookings',
@@ -16,10 +18,11 @@ import {UpdateBookingDialogComponent} from '../dialogs/update-booking-dialog/upd
   styleUrls: ['./bookings.component.scss']
 })
 export class BookingsComponent implements OnInit {
+  isLoading: boolean = true;
 
-  bookings: Observable<Booking[]>;
-  categories?: Category[];
-  balances?: Balance[];
+  bookings: Booking[] = [];
+  categories: Category[] = [];
+  balances: Balance[] = [];
 
   startDate: Date = new Date();
   endDate: Date = new Date();
@@ -27,6 +30,7 @@ export class BookingsComponent implements OnInit {
   constructor(private bookingService: BookingService,
               private categoryService: CategoryService,
               private balanceService: BalanceService,
+              private errorService: ErrorService,
               public dialog: MatDialog) {
   }
 
@@ -35,27 +39,26 @@ export class BookingsComponent implements OnInit {
     this.startDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
     this.endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
 
-    this.loadBookings();
-    this.loadCategories();
-    this.loadBalances();
+    this.loadData();
   }
 
-  private loadBookings() {
-    this.bookings = this.bookingService.getBookings(this.startDate, this.endDate);
-  }
+  private loadData() {
+    this.isLoading = true;
 
-  private loadCategories() {
-    this.categoryService.getCategories()
-      .subscribe(categories => {
+    const bookings$ = this.bookingService.getBookings(this.startDate, this.endDate);
+    const categories$ = this.categoryService.getCategories();
+    const balances$ = this.balanceService.getBalances();
+
+    forkJoin(bookings$, categories$, balances$)
+      .subscribe(([bookings, categories, balances]) => {
+        this.isLoading = false;
+        this.bookings = bookings;
         this.categories = categories;
-      });
-  }
-
-  private loadBalances() {
-    this.balanceService.getBalances()
-      .subscribe(balances => {
         this.balances = balances;
-      })
+      }, (err: ErrorVo) => {
+        this.isLoading = false;
+        this.errorService.showErrorMessage(err.message);
+      });
   }
 
   showCreateDialog() {
@@ -64,9 +67,7 @@ export class BookingsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      this.loadBookings();
-      this.loadBalances();
+      this.loadData();
     });
   }
 
@@ -95,30 +96,29 @@ export class BookingsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.loadBookings();
-      this.loadBalances();
+      this.loadData();
     });
   }
 
   onStartDateChange() {
-    this.loadBookings();
+    this.loadData();
   }
 
   onEndDateChange() {
     this.endDate.setHours(23, 59, 59);
-    this.loadBookings();
+    this.loadData();
   }
 
   selectPreviousMonth() {
     this.endDate = new Date(this.startDate.getFullYear(), this.startDate.getMonth(), 0, 23, 59, 59);
     this.startDate = new Date(this.startDate.getFullYear(), this.startDate.getMonth() - 1, 1, 0, 0, 0)
-    this.loadBookings();
+    this.loadData();
   }
 
   selectNextMonth() {
     this.startDate = new Date(this.endDate.getFullYear(), this.endDate.getMonth() + 1, 1, 0, 0, 0)
     this.endDate = new Date(this.startDate.getFullYear(), this.startDate.getMonth() + 1, 0, 23, 59, 59);
-    this.loadBookings();
+    this.loadData();
   }
 
   balancesClicked() {

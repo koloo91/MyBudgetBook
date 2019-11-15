@@ -1,5 +1,8 @@
 <div class="container" fxLayout="column" fxLayoutAlign="center stretch">
-  <div fxFlex="10" fxLayout="row" fxLayoutAlign="space-evenly center" style="margin-top: 8px">
+  <div *ngIf="isLoading" class="spinner" fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div *ngIf="!isLoading" fxFlex="10" fxLayout="row" fxLayoutAlign="space-evenly center" style="margin-top: 8px">
     <button mat-icon-button aria-label="Previous month" (click)="selectPreviousMonth()">
       <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
@@ -25,8 +28,8 @@
     </button>
   </div>
 
-  <mat-nav-list fxFlex="80">
-    <mat-list-item class="account" role="listitem" *ngFor="let booking of (bookings | async)"
+  <mat-nav-list *ngIf="!isLoading" fxFlex="80">
+    <mat-list-item class="account" role="listitem" *ngFor="let booking of bookings"
                    (click)="updateBooking(booking)">
       <div matLine fxLayout="row" fxLayoutAlign="space-between start">
         <div>{{booking.title}}</div>
@@ -41,7 +44,7 @@
   </mat-nav-list>
 
   <div fxFlex="10" class="balance" fxLayout="column" fxLayoutAlign="center center">
-    <div *ngIf="balances" (click)="balancesClicked()">
+    <div *ngIf="balances.length > 0" (click)="balancesClicked()">
       {{balances[0].name}}
       {{balances[0].balance | number: '1.2-2'}} €
     </div>
