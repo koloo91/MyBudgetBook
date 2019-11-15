@@ -59,7 +59,7 @@ func unhandledErrorHandler() gin.HandlerFunc {
 		defer func() {
 			if err := recover(); err != nil {
 				log.Println(err)
-				ctx.AbortWithStatusJSON(http.StatusBadRequest, model.ErrorVo{Error: "unexpected error"})
+				ctx.AbortWithStatusJSON(http.StatusBadRequest, model.ErrorVo{Message: "unexpected error"})
 			}
 		}()
 		ctx.Next()
@@ -82,14 +82,14 @@ func createAccount(db *sql.DB) gin.HandlerFunc {
 		var accountVo model.AccountVo
 		if err := ctx.ShouldBindJSON(&accountVo); err != nil {
 			log.Println(err)
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
 		createdAccount, err := service.CreateAccount(ctx.Request.Context(), db, mapper.AccountVoToEntity(accountVo))
 		if err != nil {
 			log.Println(err)
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
@@ -103,7 +103,7 @@ func getAccounts(db *sql.DB) gin.HandlerFunc {
 		accounts, err := service.GetAccounts(ctx.Request.Context(), db)
 		if err != nil {
 			log.Println(err)
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
@@ -116,14 +116,14 @@ func createCategory(db *sql.DB) gin.HandlerFunc {
 		var categoryVo model.CategoryVo
 		if err := ctx.ShouldBindJSON(&categoryVo); err != nil {
 			log.Println(err)
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
 		createdCategory, err := service.CreateCategory(ctx.Request.Context(), db, mapper.CategoryVoToEntity(categoryVo))
 		if err != nil {
 			log.Println(err)
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
@@ -136,13 +136,13 @@ func updateCategory(db *sql.DB) gin.HandlerFunc {
 		id := ctx.Param("id")
 		var categoryVo model.CategoryVo
 		if err := ctx.ShouldBindJSON(&categoryVo); err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
 		updatedCategory, err := service.UpdateCategory(ctx.Request.Context(), db, id, mapper.CategoryVoToEntity(categoryVo))
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
@@ -155,7 +155,7 @@ func getCategories(db *sql.DB) gin.HandlerFunc {
 
 		categories, err := service.GetCategories(ctx.Request.Context(), db)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
@@ -167,13 +167,13 @@ func createBooking(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var bookingVo model.BookingVo
 		if err := ctx.ShouldBindJSON(&bookingVo); err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
 		createdBooking, err := service.CreateBooking(ctx.Request.Context(), db, mapper.BookingVoToEntity(bookingVo))
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
@@ -188,13 +188,13 @@ func updateBooking(db *sql.DB) gin.HandlerFunc {
 
 		var bookingVo model.BookingVo
 		if err := ctx.ShouldBindJSON(&bookingVo); err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
 		updatedBooking, err := service.UpdateBooking(ctx.Request.Context(), db, id, mapper.BookingVoToEntity(bookingVo), updateStrategy)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
@@ -209,19 +209,19 @@ func getBookings(db *sql.DB) gin.HandlerFunc {
 
 		startDate, err := time.Parse(time.RFC3339, startDateString)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
 		endDate, err := time.Parse(time.RFC3339, endDateString)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
 		bookings, err := service.GetBookings(ctx.Request.Context(), db, startDate, endDate)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
@@ -236,7 +236,7 @@ func deleteBooking(db *sql.DB) gin.HandlerFunc {
 
 		err := service.DeleteBooking(ctx.Request.Context(), db, id, deleteStrategy)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 
@@ -249,7 +249,7 @@ func getBalances(db *sql.DB) gin.HandlerFunc {
 
 		balances, err := service.GetBalances(ctx.Request.Context(), db)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Error: err.Error()})
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
 		}
 

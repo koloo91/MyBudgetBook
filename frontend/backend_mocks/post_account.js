@@ -5,7 +5,8 @@ module.exports = {
   method: 'POST',
   status: function (req, res, next) {
     res.status(400);
-    next();
+    res.send('Hello');
+    // next();
   },
   template: {
     id: 1,

@@ -5,7 +5,7 @@ import (
 )
 
 type ErrorVo struct {
-	Error string `json:"error"`
+	Message string `json:"message"`
 }
 
 type (

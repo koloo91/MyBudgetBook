@@ -4,14 +4,16 @@ import {Observable} from 'rxjs';
 import {PagedEntity} from '../models/paged-entity.model';
 import {environment} from '../../environments/environment';
 import {Booking} from '../models/booking.model';
-import {map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
+import {BaseService} from './base.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BookingService {
+export class BookingService extends BaseService {
 
   constructor(private http: HttpClient) {
+    super()
   }
 
   getBookings(startDate: Date, endDate: Date): Observable<Booking[]> {
@@ -21,7 +23,8 @@ export class BookingService {
     };
     return this.http.get<PagedEntity<Booking>>(`${environment.host}/api/bookings`, {params: params})
       .pipe(
-        map(_ => _.content)
+        map(_ => _.content),
+        catchError(this.handleError)
       );
   }
 
@@ -33,7 +36,10 @@ export class BookingService {
       categoryId,
       accountId,
       standingOrderPeriod
-    });
+    })
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   updateBooking(id: string, title: string, date: string, amount: number, categoryId: string, accountId: string, updateAll: boolean) {
@@ -47,7 +53,10 @@ export class BookingService {
       params: {
         updateStrategy: updateAll ? 'ALL' : 'ONE'
       }
-    });
+    })
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   delete(id: string, deleteAll: boolean) {
@@ -57,5 +66,8 @@ export class BookingService {
           deleteStrategy: deleteAll ? 'ALL' : 'ONE'
         }
       })
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 }

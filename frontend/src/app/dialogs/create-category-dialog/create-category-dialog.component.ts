@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {CategoryService} from '../../services/category.service';
 import {Category} from '../../models/category.model';
 import {ErrorService} from '../../services/error.service';
+import {ErrorVo} from '../../models/error.model';
 
 @Component({
   selector: 'app-create-account-dialog',
@@ -53,8 +54,9 @@ export class CreateCategoryDialogComponent implements OnInit {
     this.categoryService.createCategory(this.categoryName).subscribe(category => {
       console.log(category);
       this.dialogRef.close({success: true});
-    }, err => {
-      this.errorService.showErrorMessage(err.error);
+    }, (err: ErrorVo) => {
+      this.isLoading = false;
+      this.errorService.showErrorMessage(err.message);
     });
   }
 }
