@@ -7,7 +7,7 @@ module.exports = {
       return [
         {
           id: '1',
-          title: faker.lorem.word(),
+          title: 'Number One',
           amount: 12,
           date: '2019-10-23T22:00:00.0Z',
           categoryId: '1',
@@ -117,6 +117,6 @@ module.exports = {
           updated: faker.date.recent()
         }
       ]
-    },
+    }
   }
 };

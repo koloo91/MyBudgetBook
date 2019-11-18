@@ -4,7 +4,6 @@ import {Category} from '../models/category.model';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateCategoryDialogComponent} from '../dialogs/create-category-dialog/create-category-dialog.component';
 import {ErrorService} from '../services/error.service';
-import {ErrorVo} from '../models/error.model';
 
 interface CategoryNode {
   id: string;
@@ -37,7 +36,7 @@ export class CategoriesComponent implements OnInit {
       .subscribe((categories) => {
         this.isLoading = false;
         this.categories = categories;
-      }, (err: ErrorVo) => {
+      }, (err: any) => {
         this.isLoading = false;
         this.errorService.showErrorMessage(err.message);
       });

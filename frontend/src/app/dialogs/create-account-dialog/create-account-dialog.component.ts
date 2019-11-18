@@ -3,7 +3,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AccountService} from '../../services/account.service';
 import {Account} from '../../models/account.model';
 import {ErrorService} from '../../services/error.service';
-import {ErrorVo} from '../../models/error.model';
 
 @Component({
   selector: 'app-create-account-dialog',
@@ -33,7 +32,7 @@ export class CreateAccountDialogComponent implements OnInit {
     this.isLoading = true;
     this.accountService.createAccount(this.accountName, this.startingBalance).subscribe(account => {
       this.dialogRef.close({success: true});
-    }, (err: ErrorVo) => {
+    }, (err: any) => {
       this.isLoading = false;
       this.errorService.showErrorMessage(err.message);
     });

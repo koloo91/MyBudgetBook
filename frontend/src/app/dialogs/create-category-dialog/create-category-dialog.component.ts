@@ -35,13 +35,13 @@ export class CreateCategoryDialogComponent implements OnInit {
     this.isLoading = true;
 
     if (this.data) {
-      this.updateAccount();
+      this.updateCategory();
     } else {
-      this.createAccount();
+      this.createCategory();
     }
   }
 
-  updateAccount() {
+  updateCategory() {
     this.categoryService.updateCategory(this.data.id, this.categoryName).subscribe(category => {
       console.log(category);
       this.dialogRef.close({success: true});
@@ -50,11 +50,12 @@ export class CreateCategoryDialogComponent implements OnInit {
     });
   }
 
-  createAccount() {
+  createCategory() {
     this.categoryService.createCategory(this.categoryName).subscribe(category => {
       console.log(category);
       this.dialogRef.close({success: true});
     }, (err: ErrorVo) => {
+      console.log(err);
       this.isLoading = false;
       this.errorService.showErrorMessage(err.message);
     });

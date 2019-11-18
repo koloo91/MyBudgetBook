@@ -2,6 +2,7 @@ package controller
 
 import (
 	"database/sql"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/koloo91/mapper"
 	"github.com/koloo91/model"
@@ -15,6 +16,14 @@ func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.Use(unhandledErrorHandler())
+
+	corsConfig := cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
+		AllowHeaders:     []string{"*"},
+		AllowCredentials: true,
+	}
+	router.Use(cors.New(corsConfig))
 
 	authorized := router.Group("", gin.BasicAuth(gin.Accounts{
 		appUser: appUserPassword,

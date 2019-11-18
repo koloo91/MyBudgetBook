@@ -4,9 +4,7 @@ module.exports = {
   path: '/api/accounts',
   method: 'POST',
   status: function (req, res, next) {
-    res.status(400);
-    res.send('Hello');
-    // next();
+    res.send(400, {message: 'Nope'});
   },
   template: {
     id: 1,

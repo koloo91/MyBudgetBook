@@ -7,7 +7,6 @@ import {Observable} from 'rxjs';
 import {Category} from '../../models/category.model';
 import {Account} from '../../models/account.model';
 import {ErrorService} from '../../services/error.service';
-import {ErrorVo} from '../../models/error.model';
 
 @Component({
   selector: 'app-create-account-dialog',
@@ -111,7 +110,7 @@ export class CreateBookingDialogComponent implements OnInit {
     this.bookingService.delete(this.data.booking.id, this.data.updateAll)
       .subscribe(() => {
         this.dialogRef.close({success: true});
-      }, (err: ErrorVo) => {
+      }, (err: any) => {
         this.isLoading = false;
         this.errorService.showErrorMessage(err.message);
       });

@@ -7,7 +7,6 @@ import {Account} from '../models/account.model';
 import {BalanceService} from '../services/balance.service';
 import {Balance} from '../models/balance.model';
 import {ErrorService} from '../services/error.service';
-import {ErrorVo} from '../models/error.model';
 
 @Component({
   selector: 'app-accounts',
@@ -55,7 +54,7 @@ export class AccountsComponent implements OnInit {
           this.balances = balances;
           this.isLoading = false
         },
-        (err: ErrorVo) => {
+        (err: any) => {
           this.isLoading = false;
           this.errorService.showErrorMessage(err.message);
         }

@@ -10,6 +10,7 @@ export class ErrorService {
   }
 
   showErrorMessage(errorMessage: string) {
+    console.log(errorMessage);
     this.snackBar.open(errorMessage, 'OK', {duration: 2000});
   }
 }
