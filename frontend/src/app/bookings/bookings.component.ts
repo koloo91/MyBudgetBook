@@ -10,6 +10,7 @@ import {Balance} from '../models/balance.model';
 import {BalanceService} from '../services/balance.service';
 import {UpdateBookingDialogComponent} from '../dialogs/update-booking-dialog/update-booking-dialog.component';
 import {ErrorService} from '../services/error.service';
+import {ErrorVo} from '../models/error.model';
 
 @Component({
   selector: 'app-bookings',
@@ -54,7 +55,7 @@ export class BookingsComponent implements OnInit {
         this.bookings = bookings;
         this.categories = categories;
         this.balances = balances;
-      }, (err: any) => {
+      }, (err: ErrorVo) => {
         this.isLoading = false;
         this.errorService.showErrorMessage(err.message);
       });

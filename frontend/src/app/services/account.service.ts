@@ -19,12 +19,15 @@ export class AccountService extends BaseService {
   getAccounts(): Observable<Account[]> {
     return this.http.get<PagedEntity<Account>>(`${environment.host}/api/accounts`)
       .pipe(
-        map(_ => _.content)
+        map(_ => _.content),
+        catchError(this.handleError)
       );
   }
 
   createAccount(name: string, startingBalance: number): Observable<Account> {
     return this.http.post<Account>(`${environment.host}/api/accounts`, {name, startingBalance})
-      .pipe(catchError(this.handleError));
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 }

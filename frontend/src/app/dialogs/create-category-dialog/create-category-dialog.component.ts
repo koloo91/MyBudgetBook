@@ -43,7 +43,6 @@ export class CreateCategoryDialogComponent implements OnInit {
 
   updateCategory() {
     this.categoryService.updateCategory(this.data.id, this.categoryName).subscribe(category => {
-      console.log(category);
       this.dialogRef.close({success: true});
     }, err => {
       this.errorService.showErrorMessage(err.error);
@@ -52,10 +51,8 @@ export class CreateCategoryDialogComponent implements OnInit {
 
   createCategory() {
     this.categoryService.createCategory(this.categoryName).subscribe(category => {
-      console.log(category);
       this.dialogRef.close({success: true});
     }, (err: ErrorVo) => {
-      console.log(err);
       this.isLoading = false;
       this.errorService.showErrorMessage(err.message);
     });
