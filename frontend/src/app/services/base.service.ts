@@ -24,11 +24,7 @@ export class BaseService {
       console.error(
         `Backend returned code ${error.status}, ` +
         `body was: ${error.error}`);
-      if (error.error instanceof ErrorVo) {
-        return throwError(error.error as ErrorVo);
-      } else {
-        return throwError(new ErrorVo(error.statusText));
-      }
+      return throwError(error.error as ErrorVo);
     }
   }
 }
