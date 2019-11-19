@@ -124,4 +124,10 @@ export class BookingsComponent implements OnInit {
   balancesClicked() {
     console.log('balances');
   }
+
+  dateIsInFuture(date: string): boolean {
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59);
+    return new Date(date).getTime() > endOfDay.getTime();
+  }
 }
