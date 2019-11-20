@@ -3,14 +3,6 @@ import {throwError} from 'rxjs';
 import {ErrorVo} from '../models/error.model';
 
 export class BaseService {
-  // Http Options
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    })
-  };
-
   handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.

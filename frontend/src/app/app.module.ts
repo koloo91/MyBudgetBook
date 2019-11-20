@@ -15,7 +15,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {CreateAccountDialogComponent} from './dialogs/create-account-dialog/create-account-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {CategoriesComponent} from './categories/categories.component';
 import {CreateCategoryDialogComponent} from './dialogs/create-category-dialog/create-category-dialog.component';
@@ -75,7 +75,8 @@ registerLocaleData(localDe, 'de-DE', localeDeExtra)
     MatNativeDateModule,
     MatCheckboxModule,
     MatExpansionModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    ReactiveFormsModule
   ],
   entryComponents: [
     CreateAccountDialogComponent,

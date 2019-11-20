@@ -4,6 +4,7 @@ import {AccountService} from '../../services/account.service';
 import {Account} from '../../models/account.model';
 import {ErrorService} from '../../services/error.service';
 import {ErrorVo} from '../../models/error.model';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-create-account-dialog',
@@ -16,6 +17,8 @@ export class CreateAccountDialogComponent implements OnInit {
   startingBalance: number;
   isLoading = false;
 
+  accountFormGroup: FormGroup;
+
   constructor(public dialogRef: MatDialogRef<CreateAccountDialogComponent>,
               private accountService: AccountService,
               private errorService: ErrorService,
@@ -23,6 +26,11 @@ export class CreateAccountDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.accountFormGroup = new FormGroup({
+        'name': new FormControl(this.accountName, Validators.required),
+        'startingBalance': new FormControl(this.startingBalance, Validators.required)
+      }
+    );
   }
 
   onNoClick() {

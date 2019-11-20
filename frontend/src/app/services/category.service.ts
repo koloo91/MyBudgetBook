@@ -25,7 +25,7 @@ export class CategoryService extends BaseService {
   }
 
   createCategory(name: string): Observable<Category> {
-    return this.http.post<Category>(`${environment.host}/api/categories`, {name}, this.httpOptions)
+    return this.http.post<Category>(`${environment.host}/api/categories`, {name})
       .pipe(
         catchError(this.handleError)
       );
