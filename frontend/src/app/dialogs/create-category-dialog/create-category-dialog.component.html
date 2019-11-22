@@ -3,13 +3,13 @@
 </div>
 <div *ngIf="!isLoading">
   <h1 mat-dialog-title>Kategorie anlegen/bearbeiten</h1>
-  <div mat-dialog-content>
+  <div mat-dialog-content [formGroup]="categoryFormGroup">
     <mat-form-field>
-      <input matInput required [(ngModel)]="categoryName" placeholder="Name">
+      <input matInput required formControlName="name" placeholder="Name">
     </mat-form-field>
   </div>
   <div mat-dialog-actions align="end">
     <button mat-button (click)="onNoClick()">Abbrechen</button>
-    <button mat-button (click)="onOkClick()" cdkFocusInitial>OK</button>
+    <button mat-button (click)="onOkClick()" [disabled]="!categoryFormGroup.valid" cdkFocusInitial>OK</button>
   </div>
 </div>

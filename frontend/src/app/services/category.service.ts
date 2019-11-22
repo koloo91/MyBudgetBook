@@ -24,15 +24,15 @@ export class CategoryService extends BaseService {
       );
   }
 
-  createCategory(name: string): Observable<Category> {
-    return this.http.post<Category>(`${environment.host}/api/categories`, {name})
+  createCategory(category: Category): Observable<Category> {
+    return this.http.post<Category>(`${environment.host}/api/categories`, category)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  updateCategory(id: string, name: string): Observable<Category> {
-    return this.http.put<Category>(`${environment.host}/api/categories/${id}`, {name})
+  updateCategory(id: string, category: Category): Observable<Category> {
+    return this.http.put<Category>(`${environment.host}/api/categories/${id}`, category)
       .pipe(
         catchError(this.handleError)
       );

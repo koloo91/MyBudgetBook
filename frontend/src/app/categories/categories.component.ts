@@ -45,10 +45,14 @@ export class CategoriesComponent implements OnInit {
 
   showCreateDialog() {
     const dialogRef = this.dialog.open(CreateCategoryDialogComponent, {
-      width: '600px'
+      width: '600px',
+      data: new Category()
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (!result || !result.success) {
+        return;
+      }
       this.loadCategories();
     });
   }
@@ -60,6 +64,9 @@ export class CategoriesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (!result || !result.success) {
+        return;
+      }
       this.loadCategories();
     });
   }

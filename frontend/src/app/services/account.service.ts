@@ -24,8 +24,8 @@ export class AccountService extends BaseService {
       );
   }
 
-  createAccount(name: string, startingBalance: number): Observable<Account> {
-    return this.http.post<Account>(`${environment.host}/api/accounts`, {name, startingBalance})
+  createAccount(account: Account): Observable<Account> {
+    return this.http.post<Account>(`${environment.host}/api/accounts`, account)
       .pipe(
         catchError(this.handleError)
       );

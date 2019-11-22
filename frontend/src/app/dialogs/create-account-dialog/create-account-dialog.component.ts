@@ -13,8 +13,6 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class CreateAccountDialogComponent implements OnInit {
 
-  accountName: string;
-  startingBalance: number;
   isLoading = false;
 
   accountFormGroup: FormGroup;
@@ -22,13 +20,13 @@ export class CreateAccountDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<CreateAccountDialogComponent>,
               private accountService: AccountService,
               private errorService: ErrorService,
-              @Inject(MAT_DIALOG_DATA) public data?: Account) {
+              @Inject(MAT_DIALOG_DATA) public account: Account) {
   }
 
   ngOnInit() {
     this.accountFormGroup = new FormGroup({
-        'name': new FormControl(this.accountName, Validators.required),
-        'startingBalance': new FormControl(this.startingBalance, Validators.required)
+        'name': new FormControl(this.account.name, [Validators.required, Validators.minLength(1)]),
+        'startingBalance': new FormControl(this.account.startingBalance, Validators.required)
       }
     );
   }
@@ -39,7 +37,7 @@ export class CreateAccountDialogComponent implements OnInit {
 
   createAccount() {
     this.isLoading = true;
-    this.accountService.createAccount(this.accountName, this.startingBalance).subscribe(account => {
+    this.accountService.createAccount(this.accountFormGroup.value).subscribe(account => {
       this.dialogRef.close({success: true});
     }, (err: ErrorVo) => {
       this.isLoading = false;

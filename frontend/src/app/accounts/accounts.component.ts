@@ -36,10 +36,14 @@ export class AccountsComponent implements OnInit {
 
   showCreateDialog() {
     const dialogRef = this.dialog.open(CreateAccountDialogComponent, {
-      width: '600px'
+      width: '600px',
+      data: new Account()
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (!result || !result.success) {
+        return;
+      }
       this.loadData();
     });
   }
@@ -50,7 +54,7 @@ export class AccountsComponent implements OnInit {
     this.accounts$ = this.accountService.getAccounts();
     this.balances$ = this.balanceService.getBalances();
 
-    forkJoin(this.accounts$, this.balances$)
+    forkJoin([this.accounts$, this.balances$])
       .subscribe(([_, balances]) => {
           this.balances = balances;
           this.isLoading = false

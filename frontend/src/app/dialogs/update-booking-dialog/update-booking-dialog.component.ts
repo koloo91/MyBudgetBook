@@ -15,10 +15,10 @@ export class UpdateBookingDialogComponent implements OnInit {
   }
 
   onJustThisClick() {
-    this.dialogRef.close(false);
+    this.dialogRef.close({updateAll: false});
   }
 
   onAllClick() {
-    this.dialogRef.close(true);
+    this.dialogRef.close({updateAll: true});
   }
 }

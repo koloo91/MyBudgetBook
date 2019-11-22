@@ -49,7 +49,7 @@ export class BookingsComponent implements OnInit {
     const categories$ = this.categoryService.getCategories();
     const balances$ = this.balanceService.getBalances();
 
-    forkJoin(bookings$, categories$, balances$)
+    forkJoin([bookings$, categories$, balances$])
       .subscribe(([bookings, categories, balances]) => {
         this.isLoading = false;
         this.bookings = bookings;
@@ -67,6 +67,9 @@ export class BookingsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (!result || !result.success) {
+        return;
+      }
       this.loadData();
     });
   }
@@ -82,7 +85,10 @@ export class BookingsComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(updateAll => {
-        this.displayUpdateBookingDialog(selectedBooking, updateAll);
+        if (!updateAll) {
+          return;
+        }
+        this.displayUpdateBookingDialog(selectedBooking, updateAll.updateAll);
       });
     } else {
       this.displayUpdateBookingDialog(selectedBooking, false);
@@ -96,6 +102,9 @@ export class BookingsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (!result || !result.success) {
+        return;
+      }
       this.loadData();
     });
   }
