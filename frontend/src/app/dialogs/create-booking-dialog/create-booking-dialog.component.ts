@@ -3,11 +3,18 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AccountService} from '../../services/account.service';
 import {CategoryService} from '../../services/category.service';
 import {BookingService} from '../../services/booking.service';
-import {Observable} from 'rxjs';
+import {forkJoin} from 'rxjs';
 import {Category} from '../../models/category.model';
 import {Account} from '../../models/account.model';
 import {ErrorService} from '../../services/error.service';
 import {ErrorVo} from '../../models/error.model';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Booking} from '../../models/booking.model';
+
+interface BookingDialogData {
+  booking: Booking;
+  updateAll: boolean;
+}
 
 @Component({
   selector: 'app-create-account-dialog',
@@ -16,39 +23,46 @@ import {ErrorVo} from '../../models/error.model';
 })
 export class CreateBookingDialogComponent implements OnInit {
 
-  title: string;
-  date: Date = new Date();
-  amount: number;
-  categoryId: string;
-  accountId: string;
-  isLoading = false;
+  isLoading = true;
 
-  categories: Observable<Category[]>;
-  accounts: Observable<Account[]>;
+  categories: Category[];
+  accounts: Account[];
 
-  isStandingOrder: boolean = false;
-  standingOrderPeriod: string = 'MONTHLY';
+  bookingFormGroup: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<CreateBookingDialogComponent>,
               private accountService: AccountService,
               private categoryService: CategoryService,
               private bookingService: BookingService,
               private errorService: ErrorService,
-              @Inject(MAT_DIALOG_DATA) public data?: any) {
+              @Inject(MAT_DIALOG_DATA) public data: BookingDialogData) {
 
-    if (data && data.booking) {
-      const booking = data.booking;
-      this.title = booking.title;
-      this.date = new Date(booking.date);
-      this.amount = booking.amount;
-      this.categoryId = booking.categoryId;
-      this.accountId = booking.accountId;
-    }
+    const booking = data.booking;
+
+    this.bookingFormGroup = new FormGroup({
+      title: new FormControl(booking.title, Validators.required),
+      date: new FormControl(new Date(booking.date), Validators.required),
+      amount: new FormControl(booking.amount, Validators.required),
+      categoryId: new FormControl(booking.categoryId, Validators.required),
+      accountId: new FormControl(booking.accountId, Validators.required),
+      isStandingOrder: new FormControl(false),
+      standingOrderPeriod: new FormControl(booking.standingOrderPeriod)
+    });
   }
 
   ngOnInit() {
-    this.categories = this.categoryService.getCategories();
-    this.accounts = this.accountService.getAccounts();
+    const categories$ = this.categoryService.getCategories();
+    const accounts$ = this.accountService.getAccounts();
+
+    forkJoin([categories$, accounts$])
+      .subscribe(([categories, accounts]) => {
+        this.categories = categories;
+        this.accounts = accounts;
+        this.isLoading = false;
+      }, (error: ErrorVo) => {
+        this.errorService.showErrorMessage(error.message);
+        this.isLoading = false;
+      });
   }
 
   onNoClick() {
@@ -58,7 +72,7 @@ export class CreateBookingDialogComponent implements OnInit {
   onOkClick() {
     this.isLoading = true;
 
-    if (this.data && this.data.booking) {
+    if (this.data.booking && this.data.booking.id.length > 0) {
       this.updateBooking();
     } else {
       this.createBooking();
@@ -66,13 +80,14 @@ export class CreateBookingDialogComponent implements OnInit {
   }
 
   updateBooking() {
+    this.bookingFormGroup.patchValue({
+      date: this.addTimeToSelectedDate(this.bookingFormGroup.controls['date'].value).toISOString()
+    });
+
+    console.log(this.bookingFormGroup.value);
     this.bookingService.updateBooking(
       this.data.booking.id,
-      this.title,
-      this.addTimeToSelectedDate(this.date).toISOString(),
-      this.amount,
-      this.categoryId,
-      this.accountId,
+      this.bookingFormGroup.value,
       this.data.updateAll)
       .subscribe(booking => {
         this.dialogRef.close({success: true});
@@ -82,13 +97,16 @@ export class CreateBookingDialogComponent implements OnInit {
   }
 
   createBooking() {
+    const isStandingOrder = this.bookingFormGroup.controls['isStandingOrder'].value as boolean;
+
+    this.bookingFormGroup.patchValue({
+      date: this.addTimeToSelectedDate(this.bookingFormGroup.controls['date'].value).toISOString(),
+      standingOrderPeriod: !isStandingOrder ? null : this.bookingFormGroup.controls['standingOrderPeriod'].value
+    });
+
+    console.log(this.bookingFormGroup.value);
     this.bookingService.createBooking(
-      this.title,
-      this.addTimeToSelectedDate(this.date).toISOString(),
-      this.amount,
-      this.categoryId,
-      this.accountId,
-      this.isStandingOrder ? this.standingOrderPeriod : null)
+      this.bookingFormGroup.value)
       .subscribe(booking => {
         this.dialogRef.close({success: true});
       }, (err: ErrorVo) => {
@@ -99,11 +117,12 @@ export class CreateBookingDialogComponent implements OnInit {
   addTimeToSelectedDate(date: Date): Date {
     let now = new Date();
     now.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    now.setHours(12, 0, 0, 0);
     return now;
   }
 
   onDeleteClick() {
-    if (!this.data || !this.data.booking) {
+    if (!this.data.booking || this.data.booking.id.length === 0) {
       return;
     }
     this.isLoading = true;

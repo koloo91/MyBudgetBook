@@ -28,28 +28,15 @@ export class BookingService extends BaseService {
       );
   }
 
-  createBooking(title: string, date: string, amount: number, categoryId: string, accountId: string, standingOrderPeriod?: string): Observable<Booking> {
-    return this.http.post<Booking>(`${environment.host}/api/bookings`, {
-      title,
-      date,
-      amount,
-      categoryId,
-      accountId,
-      standingOrderPeriod
-    })
+  createBooking(booking: Booking): Observable<Booking> {
+    return this.http.post<Booking>(`${environment.host}/api/bookings`, booking)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  updateBooking(id: string, title: string, date: string, amount: number, categoryId: string, accountId: string, updateAll: boolean) {
-    return this.http.put<Booking>(`${environment.host}/api/bookings/${id}`, {
-      title,
-      date,
-      amount,
-      categoryId,
-      accountId
-    }, {
+  updateBooking(id: string, booking: Booking, updateAll: boolean) {
+    return this.http.put<Booking>(`${environment.host}/api/bookings/${id}`, booking, {
       params: {
         updateStrategy: updateAll ? 'ALL' : 'ONE'
       }

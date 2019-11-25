@@ -63,7 +63,8 @@ export class BookingsComponent implements OnInit {
 
   showCreateDialog() {
     const dialogRef = this.dialog.open(CreateBookingDialogComponent, {
-      width: '600px'
+      width: '600px',
+      data: {booking: new Booking(), updateAll: false}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -98,7 +99,7 @@ export class BookingsComponent implements OnInit {
   displayUpdateBookingDialog(booking: Booking, updateAll: boolean) {
     const dialogRef = this.dialog.open(CreateBookingDialogComponent, {
       width: '600px',
-      data: {booking, updateAll}
+      data: {booking: booking, updateAll: updateAll}
     });
 
     dialogRef.afterClosed().subscribe(result => {

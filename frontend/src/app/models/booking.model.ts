@@ -1,12 +1,12 @@
 export class Booking {
-  id: string;
+  id: string = '';
   title: string;
-  date: string;
+  date: string = new Date().toISOString();
   amount: number;
   categoryId: string;
   accountId: string;
   standingOrderId: string;
-  standingOrderPeriod: string;
+  standingOrderPeriod: string = 'MONTHLY';
   standingOrderLastDay: string;
   created: string;
   updated: string;
