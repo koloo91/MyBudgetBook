@@ -1,0 +1,96 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "contact": {},
+    "license": {}
+  },
+  "paths": {
+    "/api/accounts": {
+      "post": {
+        "description": "Create a new account",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Create a new account",
+        "parameters": [
+          {
+            "description": "Create account",
+            "name": "account",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.AccountVo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/model.AccountVo"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/model.ErrorVo"
+            }
+          }
+        }
+      }
+    },
+    "/api/ping": {
+      "get": {
+        "description": "Checks if the user is logged in",
+        "tags": [
+          "Ping"
+        ],
+        "summary": "Checks if the user is logged in",
+        "responses": {
+          "204": {}
+        }
+      }
+    }
+  },
+  "definitions": {
+    "model.AccountVo": {
+      "type": "object",
+      "required": [
+        "name",
+        "startingBalance"
+      ],
+      "properties": {
+        "created": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "startingBalance": {
+          "type": "number"
+        },
+        "updated": {
+          "type": "string"
+        }
+      }
+    },
+    "model.ErrorVo": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

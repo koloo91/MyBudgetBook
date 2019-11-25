@@ -4,13 +4,19 @@ import (
 	"database/sql"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	_ "github.com/koloo91/docs"
 	"github.com/koloo91/mapper"
 	"github.com/koloo91/model"
 	"github.com/koloo91/service"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"log"
 	"net/http"
 	"time"
 )
+
+// gin-swagger middleware
+// swagger embed files
 
 func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
 	router := gin.New()
@@ -59,6 +65,9 @@ func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
 
 	router.GET("/api/alive", alive())
 
+	url := ginSwagger.URL("router/swagger/doc.json") // The url pointing to API definition
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+
 	return router
 }
 
@@ -74,6 +83,13 @@ func unhandledErrorHandler() gin.HandlerFunc {
 		ctx.Next()
 	}
 }
+
+// Ping godoc
+// @Summary Checks if the user is logged in
+// @Description Checks if the user is logged in
+// @Tags Ping
+// @Success 204
+// @Router /api/ping [get]
 func ping() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.String(http.StatusNoContent, "")
@@ -86,6 +102,16 @@ func alive() gin.HandlerFunc {
 	}
 }
 
+// CreateAccount godoc
+// @Summary Create a new account
+// @Description Create a new account
+// @Tags Accounts
+// @Accept  json
+// @Produce  json
+// @Param account body model.AccountVo true "Create account"
+// @Success 200 {object} model.AccountVo
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/accounts [post]
 func createAccount(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var accountVo model.AccountVo

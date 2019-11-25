@@ -1,0 +1,62 @@
+definitions:
+  model.AccountVo:
+    properties:
+      created:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      startingBalance:
+        type: number
+      updated:
+        type: string
+    required:
+      - name
+      - startingBalance
+    type: object
+  model.ErrorVo:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+  license: {}
+paths:
+  /api/accounts:
+    post:
+      consumes:
+        - application/json
+      description: Create a new account
+      parameters:
+        - description: Create account
+          in: body
+          name: account
+          required: true
+          schema:
+            $ref: '#/definitions/model.AccountVo'
+            type: object
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AccountVo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorVo'
+      summary: Create a new account
+      tags:
+        - Accounts
+  /api/ping:
+    get:
+      description: Checks if the user is logged in
+      responses:
+        "204": {}
+      summary: Checks if the user is logged in
+      tags:
+        - Ping
+swagger: "2.0"
