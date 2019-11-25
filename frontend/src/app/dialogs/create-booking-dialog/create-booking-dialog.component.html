@@ -54,7 +54,7 @@
   </div>
   <div>
     <div mat-dialog-actions align="end">
-      <button mat-button *ngIf="data.booking.id > 0" (click)="onDeleteClick()" color="warn">Löschen</button>
+      <button mat-button *ngIf="data.booking.id.length > 0" (click)="onDeleteClick()" color="warn">Löschen</button>
       <button mat-button (click)="onNoClick()">Abbrechen</button>
       <button mat-button (click)="onOkClick()" [disabled]="!bookingFormGroup.valid" cdkFocusInitial>OK</button>
     </div>
