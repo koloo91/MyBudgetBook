@@ -96,11 +96,11 @@ func ping() gin.HandlerFunc {
 // @Summary Checks if the user is logged in
 // @Description Checks if the user is logged in
 // @Tags Ping
-// @Success 204
+// @Success 200
 // @Router /api/alive [get]
 func alive() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		ctx.String(http.StatusNoContent, "")
+		ctx.String(http.StatusOK, "Running")
 	}
 }
 
