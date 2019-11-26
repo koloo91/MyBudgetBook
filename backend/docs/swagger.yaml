@@ -1,4 +1,20 @@
 definitions:
+  model.AccountBalanceVo:
+    properties:
+      accountId:
+        type: string
+      balance:
+        type: number
+      name:
+        type: string
+    type: object
+  model.AccountBalancesVo:
+    properties:
+      content:
+        items:
+          $ref: '#/definitions/model.AccountBalanceVo'
+        type: array
+    type: object
   model.AccountVo:
     properties:
       created:
@@ -15,6 +31,71 @@ definitions:
       - name
       - startingBalance
     type: object
+  model.AccountsVo:
+    properties:
+      content:
+        items:
+          $ref: '#/definitions/model.AccountVo'
+        type: array
+    type: object
+  model.BookingVo:
+    properties:
+      accountId:
+        type: string
+      amount:
+        type: number
+      categoryId:
+        type: string
+      created:
+        type: string
+      date:
+        type: string
+      id:
+        type: string
+      standingOrderId:
+        type: string
+      standingOrderLastDay:
+        type: string
+      standingOrderPeriod:
+        type: string
+      title:
+        type: string
+      updated:
+        type: string
+    required:
+      - accountId
+      - amount
+      - categoryId
+      - date
+      - title
+    type: object
+  model.BookingsVo:
+    properties:
+      content:
+        items:
+          $ref: '#/definitions/model.BookingVo'
+        type: array
+    type: object
+  model.CategoriesVo:
+    properties:
+      content:
+        items:
+          $ref: '#/definitions/model.CategoryVo'
+        type: array
+    type: object
+  model.CategoryVo:
+    properties:
+      created:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updated:
+        type: string
+    required:
+      - name
+    type: object
   model.ErrorVo:
     properties:
       message:
@@ -25,6 +106,22 @@ info:
   license: {}
 paths:
   /api/accounts:
+    get:
+      description: Get all accounts
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AccountsVo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorVo'
+      summary: Get all accounts
+      tags:
+        - Accounts
     post:
       consumes:
         - application/json
@@ -40,8 +137,8 @@ paths:
       produces:
         - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/model.AccountVo'
         "400":
@@ -51,7 +148,7 @@ paths:
       summary: Create a new account
       tags:
         - Accounts
-  /api/ping:
+  /api/alive:
     get:
       description: Checks if the user is logged in
       responses:
@@ -59,4 +156,196 @@ paths:
       summary: Checks if the user is logged in
       tags:
         - Ping
+  /api/bookings:
+    get:
+      description: Get bookings in the given time range
+      parameters:
+        - description: 'start date of the range: 2006-01-02T15:04:05Z07:00'
+          in: query
+          name: startDate
+          type: string
+        - description: 'end date of the range: 2006-01-02T15:04:05Z07:00'
+          in: query
+          name: endDate
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BookingsVo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorVo'
+      summary: Get bookings in the given time range
+      tags:
+        - Bookings
+    post:
+      consumes:
+        - application/json
+      description: Create a new booking
+      parameters:
+        - description: Create booking
+          in: body
+          name: category
+          required: true
+          schema:
+            $ref: '#/definitions/model.BookingVo'
+            type: object
+      produces:
+        - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.BookingVo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorVo'
+      summary: Create a new booking
+      tags:
+        - Bookings
+  /api/bookings/{id}:
+    delete:
+      description: Deletes a booking
+      parameters:
+        - description: Booking id
+          in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        "204": {}
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorVo'
+      summary: Deletes a booking
+      tags:
+        - Bookings
+    put:
+      consumes:
+        - application/json
+      description: Updates a booking
+      parameters:
+        - description: Create booking
+          in: body
+          name: category
+          required: true
+          schema:
+            $ref: '#/definitions/model.BookingVo'
+            type: object
+        - description: Booking id
+          in: path
+          name: id
+          required: true
+          type: string
+        - default: ONE
+          description: update only this entry or all of the standing order
+          enum:
+            - ONE
+            - ALL
+          in: query
+          name: updateStrategy
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BookingVo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorVo'
+      summary: Updates a booking
+      tags:
+        - Bookings
+  /api/categories:
+    get:
+      description: Get current balances
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AccountBalancesVo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorVo'
+      summary: Get current balances
+      tags:
+        - Balances
+    post:
+      consumes:
+        - application/json
+      description: Create a new category
+      parameters:
+        - description: Create category
+          in: body
+          name: category
+          required: true
+          schema:
+            $ref: '#/definitions/model.CategoryVo'
+            type: object
+      produces:
+        - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.CategoryVo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorVo'
+      summary: Create a new category
+      tags:
+        - Categories
+  /api/categories/{id}:
+    put:
+      consumes:
+        - application/json
+      description: Updates a category
+      parameters:
+        - description: Update category
+          in: body
+          name: category
+          required: true
+          schema:
+            $ref: '#/definitions/model.CategoryVo'
+            type: object
+        - description: Category id
+          in: path
+          name: id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CategoryVo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorVo'
+      summary: Updates a category
+      tags:
+        - Categories
+  /api/ping:
+    get:
+      description: Checks if the service is running
+      responses:
+        "204": {}
+      summary: Checks if the service is running
+      tags:
+        - Alive
 swagger: "2.0"

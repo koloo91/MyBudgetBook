@@ -15,9 +15,6 @@ import (
 	"time"
 )
 
-// gin-swagger middleware
-// swagger embed files
-
 func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Logger())
@@ -65,8 +62,7 @@ func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
 
 	router.GET("/api/alive", alive())
 
-	url := ginSwagger.URL("router/swagger/doc.json") // The url pointing to API definition
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+	router.GET("/swagger/*any", ginSwagger.DisablingWrapHandler(swaggerFiles.Handler, "GIN_MODE"))
 
 	return router
 }
@@ -84,10 +80,10 @@ func unhandledErrorHandler() gin.HandlerFunc {
 	}
 }
 
-// Ping godoc
-// @Summary Checks if the user is logged in
-// @Description Checks if the user is logged in
-// @Tags Ping
+// Alive godoc
+// @Summary Checks if the service is running
+// @Description Checks if the service is running
+// @Tags Alive
 // @Success 204
 // @Router /api/ping [get]
 func ping() gin.HandlerFunc {
@@ -96,6 +92,12 @@ func ping() gin.HandlerFunc {
 	}
 }
 
+// Ping godoc
+// @Summary Checks if the user is logged in
+// @Description Checks if the user is logged in
+// @Tags Ping
+// @Success 204
+// @Router /api/alive [get]
 func alive() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.String(http.StatusNoContent, "")
@@ -106,10 +108,10 @@ func alive() gin.HandlerFunc {
 // @Summary Create a new account
 // @Description Create a new account
 // @Tags Accounts
-// @Accept  json
-// @Produce  json
+// @Accept json
+// @Produce json
 // @Param account body model.AccountVo true "Create account"
-// @Success 200 {object} model.AccountVo
+// @Success 201 {object} model.AccountVo
 // @Failure 400 {object} model.ErrorVo
 // @Router /api/accounts [post]
 func createAccount(db *sql.DB) gin.HandlerFunc {
@@ -132,6 +134,14 @@ func createAccount(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
+// GetAccounts godoc
+// @Summary Get all accounts
+// @Description Get all accounts
+// @Tags Accounts
+// @Produce json
+// @Success 200 {object} model.AccountsVo
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/accounts [get]
 func getAccounts(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -146,6 +156,16 @@ func getAccounts(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
+// CreateCategory godoc
+// @Summary Create a new category
+// @Description Create a new category
+// @Tags Categories
+// @Accept json
+// @Produce json
+// @Param category body model.CategoryVo true "Create category"
+// @Success 201 {object} model.CategoryVo
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/categories [post]
 func createCategory(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var categoryVo model.CategoryVo
@@ -166,6 +186,17 @@ func createCategory(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
+// UpdateCategory godoc
+// @Summary Updates a category
+// @Description Updates a category
+// @Tags Categories
+// @Accept json
+// @Produce json
+// @Param category body model.CategoryVo true "Update category"
+// @Param id path string true "Category id"
+// @Success 200 {object} model.CategoryVo
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/categories/{id} [put]
 func updateCategory(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
@@ -185,6 +216,14 @@ func updateCategory(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
+// GetCategories godoc
+// @Summary Get all categories
+// @Description Get all categories
+// @Tags Categories
+// @Produce json
+// @Success 200 {object} model.CategoriesVo
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/categories [get]
 func getCategories(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -198,6 +237,16 @@ func getCategories(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
+// CreateBooking godoc
+// @Summary Create a new booking
+// @Description Create a new booking
+// @Tags Bookings
+// @Accept json
+// @Produce json
+// @Param category body model.BookingVo true "Create booking"
+// @Success 201 {object} model.BookingVo
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/bookings [post]
 func createBooking(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var bookingVo model.BookingVo
@@ -216,6 +265,18 @@ func createBooking(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
+// UpdateBooking godoc
+// @Summary Updates a booking
+// @Description Updates a booking
+// @Tags Bookings
+// @Accept json
+// @Produce json
+// @Param category body model.BookingVo true "Create booking"
+// @Param id path string true "Booking id"
+// @Param updateStrategy query string false "update only this entry or all of the standing order" Enums(ONE, ALL) default(ONE)
+// @Success 200 {object} model.BookingVo
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/bookings/{id} [put]
 func updateBooking(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
@@ -237,6 +298,16 @@ func updateBooking(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
+// GetBookings godoc
+// @Summary Get bookings in the given time range
+// @Description Get bookings in the given time range
+// @Tags Bookings
+// @Produce json
+// @Param startDate query string false "start date of the range: 2006-01-02T15:04:05Z07:00"
+// @Param endDate query string false "end date of the range: 2006-01-02T15:04:05Z07:00"
+// @Success 200 {object} model.BookingsVo
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/bookings [get]
 func getBookings(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		startDateString := ctx.DefaultQuery("startDate", service.BeginningOfMonth().Format(time.RFC3339))
@@ -264,6 +335,14 @@ func getBookings(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
+// DeleteBooking godoc
+// @Summary Deletes a booking
+// @Description Deletes a booking
+// @Tags Bookings
+// @Param id path string true "Booking id"
+// @Success 204
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/bookings/{id} [delete]
 func deleteBooking(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
@@ -279,6 +358,14 @@ func deleteBooking(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
+// GetBalances godoc
+// @Summary Get current balances
+// @Description Get current balances
+// @Tags Balances
+// @Produce json
+// @Success 200 {object} model.AccountBalancesVo
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/categories [get]
 func getBalances(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
