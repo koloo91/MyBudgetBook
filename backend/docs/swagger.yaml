@@ -101,6 +101,22 @@ definitions:
       message:
         type: string
     type: object
+  model.MonthStatisticVo:
+    properties:
+      expenses:
+        type: number
+      incomes:
+        type: number
+      month:
+        type: integer
+    type: object
+  model.MonthStatisticsVo:
+    properties:
+      content:
+        items:
+          $ref: '#/definitions/model.MonthStatisticVo'
+        type: array
+    type: object
 info:
   contact: {}
   license: {}
@@ -152,7 +168,7 @@ paths:
     get:
       description: Checks if the user is logged in
       responses:
-        "204": {}
+        "200": {}
       summary: Checks if the user is logged in
       tags:
         - Ping
@@ -348,4 +364,26 @@ paths:
       summary: Checks if the service is running
       tags:
         - Alive
+  /api/statistics/month:
+    get:
+      description: Get expense, income statistic for each month
+      parameters:
+        - description: 'statistics for the year: 2019'
+          in: query
+          name: year
+          type: integer
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MonthStatisticsVo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorVo'
+      summary: Get expense, income statistic for each month
+      tags:
+        - Statistics
 swagger: "2.0"

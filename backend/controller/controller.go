@@ -2,6 +2,7 @@ package controller
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/koloo91/docs"
@@ -12,6 +13,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -58,6 +60,11 @@ func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
 	{
 		balances := authorized.Group("/api/balances")
 		balances.GET("", getBalances(db))
+	}
+
+	{
+		statistics := authorized.Group("/api/statistics")
+		statistics.GET("/month", getMonthStatistics(db))
 	}
 
 	router.GET("/api/alive", alive())
@@ -376,5 +383,34 @@ func getBalances(db *sql.DB) gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, model.AccountBalancesVo{Content: mapper.AccountBalanceEntitiesToVos(balances)})
+	}
+}
+
+// GetMonthStatistics godoc
+// @Summary Get expense, income statistic for each month
+// @Description Get expense, income statistic for each month
+// @Tags Statistics
+// @Produce json
+// @Param year query int false "statistics for the year: 2019"
+// @Success 200 {object} model.MonthStatisticsVo
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/statistics/month [get]
+func getMonthStatistics(db *sql.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		yearString := ctx.DefaultQuery("year", fmt.Sprintf("%d", time.Now().Year()))
+
+		year, err := strconv.Atoi(yearString)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: "invalid year parameter"})
+			return
+		}
+
+		bookings, err := service.GetMonthStatistics(ctx.Request.Context(), db, year)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, model.MonthStatisticsVo{Content: mapper.MonthStatisticEntitiesToVos(bookings)})
 	}
 }

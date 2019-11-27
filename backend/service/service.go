@@ -147,6 +147,10 @@ func GetBalances(ctx context.Context, db *sql.DB) ([]model.AccountBalance, error
 	return repository.QueryBalances(ctx, db, EndOfDay().UTC())
 }
 
+func GetMonthStatistics(ctx context.Context, db *sql.DB, year int) ([]model.MonthStatistic, error) {
+	return repository.QueryMonthStatistics(ctx, db, BeginningOfYearWithYear(year), EndOfYearWithYear(year))
+}
+
 func yearsMonthsDaysToAdd(period string) (years int, months int, days int, err error) {
 	years = 0
 	months = 0
@@ -204,6 +208,10 @@ func BeginningOfYear() time.Time {
 	return time.Date(y, time.January, 1, 0, 0, 0, 0, time.Now().Location())
 }
 
+func BeginningOfYearWithYear(year int) time.Time {
+	return time.Date(year, time.January, 1, 0, 0, 0, 0, time.Now().Location())
+}
+
 func EndOfDay() time.Time {
 	y, m, d := time.Now().Date()
 	return time.Date(y, m, d, 23, 59, 59, 59, time.Now().Location())
@@ -223,4 +231,8 @@ func EndOfHalf() time.Time {
 
 func EndOfYear() time.Time {
 	return BeginningOfYear().AddDate(1, 0, 0).Add(-time.Nanosecond)
+}
+
+func EndOfYearWithYear(year int) time.Time {
+	return BeginningOfYearWithYear(year).AddDate(1, 0, 0).Add(-time.Nanosecond)
 }

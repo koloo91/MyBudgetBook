@@ -78,7 +78,7 @@
         ],
         "summary": "Checks if the user is logged in",
         "responses": {
-          "204": {}
+          "200": {}
         }
       }
     },
@@ -369,6 +369,40 @@
           "204": {}
         }
       }
+    },
+    "/api/statistics/month": {
+      "get": {
+        "description": "Get expense, income statistic for each month",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Statistics"
+        ],
+        "summary": "Get expense, income statistic for each month",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "statistics for the year: 2019",
+            "name": "year",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/model.MonthStatisticsVo"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/model.ErrorVo"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -524,6 +558,31 @@
       "properties": {
         "message": {
           "type": "string"
+        }
+      }
+    },
+    "model.MonthStatisticVo": {
+      "type": "object",
+      "properties": {
+        "expenses": {
+          "type": "number"
+        },
+        "incomes": {
+          "type": "number"
+        },
+        "month": {
+          "type": "integer"
+        }
+      }
+    },
+    "model.MonthStatisticsVo": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/model.MonthStatisticVo"
+          }
         }
       }
     }

@@ -101,3 +101,21 @@ type (
 		Content []AccountBalanceVo `json:"content"`
 	}
 )
+
+type (
+	MonthStatistic struct {
+		Expenses float64
+		Incomes  float64
+		Month    int
+	}
+
+	MonthStatisticVo struct {
+		Expenses float64 `json:"expenses"`
+		Incomes  float64 `json:"incomes"`
+		Month    int     `json:"month"`
+	}
+
+	MonthStatisticsVo struct {
+		Content []MonthStatisticVo `json:"content"`
+	}
+)

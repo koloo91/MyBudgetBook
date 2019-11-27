@@ -209,3 +209,62 @@ func QueryBalances(ctx context.Context, db *sql.DB, endDate time.Time) ([]model.
 
 	return result, nil
 }
+
+func QueryMonthStatistics(ctx context.Context, db *sql.DB, startDate, endDate time.Time) ([]model.MonthStatistic, error) {
+
+	rows, err := db.QueryContext(ctx, `SELECT CASE
+								   WHEN sum(negative_bookings.amount) IS NULL
+									   THEN 0
+								   ELSE sum(negative_bookings.amount)
+								   END as negative_amount,
+							   CASE
+								   WHEN sum(positive_bookings.amount) IS NULL
+									   THEN 0
+								   ELSE sum(positive_bookings.amount)
+								   END as positive_amount,
+							   series.month
+						FROM (SELECT 0 as amount, generate_series(1, 12) as month) as series
+								 LEFT JOIN (SELECT sum(amount)                  as amount,
+												   to_char(date, 'MM')::INTEGER as month,
+												   extract(year from date)      as year
+											FROM bookings
+											WHERE date BETWEEN $1 AND $2
+											  AND amount < 0
+											GROUP BY month, year) as negative_bookings
+										   ON series.month = negative_bookings.month
+								 LEFT JOIN (SELECT sum(amount)                  as amount,
+												   to_char(date, 'MM')::INTEGER as month,
+												   extract(year from date)      as year
+											FROM bookings
+											WHERE date BETWEEN $1 AND $2
+											  AND amount >= 0
+											GROUP BY month, year) as positive_bookings
+										   ON series.month = positive_bookings.month
+						GROUP BY series.month
+						ORDER BY series.month DESC;`, startDate, endDate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var expenses, incomes float64
+	var month int
+
+	result := make([]model.MonthStatistic, 0)
+	for rows.Next() {
+
+		if err := rows.Scan(&expenses, &incomes, &month); err != nil {
+			return nil, err
+		}
+
+		result = append(result, model.MonthStatistic{
+			Expenses: expenses,
+			Incomes:  incomes,
+			Month:    month,
+		})
+	}
+
+	return result, nil
+}

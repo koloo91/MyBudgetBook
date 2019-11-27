@@ -115,3 +115,19 @@ func AccountBalanceEntitiesToVos(entities []model.AccountBalance) []model.Accoun
 	}
 	return vos
 }
+
+func MonthStatisticEntityToVo(entity model.MonthStatistic) model.MonthStatisticVo {
+	return model.MonthStatisticVo{
+		Expenses: entity.Expenses,
+		Incomes:  entity.Incomes,
+		Month:    entity.Month,
+	}
+}
+
+func MonthStatisticEntitiesToVos(entities []model.MonthStatistic) []model.MonthStatisticVo {
+	vos := make([]model.MonthStatisticVo, 0, len(entities))
+	for _, entity := range entities {
+		vos = append(vos, MonthStatisticEntityToVo(entity))
+	}
+	return vos
+}
