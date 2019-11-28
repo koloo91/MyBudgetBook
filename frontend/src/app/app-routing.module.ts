@@ -6,6 +6,7 @@ import {LoginComponent} from './login/login.component';
 import {HomeComponent} from './home/home.component';
 import {AuthGuard} from './helper/auth.guard';
 import {BookingsComponent} from './bookings/bookings.component';
+import {DashboardComponent} from './dashboard/dashboard.component';
 
 
 const routes: Routes = [
@@ -14,6 +15,10 @@ const routes: Routes = [
     component: HomeComponent,
     canActivate: [AuthGuard],
     children: [
+      {
+        path: '',
+        component: DashboardComponent
+      },
       {
         path: 'bookings',
         component: BookingsComponent

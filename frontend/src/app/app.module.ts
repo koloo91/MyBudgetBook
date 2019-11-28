@@ -37,6 +37,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {UpdateBookingDialogComponent} from './dialogs/update-booking-dialog/update-booking-dialog.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {DashboardComponent} from './dashboard/dashboard.component';
+import {ChartsModule} from 'ng2-charts';
 
 registerLocaleData(localDe, 'de-DE', localeDeExtra)
 
@@ -51,7 +53,8 @@ registerLocaleData(localDe, 'de-DE', localeDeExtra)
     LoginComponent,
     HomeComponent,
     BookingsComponent,
-    UpdateBookingDialogComponent
+    UpdateBookingDialogComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +79,8 @@ registerLocaleData(localDe, 'de-DE', localeDeExtra)
     MatCheckboxModule,
     MatExpansionModule,
     MatSnackBarModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ChartsModule
   ],
   entryComponents: [
     CreateAccountDialogComponent,
