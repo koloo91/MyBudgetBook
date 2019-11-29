@@ -40,7 +40,6 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {ChartsModule} from 'ng2-charts';
 import {DocumentsComponent} from './documents/documents.component';
-import {PdfJsViewerModule} from 'ng2-pdfjs-viewer';
 
 registerLocaleData(localDe, 'de-DE', localeDeExtra);
 
@@ -83,8 +82,7 @@ registerLocaleData(localDe, 'de-DE', localeDeExtra);
     MatExpansionModule,
     MatSnackBarModule,
     ReactiveFormsModule,
-    ChartsModule,
-    PdfJsViewerModule
+    ChartsModule
   ],
   entryComponents: [
     CreateAccountDialogComponent,

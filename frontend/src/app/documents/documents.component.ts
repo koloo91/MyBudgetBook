@@ -10,6 +10,7 @@ import {getDocument, PDFSource} from 'pdfjs-dist/webpack';
 export class DocumentsComponent implements OnInit {
 
   public files: Set<File> = new Set();
+  text: string;
 
   constructor() {
   }
@@ -39,6 +40,7 @@ export class DocumentsComponent implements OnInit {
     await worker.initialize('deu');
     const {data: {text}} = await worker.recognize(image);
     console.log(text);
+    this.text = text;
     await worker.terminate();
   }
 
@@ -63,7 +65,7 @@ export class DocumentsComponent implements OnInit {
             // Prepare canvas using PDF page dimensions
             //
 
-            let canvas = document.getElementById('the-canvas') as HTMLCanvasElement;
+            let canvas = document.getElementById('pdf-to-image-canvas') as HTMLCanvasElement;
             let context = canvas.getContext('2d');
             canvas.height = viewport.height;
             canvas.width = viewport.width;
