@@ -39,8 +39,10 @@ import {UpdateBookingDialogComponent} from './dialogs/update-booking-dialog/upda
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {ChartsModule} from 'ng2-charts';
+import {DocumentsComponent} from './documents/documents.component';
+import {PdfJsViewerModule} from 'ng2-pdfjs-viewer';
 
-registerLocaleData(localDe, 'de-DE', localeDeExtra)
+registerLocaleData(localDe, 'de-DE', localeDeExtra);
 
 @NgModule({
   declarations: [
@@ -54,7 +56,8 @@ registerLocaleData(localDe, 'de-DE', localeDeExtra)
     HomeComponent,
     BookingsComponent,
     UpdateBookingDialogComponent,
-    DashboardComponent
+    DashboardComponent,
+    DocumentsComponent
   ],
   imports: [
     BrowserModule,
@@ -80,7 +83,8 @@ registerLocaleData(localDe, 'de-DE', localeDeExtra)
     MatExpansionModule,
     MatSnackBarModule,
     ReactiveFormsModule,
-    ChartsModule
+    ChartsModule,
+    PdfJsViewerModule
   ],
   entryComponents: [
     CreateAccountDialogComponent,
