@@ -7,7 +7,6 @@ import {HomeComponent} from './home/home.component';
 import {AuthGuard} from './helper/auth.guard';
 import {BookingsComponent} from './bookings/bookings.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
-import {DocumentsComponent} from './documents/documents.component';
 
 
 const routes: Routes = [
@@ -31,10 +30,6 @@ const routes: Routes = [
       {
         path: 'categories',
         component: CategoriesComponent
-      },
-      {
-        path: 'documents',
-        component: DocumentsComponent
       }
     ]
   },

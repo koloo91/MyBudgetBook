@@ -39,7 +39,6 @@ import {UpdateBookingDialogComponent} from './dialogs/update-booking-dialog/upda
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {ChartsModule} from 'ng2-charts';
-import {DocumentsComponent} from './documents/documents.component';
 
 registerLocaleData(localDe, 'de-DE', localeDeExtra);
 
@@ -55,8 +54,7 @@ registerLocaleData(localDe, 'de-DE', localeDeExtra);
     HomeComponent,
     BookingsComponent,
     UpdateBookingDialogComponent,
-    DashboardComponent,
-    DocumentsComponent
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
