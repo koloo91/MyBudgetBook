@@ -11,6 +11,7 @@ func AccountVoToEntity(vo model.AccountVo) model.Account {
 		Id:              uuid.New().String(),
 		Name:            vo.Name,
 		StartingBalance: vo.StartingBalance,
+		IsMain:          vo.IsMain,
 		Created:         time.Now(),
 		Updated:         time.Now(),
 	}
@@ -21,6 +22,7 @@ func AccountEntityToVo(entity model.Account) model.AccountVo {
 		Id:              entity.Id,
 		Name:            entity.Name,
 		StartingBalance: entity.StartingBalance,
+		IsMain:          entity.IsMain,
 		Created:         entity.Created,
 		Updated:         entity.Updated,
 	}

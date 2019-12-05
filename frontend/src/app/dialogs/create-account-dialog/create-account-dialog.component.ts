@@ -25,8 +25,9 @@ export class CreateAccountDialogComponent implements OnInit {
 
   ngOnInit() {
     this.accountFormGroup = new FormGroup({
-        'name': new FormControl(this.account.name, [Validators.required, Validators.minLength(1)]),
-        'startingBalance': new FormControl(this.account.startingBalance, Validators.required)
+        name: new FormControl(this.account.name, [Validators.required, Validators.minLength(1)]),
+        startingBalance: new FormControl(this.account.startingBalance, Validators.required),
+        isMain: new FormControl(false)
       }
     );
   }

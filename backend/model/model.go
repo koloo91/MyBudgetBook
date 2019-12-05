@@ -13,6 +13,7 @@ type (
 		Id              string    `json:"id"`
 		Name            string    `json:"name" binding:"required"`
 		StartingBalance float64   `json:"startingBalance" binding:"required"`
+		IsMain          bool      `json:"isMain"`
 		Created         time.Time `json:"created"`
 		Updated         time.Time `json:"updated"`
 	}
@@ -21,6 +22,7 @@ type (
 		Id              string
 		Name            string
 		StartingBalance float64
+		IsMain          bool
 		Created         time.Time
 		Updated         time.Time
 	}
