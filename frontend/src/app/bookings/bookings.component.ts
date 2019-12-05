@@ -7,10 +7,12 @@ import {CreateBookingDialogComponent} from '../dialogs/create-booking-dialog/cre
 import {Category} from '../models/category.model';
 import {CategoryService} from '../services/category.service';
 import {Balance} from '../models/balance.model';
+import {Account} from '../models/account.model';
 import {BalanceService} from '../services/balance.service';
 import {UpdateBookingDialogComponent} from '../dialogs/update-booking-dialog/update-booking-dialog.component';
 import {ErrorService} from '../services/error.service';
 import {ErrorVo} from '../models/error.model';
+import {AccountService} from '../services/account.service';
 
 @Component({
   selector: 'app-bookings',
@@ -22,6 +24,7 @@ export class BookingsComponent implements OnInit {
 
   bookings: Booking[] = [];
   categories: Category[] = [];
+  accounts: Account[] = [];
   balances: Balance[] = [];
 
   startDate: Date = new Date();
@@ -29,6 +32,7 @@ export class BookingsComponent implements OnInit {
 
   constructor(private bookingService: BookingService,
               private categoryService: CategoryService,
+              private accountService: AccountService,
               private balanceService: BalanceService,
               private errorService: ErrorService,
               public dialog: MatDialog) {
@@ -47,13 +51,15 @@ export class BookingsComponent implements OnInit {
 
     const bookings$ = this.bookingService.getBookings(this.startDate, this.endDate);
     const categories$ = this.categoryService.getCategories();
+    const accounts$ = this.accountService.getAccounts();
     const balances$ = this.balanceService.getBalances();
 
-    forkJoin([bookings$, categories$, balances$])
-      .subscribe(([bookings, categories, balances]) => {
+    forkJoin([bookings$, categories$, accounts$, balances$])
+      .subscribe(([bookings, categories, accounts, balances]) => {
         this.isLoading = false;
         this.bookings = bookings;
         this.categories = categories;
+        this.accounts = accounts;
         this.balances = balances;
       }, (err: ErrorVo) => {
         this.isLoading = false;
@@ -139,5 +145,23 @@ export class BookingsComponent implements OnInit {
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59);
     return new Date(date).getTime() > endOfDay.getTime();
+  }
+
+  getMainAccountName(): string {
+    const mainAccount = this.accounts.find(_ => _.isMain)
+    if (!mainAccount) {
+      return 'Kein Hauptkonto ausgewählt';
+    }
+
+    return mainAccount.name;
+  }
+
+  getMainAccountBalance(): number {
+    const mainAccount = this.accounts.find(_ => _.isMain)
+    if (!mainAccount) {
+      return 0.0;
+    }
+
+    return this.balances.find(_ => _.accountId === mainAccount.id).balance;
   }
 }
