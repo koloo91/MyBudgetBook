@@ -133,3 +133,18 @@ func MonthStatisticEntitiesToVos(entities []model.MonthStatistic) []model.MonthS
 	}
 	return vos
 }
+
+func CategoryStatisticEntityToVo(entity model.CategoryStatistic) model.CategoryStatisticVo {
+	return model.CategoryStatisticVo{
+		Name: entity.Name,
+		Sum:  entity.Sum,
+	}
+}
+
+func CategoryStatisticEntitiesToVos(entities []model.CategoryStatistic) []model.CategoryStatisticVo {
+	vos := make([]model.CategoryStatisticVo, 0, len(entities))
+	for _, entity := range entities {
+		vos = append(vos, CategoryStatisticEntityToVo(entity))
+	}
+	return vos
+}

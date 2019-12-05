@@ -121,3 +121,19 @@ type (
 		Content []MonthStatisticVo `json:"content"`
 	}
 )
+
+type (
+	CategoryStatistic struct {
+		Name string
+		Sum  float64
+	}
+
+	CategoryStatisticVo struct {
+		Name string  `json:"name"`
+		Sum  float64 `json:"sum"`
+	}
+
+	CategoryStatisticsVo struct {
+		Content []CategoryStatisticVo `json:"content"`
+	}
+)

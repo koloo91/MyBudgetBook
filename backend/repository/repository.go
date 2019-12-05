@@ -270,3 +270,38 @@ func QueryMonthStatistics(ctx context.Context, db *sql.DB, startDate, endDate ti
 
 	return result, nil
 }
+
+func QueryCategoryStatistic(ctx context.Context, db *sql.DB, startDate, endDate time.Time) ([]model.CategoryStatistic, error) {
+
+	rows, err := db.QueryContext(ctx, `SELECT c.name, ABS(SUM(amount)) as category_sum
+									FROM bookings
+									JOIN categories c on bookings.category_id = c.id
+									WHERE date between $1 AND $2
+									AND account_id = (SELECT id FROM accounts WHERE is_main = true)
+									GROUP BY category_id, c.name
+									ORDER BY category_sum DESC;`, startDate, endDate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var name string
+	var sum float64
+
+	result := make([]model.CategoryStatistic, 0)
+
+	for rows.Next() {
+		if err := rows.Scan(&name, sum); err != nil {
+			return nil, err
+		}
+
+		result = append(result, model.CategoryStatistic{
+			Name: name,
+			Sum:  sum,
+		})
+	}
+
+	return result, nil
+}

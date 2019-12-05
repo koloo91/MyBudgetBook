@@ -151,6 +151,10 @@ func GetMonthStatistics(ctx context.Context, db *sql.DB, year int) ([]model.Mont
 	return repository.QueryMonthStatistics(ctx, db, BeginningOfYearWithYear(year), EndOfYearWithYear(year))
 }
 
+func GetCategoryStatistics(ctx context.Context, db *sql.DB, year int) ([]model.CategoryStatistic, error) {
+	return repository.QueryCategoryStatistic(ctx, db, BeginningOfYearWithYear(year), EndOfYearWithYear(year))
+}
+
 func yearsMonthsDaysToAdd(period string) (years int, months int, days int, err error) {
 	years = 0
 	months = 0
