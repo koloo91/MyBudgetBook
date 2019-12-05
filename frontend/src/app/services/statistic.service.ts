@@ -6,6 +6,7 @@ import {PagedEntity} from '../models/paged-entity.model';
 import {environment} from '../../environments/environment';
 import {catchError, map} from 'rxjs/operators';
 import {MonthStatistic} from '../models/month_statistic.model';
+import {CategoryStatistic} from '../models/category_statistic.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,14 @@ export class StatisticService extends BaseService {
 
   getMonthStatistics(): Observable<MonthStatistic[]> {
     return this.http.get<PagedEntity<MonthStatistic>>(`${environment.host}/api/statistics/month`)
+      .pipe(
+        map(_ => _.content),
+        catchError(this.handleError)
+      );
+  }
+
+  getCategoryStatistics(): Observable<CategoryStatistic[]> {
+    return this.http.get<PagedEntity<CategoryStatistic>>(`${environment.host}/api/statistics/category`)
       .pipe(
         map(_ => _.content),
         catchError(this.handleError)

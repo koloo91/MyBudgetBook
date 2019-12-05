@@ -4,6 +4,7 @@ import {StatisticService} from '../services/statistic.service';
 import {ErrorVo} from '../models/error.model';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Label} from 'ng2-charts';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +14,8 @@ import {Label} from 'ng2-charts';
 export class DashboardComponent implements OnInit {
 
   isLoading: boolean = true;
+
+  selectedStatistic: string = 'month';
 
   public barChartOptions: ChartOptions = {
     responsive: true,
@@ -35,6 +38,17 @@ export class DashboardComponent implements OnInit {
     {data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], label: 'Einnahmen'}
   ];
 
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+    legend: {
+      position: 'bottom',
+    },
+  };
+  public pieChartLabels: Label[] = [];
+  public pieChartData: number[] = [];
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = false;
+
   constructor(
     private statisticService: StatisticService,
     private errorService: ErrorService) {
@@ -45,12 +59,17 @@ export class DashboardComponent implements OnInit {
   }
 
   loadData() {
-    this.statisticService.getMonthStatistics()
-      .subscribe(data => {
-          console.log(data);
+    const monthStatistic$ = this.statisticService.getMonthStatistics();
+    const categoryStatistic$ = this.statisticService.getCategoryStatistics();
+
+    forkJoin([monthStatistic$, categoryStatistic$])
+      .subscribe(([monthData, categoryData]) => {
           this.isLoading = false;
-          this.barChartData[0].data = data.map(_ => Math.abs(_.expenses));
-          this.barChartData[1].data = data.map(_ => _.incomes);
+          this.barChartData[0].data = monthData.map(_ => Math.abs(_.expenses));
+          this.barChartData[1].data = monthData.map(_ => _.incomes);
+
+          this.pieChartLabels = categoryData.map(_ => _.name);
+          this.pieChartData = categoryData.map(_ => _.sum);
         },
         (error: ErrorVo) => {
           this.isLoading = false;
