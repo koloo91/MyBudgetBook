@@ -17,19 +17,25 @@ export class StatisticService extends BaseService {
     super();
   }
 
-  getMonthStatistics(): Observable<MonthStatistic[]> {
-    return this.http.get<PagedEntity<MonthStatistic>>(`${environment.host}/api/statistics/month`)
-      .pipe(
-        map(_ => _.content),
-        catchError(this.handleError)
-      );
+  getMonthStatistics(year: number = new Date().getFullYear()): Observable<MonthStatistic[]> {
+    return this.http.get<PagedEntity<MonthStatistic>>(`${environment.host}/api/statistics/month`, {
+      params: {
+        year: `${year}`
+      }
+    }).pipe(
+      map(_ => _.content),
+      catchError(this.handleError)
+    );
   }
 
-  getCategoryStatistics(): Observable<CategoryStatistic[]> {
-    return this.http.get<PagedEntity<CategoryStatistic>>(`${environment.host}/api/statistics/category`)
-      .pipe(
-        map(_ => _.content),
-        catchError(this.handleError)
-      );
+  getCategoryStatistics(year: number = new Date().getFullYear()): Observable<CategoryStatistic[]> {
+    return this.http.get<PagedEntity<CategoryStatistic>>(`${environment.host}/api/statistics/category`, {
+      params: {
+        year: `${year}`
+      }
+    }).pipe(
+      map(_ => _.content),
+      catchError(this.handleError)
+    );
   }
 }
