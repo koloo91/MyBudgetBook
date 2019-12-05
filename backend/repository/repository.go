@@ -293,7 +293,7 @@ func QueryCategoryStatistic(ctx context.Context, db *sql.DB, startDate, endDate 
 	result := make([]model.CategoryStatistic, 0)
 
 	for rows.Next() {
-		if err := rows.Scan(&name, sum); err != nil {
+		if err := rows.Scan(&name, &sum); err != nil {
 			return nil, err
 		}
 
