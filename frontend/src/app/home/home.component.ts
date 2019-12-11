@@ -17,9 +17,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.router.events.subscribe(() => {
+    this.router.events.subscribe((event) => {
       this.matDrawer.close();
     })
   }
-
 }

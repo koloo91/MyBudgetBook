@@ -11,3 +11,8 @@ mat-drawer-container {
 mat-drawer {
   width: 200px;
 }
+
+.list-item-active {
+  font-weight: bold;
+  color: black !important;
+}
