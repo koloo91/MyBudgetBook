@@ -8,7 +8,6 @@ before_install:
 script:
   - make test-backend
 after_success:
-  - cd ..
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t koloooo/mbb:latest .
   - docker push koloooo/mbb:latest
