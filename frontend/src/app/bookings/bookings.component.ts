@@ -82,7 +82,11 @@ export class BookingsComponent implements OnInit {
   }
 
   getCategory(categoryId: string): string {
-    return this.categories.find(_ => _.id === categoryId).name || 'Unbekannt';
+    const maybeCategory = this.categories.find(_ => _.id === categoryId);
+    if (!maybeCategory) {
+      return 'Unbekannt';
+    }
+    return maybeCategory.name;
   }
 
   updateBooking(selectedBooking: Booking) {

@@ -31,8 +31,8 @@ module.exports = {
           title: faker.lorem.word(),
           amount: -50.00,
           date: '2019-10-23T23:17:12.0Z',
-          categoryId: '2',
-          accountId: '2',
+          categoryId: null,
+          accountId: null,
           created: faker.date.recent(),
           updated: faker.date.recent()
         },
