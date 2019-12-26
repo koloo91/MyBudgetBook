@@ -3,3 +3,23 @@
   overflow: auto;
   height: 100%;
 }
+
+@media (min-width: 672px) {
+  .content {
+    width: 672px;
+    margin: auto;
+  }
+}
+
+mat-drawer-container {
+  height: 100%;
+}
+
+mat-drawer {
+  width: 200px;
+}
+
+.list-item-active {
+  font-weight: bold;
+  color: black !important;
+}

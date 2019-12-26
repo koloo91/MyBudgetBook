@@ -11,6 +11,7 @@ func AccountVoToEntity(vo model.AccountVo) model.Account {
 		Id:              uuid.New().String(),
 		Name:            vo.Name,
 		StartingBalance: vo.StartingBalance,
+		IsMain:          vo.IsMain,
 		Created:         time.Now(),
 		Updated:         time.Now(),
 	}
@@ -21,6 +22,7 @@ func AccountEntityToVo(entity model.Account) model.AccountVo {
 		Id:              entity.Id,
 		Name:            entity.Name,
 		StartingBalance: entity.StartingBalance,
+		IsMain:          entity.IsMain,
 		Created:         entity.Created,
 		Updated:         entity.Updated,
 	}
@@ -128,6 +130,21 @@ func MonthStatisticEntitiesToVos(entities []model.MonthStatistic) []model.MonthS
 	vos := make([]model.MonthStatisticVo, 0, len(entities))
 	for _, entity := range entities {
 		vos = append(vos, MonthStatisticEntityToVo(entity))
+	}
+	return vos
+}
+
+func CategoryStatisticEntityToVo(entity model.CategoryStatistic) model.CategoryStatisticVo {
+	return model.CategoryStatisticVo{
+		Name: entity.Name,
+		Sum:  entity.Sum,
+	}
+}
+
+func CategoryStatisticEntitiesToVos(entities []model.CategoryStatistic) []model.CategoryStatisticVo {
+	vos := make([]model.CategoryStatisticVo, 0, len(entities))
+	for _, entity := range entities {
+		vos = append(vos, CategoryStatisticEntityToVo(entity))
 	}
 	return vos
 }

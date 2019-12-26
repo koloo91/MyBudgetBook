@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod --base-href /app/",
+    "build": "ng build --prod --aot --base-href /app/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -30,13 +30,13 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.803.19",
-    "@angular/cli": "8.3.19",
+    "@angular-devkit/build-angular": "0.803.20",
+    "@angular/cli": "8.3.20",
     "@angular/compiler-cli": "8.2.14",
     "@angular/language-service": "8.2.14",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "~8.9.4",
+    "@types/node": "^8.10.59",
     "codelyzer": "^5.2.0",
     "dyson-generators": "^0.2.1",
     "faker": "^4.1.0",
@@ -47,6 +47,7 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
+    "pdfjs-dist": "^2.2.228",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",

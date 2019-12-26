@@ -8,12 +8,12 @@ import (
 )
 
 func InsertAccount(ctx context.Context, db *sql.DB, account model.Account) error {
-	_, err := db.ExecContext(ctx, "INSERT INTO accounts (id, name, starting_balance, created, updated) VALUES ($1, $2, $3, $4, $5)", account.Id, account.Name, account.StartingBalance, account.Created, account.Updated)
+	_, err := db.ExecContext(ctx, "INSERT INTO accounts (id, name, starting_balance, is_main, created, updated) VALUES ($1, $2, $3, $4, $5, $6)", account.Id, account.Name, account.StartingBalance, account.IsMain, account.Created, account.Updated)
 	return err
 }
 
 func QueryAccounts(ctx context.Context, db *sql.DB) ([]model.Account, error) {
-	rows, err := db.QueryContext(ctx, "SELECT id, name, starting_balance, created, updated FROM accounts ORDER BY name ASC")
+	rows, err := db.QueryContext(ctx, "SELECT id, name, starting_balance, is_main, created, updated FROM accounts ORDER BY name ASC")
 	if err != nil {
 		return nil, err
 	}
@@ -23,10 +23,11 @@ func QueryAccounts(ctx context.Context, db *sql.DB) ([]model.Account, error) {
 	result := make([]model.Account, 0)
 	var id, name string
 	var startingBalance float64
+	var isMain bool
 	var created, updated time.Time
 
 	for rows.Next() {
-		if err := rows.Scan(&id, &name, &startingBalance, &created, &updated); err != nil {
+		if err := rows.Scan(&id, &name, &startingBalance, &isMain, &created, &updated); err != nil {
 			return nil, err
 		}
 
@@ -34,6 +35,7 @@ func QueryAccounts(ctx context.Context, db *sql.DB) ([]model.Account, error) {
 			Id:              id,
 			Name:            name,
 			StartingBalance: startingBalance,
+			IsMain:          isMain,
 			Created:         created,
 			Updated:         updated,
 		})
@@ -263,6 +265,41 @@ func QueryMonthStatistics(ctx context.Context, db *sql.DB, startDate, endDate ti
 			Expenses: expenses,
 			Incomes:  incomes,
 			Month:    month,
+		})
+	}
+
+	return result, nil
+}
+
+func QueryCategoryStatistic(ctx context.Context, db *sql.DB, startDate, endDate time.Time) ([]model.CategoryStatistic, error) {
+
+	rows, err := db.QueryContext(ctx, `SELECT c.name, ABS(SUM(amount)) as category_sum
+									FROM bookings
+									JOIN categories c on bookings.category_id = c.id
+									WHERE date between $1 AND $2
+									AND account_id = (SELECT id FROM accounts WHERE is_main = true)
+									GROUP BY category_id, c.name
+									ORDER BY category_sum DESC;`, startDate, endDate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var name string
+	var sum float64
+
+	result := make([]model.CategoryStatistic, 0)
+
+	for rows.Next() {
+		if err := rows.Scan(&name, &sum); err != nil {
+			return nil, err
+		}
+
+		result = append(result, model.CategoryStatistic{
+			Name: name,
+			Sum:  sum,
 		})
 	}
 

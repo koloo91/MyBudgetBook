@@ -65,6 +65,7 @@ func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
 	{
 		statistics := authorized.Group("/api/statistics")
 		statistics.GET("/month", getMonthStatistics(db))
+		statistics.GET("/category", getCategoryStatistics(db))
 	}
 
 	router.GET("/api/alive", alive())
@@ -412,5 +413,34 @@ func getMonthStatistics(db *sql.DB) gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, model.MonthStatisticsVo{Content: mapper.MonthStatisticEntitiesToVos(bookings)})
+	}
+}
+
+// GetCategoryStatistics godoc
+// @Summary Get name and sum for each category for a given year
+// @Description Get name and sum for each category for a given year
+// @Tags Statistics
+// @Produce json
+// @Param year query int false "statistics for the year: 2019"
+// @Success 200 {object} model.CategoryStatisticsVo
+// @Failure 400 {object} model.ErrorVo
+// @Router /api/statistics/category [get]
+func getCategoryStatistics(db *sql.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		yearString := ctx.DefaultQuery("year", fmt.Sprintf("%d", time.Now().Year()))
+
+		year, err := strconv.Atoi(yearString)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: "invalid year parameter"})
+			return
+		}
+
+		categoryStatistics, err := service.GetCategoryStatistics(ctx.Request.Context(), db, year)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, model.CategoryStatisticsVo{Content: mapper.CategoryStatisticEntitiesToVos(categoryStatistics)})
 	}
 }

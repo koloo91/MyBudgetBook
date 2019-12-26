@@ -21,6 +21,8 @@ definitions:
         type: string
       id:
         type: string
+      isMain:
+        type: boolean
       name:
         type: string
       startingBalance:
@@ -81,6 +83,20 @@ definitions:
       content:
         items:
           $ref: '#/definitions/model.CategoryVo'
+        type: array
+    type: object
+  model.CategoryStatisticVo:
+    properties:
+      name:
+        type: string
+      sum:
+        type: number
+    type: object
+  model.CategoryStatisticsVo:
+    properties:
+      content:
+        items:
+          $ref: '#/definitions/model.CategoryStatisticVo'
         type: array
     type: object
   model.CategoryVo:
@@ -364,6 +380,28 @@ paths:
       summary: Checks if the service is running
       tags:
         - Alive
+  /api/statistics/category:
+    get:
+      description: Get name and sum for each category for a given year
+      parameters:
+        - description: 'statistics for the year: 2019'
+          in: query
+          name: year
+          type: integer
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CategoryStatisticsVo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorVo'
+      summary: Get name and sum for each category for a given year
+      tags:
+        - Statistics
   /api/statistics/month:
     get:
       description: Get expense, income statistic for each month

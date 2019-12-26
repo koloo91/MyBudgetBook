@@ -40,7 +40,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {ChartsModule} from 'ng2-charts';
 
-registerLocaleData(localDe, 'de-DE', localeDeExtra)
+registerLocaleData(localDe, 'de-DE', localeDeExtra);
 
 @NgModule({
   declarations: [

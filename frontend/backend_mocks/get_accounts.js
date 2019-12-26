@@ -9,6 +9,7 @@ module.exports = {
           id: '1',
           name: faker.lorem.word(),
           startingBalance: 12,
+          isMain: true,
           created: faker.date.recent(),
           updated: faker.date.recent()
         },
@@ -16,6 +17,7 @@ module.exports = {
           id: '2',
           name: faker.lorem.word(),
           startingBalance: 12.01,
+          isMain: false,
           created: faker.date.recent(),
           updated: faker.date.recent()
         },

@@ -3,13 +3,29 @@
     <mat-spinner></mat-spinner>
   </div>
   <div *ngIf="!isLoading">
+    <div fxLayout="column" fxLayoutAlign="space-around center">
+      <mat-form-field>
+        <mat-label>Statistik</mat-label>
+        <mat-select [(value)]="selectedStatistic">
+          <mat-option value="month">Monat</mat-option>
+          <mat-option value="category">Kategorie</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <div class="chart-container">
-      <canvas baseChart
+      <canvas *ngIf="selectedStatistic === 'month'" baseChart
               [datasets]="barChartData"
               [labels]="barChartLabels"
               [options]="barChartOptions"
               [legend]="barChartLegend"
               [chartType]="barChartType">
+      </canvas>
+      <canvas *ngIf="selectedStatistic === 'category'" baseChart
+              [data]="pieChartData"
+              [labels]="pieChartLabels"
+              [options]="pieChartOptions"
+              [chartType]="pieChartType"
+              [legend]="pieChartLegend">
       </canvas>
     </div>
   </div>

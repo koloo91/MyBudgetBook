@@ -6,6 +6,7 @@
     <mat-nav-list>
       <mat-list-item class="account" *ngFor="let account of accounts$ | async">
         <h2 matLine>{{account.name}}</h2>
+        <p *ngIf="account.isMain" matLine class="mat-small starting-balance">Hauptkonto</p>
         <p matLine class="mat-small starting-balance">Startsaldo: {{account.startingBalance | number: '1.2-2'}} €</p>
         <p matLine class="mat-small starting-balance">
           Kontostand: {{getBalanceForAccount(account.id) | number: '1.2-2'}} €

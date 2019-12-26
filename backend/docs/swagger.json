@@ -370,6 +370,40 @@
         }
       }
     },
+    "/api/statistics/category": {
+      "get": {
+        "description": "Get name and sum for each category for a given year",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Statistics"
+        ],
+        "summary": "Get name and sum for each category for a given year",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "statistics for the year: 2019",
+            "name": "year",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/model.CategoryStatisticsVo"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/model.ErrorVo"
+            }
+          }
+        }
+      }
+    },
     "/api/statistics/month": {
       "get": {
         "description": "Get expense, income statistic for each month",
@@ -443,6 +477,9 @@
         },
         "id": {
           "type": "string"
+        },
+        "isMain": {
+          "type": "boolean"
         },
         "name": {
           "type": "string"
@@ -529,6 +566,28 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/model.CategoryVo"
+          }
+        }
+      }
+    },
+    "model.CategoryStatisticVo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "sum": {
+          "type": "number"
+        }
+      }
+    },
+    "model.CategoryStatisticsVo": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/model.CategoryStatisticVo"
           }
         }
       }
