@@ -24,7 +24,7 @@ increment-version:
 build-docker:
 	docker build -t koloooo/${APP_NAME}:${CURRENT_VERSION} -t koloooo/mbb:latest .
 
-.PHONY: build-docker
+.PHONY: push-docker
 push-docker:
 	docker push koloooo/${APP_NAME}:${CURRENT_VERSION}
 	docker push koloooo/mbb:latest
