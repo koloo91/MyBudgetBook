@@ -3,7 +3,7 @@ WORKDIR /app
 COPY frontend/ .
 RUN npm config set unsafe-perm true
 RUN npm install -g @angular/cli
-RUN npm install --producation && npm run build
+RUN npm install --production && npm run build
 
 FROM golang:1.13.5-alpine AS goBuilder
 WORKDIR /builder
