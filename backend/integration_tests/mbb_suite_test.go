@@ -36,7 +36,6 @@ type MbbTestSuite struct {
 func (suite *MbbTestSuite) SetupSuite() {
 	log.Println("Setup suite")
 
-	//db, err := sql.Open("postgres", connectionString)
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
 		log.Fatal(err)

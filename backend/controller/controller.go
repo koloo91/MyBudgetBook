@@ -76,7 +76,6 @@ func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
 }
 
 func unhandledErrorHandler() gin.HandlerFunc {
-	gin.Default()
 	return func(ctx *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
@@ -108,7 +107,7 @@ func ping() gin.HandlerFunc {
 // @Router /api/alive [get]
 func alive() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		ctx.String(http.StatusOK, "Running")
+		ctx.String(http.StatusOK, "")
 	}
 }
 
