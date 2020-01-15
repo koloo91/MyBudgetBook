@@ -1,4 +1,4 @@
-FROM node:10.16-alpine as nodeBuilder
+FROM node:12.14-alpine as nodeBuilder
 WORKDIR /app
 COPY frontend/ .
 RUN npm config set unsafe-perm true
