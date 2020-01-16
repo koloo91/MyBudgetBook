@@ -13,6 +13,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.7.0
 	github.com/google/uuid v1.1.1
 	github.com/json-iterator/go v1.1.8 // indirect
+	github.com/koloo91/LoginService v0.0.0-20200116180711-71e3fb752a35 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/lib/pq v1.2.0
 	github.com/mailru/easyjson v0.7.0 // indirect
