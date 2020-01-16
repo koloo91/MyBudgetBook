@@ -1,4 +1,4 @@
-module github.com/koloo91
+module github.com/koloo91/mybudgetbook
 
 go 1.13
 

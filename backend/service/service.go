@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/koloo91/model"
-	"github.com/koloo91/repository"
+	"github.com/koloo91/mybudgetbook/model"
+	"github.com/koloo91/mybudgetbook/repository"
 	"time"
 )
 

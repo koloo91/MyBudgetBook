@@ -2,7 +2,7 @@ package mapper
 
 import (
 	"github.com/google/uuid"
-	"github.com/koloo91/model"
+	"github.com/koloo91/mybudgetbook/model"
 	"time"
 )
 
