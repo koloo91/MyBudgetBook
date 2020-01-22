@@ -7,13 +7,13 @@ import (
 	"time"
 )
 
-func InsertAccount(ctx context.Context, db *sql.DB, account model.Account) error {
-	_, err := db.ExecContext(ctx, "INSERT INTO accounts (id, name, starting_balance, is_main, created, updated) VALUES ($1, $2, $3, $4, $5, $6)", account.Id, account.Name, account.StartingBalance, account.IsMain, account.Created, account.Updated)
+func InsertAccount(ctx context.Context, db *sql.DB, userId string, account model.Account) error {
+	_, err := db.ExecContext(ctx, "INSERT INTO accounts (id, user_id, name, starting_balance, is_main, created, updated) VALUES ($1, $2, $3, $4, $5, $6, $7)", account.Id, userId, account.Name, account.StartingBalance, account.IsMain, account.Created, account.Updated)
 	return err
 }
 
-func QueryAccounts(ctx context.Context, db *sql.DB) ([]model.Account, error) {
-	rows, err := db.QueryContext(ctx, "SELECT id, name, starting_balance, is_main, created, updated FROM accounts ORDER BY name ASC")
+func QueryAccounts(ctx context.Context, db *sql.DB, userId string) ([]model.Account, error) {
+	rows, err := db.QueryContext(ctx, "SELECT id, name, starting_balance, is_main, created, updated FROM accounts WHERE user_id = $1 ORDER BY name", userId)
 	if err != nil {
 		return nil, err
 	}
@@ -44,21 +44,21 @@ func QueryAccounts(ctx context.Context, db *sql.DB) ([]model.Account, error) {
 	return result, nil
 }
 
-func InsertCategory(ctx context.Context, db *sql.DB, category model.Category) error {
-	_, err := db.ExecContext(ctx, "INSERT INTO categories (id, name, created, updated) VALUES ($1, $2, $3, $4)", category.Id, category.Name, category.Created, category.Updated)
+func InsertCategory(ctx context.Context, db *sql.DB, userId string, category model.Category) error {
+	_, err := db.ExecContext(ctx, "INSERT INTO categories (id, user_id, name, created, updated) VALUES ($1, $2, $3, $4, $5)", category.Id, userId, category.Name, category.Created, category.Updated)
 	return err
 }
 
-func UpdateCategory(ctx context.Context, db *sql.DB, id string, category model.Category) error {
-	_, err := db.ExecContext(ctx, "UPDATE categories SET name = $1, updated = $2 WHERE id = $3", category.Name, time.Now(), id)
+func UpdateCategory(ctx context.Context, db *sql.DB, userId string, id string, category model.Category) error {
+	_, err := db.ExecContext(ctx, "UPDATE categories SET name = $1, updated = $2 WHERE user_id = $3 AND id = $4", category.Name, time.Now(), userId, id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func GetCategoryById(ctx context.Context, db *sql.DB, categoryId string) (model.Category, error) {
-	row := db.QueryRowContext(ctx, "SELECT id, name, created, updated FROM categories WHERE id = $1", categoryId)
+func GetCategoryById(ctx context.Context, db *sql.DB, userId string, categoryId string) (model.Category, error) {
+	row := db.QueryRowContext(ctx, "SELECT id, name, created, updated FROM categories WHERE user_id = $1 AND id = $2", userId, categoryId)
 	var id, name string
 	var created, updated time.Time
 	if err := row.Scan(&id, &name, &created, &updated); err != nil {
@@ -72,8 +72,8 @@ func GetCategoryById(ctx context.Context, db *sql.DB, categoryId string) (model.
 	}, nil
 }
 
-func QueryCategories(ctx context.Context, db *sql.DB) ([]model.Category, error) {
-	rows, err := db.QueryContext(ctx, "SELECT id, name, created, updated FROM categories ORDER BY name asc")
+func QueryCategories(ctx context.Context, db *sql.DB, userId string) ([]model.Category, error) {
+	rows, err := db.QueryContext(ctx, "SELECT id, name, created, updated FROM categories WHERE user_id = $1 ORDER BY name", userId)
 	if err != nil {
 		return nil, err
 	}
@@ -100,26 +100,26 @@ func QueryCategories(ctx context.Context, db *sql.DB) ([]model.Category, error) 
 	return result, nil
 }
 
-func InsertBooking(ctx context.Context, db *sql.Tx, booking model.Booking) error {
-	_, err := db.ExecContext(ctx, "INSERT INTO bookings(id, title, date, amount, category_id, account_id, standing_order_id, standing_order_period, standing_order_last_day, created, updated) VALUES ($1, $2, $3, $4, $5,$6, $7,$8, $9, $10, $11)",
-		booking.Id, booking.Title, booking.Date, booking.Amount, booking.CategoryId, booking.AccountId, booking.StandingOrderId, booking.StandingOrderPeriod, booking.StandingOrderLastDay, booking.Created, booking.Updated)
+func InsertBooking(ctx context.Context, db *sql.Tx, userId string, booking model.Booking) error {
+	_, err := db.ExecContext(ctx, "INSERT INTO bookings(id, user_id, title, date, amount, category_id, account_id, standing_order_id, standing_order_period, standing_order_last_day, created, updated) VALUES ($1, $2, $3, $4, $5,$6, $7,$8, $9, $10, $11, $12)",
+		booking.Id, userId, booking.Title, booking.Date, booking.Amount, booking.CategoryId, booking.AccountId, booking.StandingOrderId, booking.StandingOrderPeriod, booking.StandingOrderLastDay, booking.Created, booking.Updated)
 	return err
 }
 
-func UpdateBooking(ctx context.Context, db *sql.DB, id string, booking model.Booking) error {
-	_, err := db.ExecContext(ctx, "UPDATE bookings SET title=$1, date=$2, amount=$3, category_id=$4, account_id=$5, updated=now() WHERE id =$6",
-		booking.Title, booking.Date, booking.Amount, booking.CategoryId, booking.AccountId, id)
+func UpdateBooking(ctx context.Context, db *sql.DB, userId string, id string, booking model.Booking) error {
+	_, err := db.ExecContext(ctx, "UPDATE bookings SET title = $1, date = $2, amount = $3, category_id = $4, account_id = $5, updated=now() WHERE user_id = $6 AND id =$7",
+		booking.Title, booking.Date, booking.Amount, booking.CategoryId, booking.AccountId, userId, id)
 	return err
 }
 
-func UpdateBookings(ctx context.Context, db *sql.DB, standingOrderId string, booking model.Booking) error {
-	_, err := db.ExecContext(ctx, "UPDATE bookings SET title=$1, amount=$2, category_id=$3, account_id=$4, updated=now() WHERE standing_order_id =$6",
-		booking.Title, booking.Amount, booking.CategoryId, booking.AccountId, standingOrderId)
+func UpdateBookings(ctx context.Context, db *sql.DB, userId string, standingOrderId string, booking model.Booking) error {
+	_, err := db.ExecContext(ctx, "UPDATE bookings SET title = $1, amount = $2, category_id = $3, account_id = $4, updated=now() WHERE user_id = $5 AND standing_order_id = $6",
+		booking.Title, booking.Amount, booking.CategoryId, booking.AccountId, userId, standingOrderId)
 	return err
 }
 
-func GetBookingById(ctx context.Context, db *sql.DB, bookingId string) (model.Booking, error) {
-	row := db.QueryRowContext(ctx, "SELECT id, title, date, amount, category_id, account_id, standing_order_id, standing_order_period, standing_order_last_day, created, updated FROM bookings WHERE id = $1", bookingId)
+func GetBookingById(ctx context.Context, db *sql.DB, userId string, bookingId string) (model.Booking, error) {
+	row := db.QueryRowContext(ctx, "SELECT id, title, date, amount, category_id, account_id, standing_order_id, standing_order_period, standing_order_last_day, created, updated FROM bookings WHERE user_id = $1 AND id = $2", userId, bookingId)
 	var id, title, categoryId, accountId, standingOrderId, standingOrderPeriod string
 	var amount float64
 	var date, standingOrderLastDay, created, updated time.Time
@@ -141,8 +141,8 @@ func GetBookingById(ctx context.Context, db *sql.DB, bookingId string) (model.Bo
 	}, nil
 }
 
-func QueryBookings(ctx context.Context, db *sql.DB, startDate time.Time, endDate time.Time) ([]model.Booking, error) {
-	rows, err := db.QueryContext(ctx, "SELECT id, title, date, amount, category_id, account_id, standing_order_id, standing_order_period, standing_order_last_day, created, updated FROM bookings WHERE date BETWEEN $1 AND $2 ORDER BY date desc", startDate, endDate)
+func QueryBookings(ctx context.Context, db *sql.DB, userId string, startDate time.Time, endDate time.Time) ([]model.Booking, error) {
+	rows, err := db.QueryContext(ctx, "SELECT id, title, date, amount, category_id, account_id, standing_order_id, standing_order_period, standing_order_last_day, created, updated FROM bookings WHERE user_id = $1 AND date BETWEEN $2 AND $3 ORDER BY date DESC", userId, startDate, endDate)
 	if err != nil {
 		return nil, err
 	}
@@ -176,18 +176,18 @@ func QueryBookings(ctx context.Context, db *sql.DB, startDate time.Time, endDate
 	return result, nil
 }
 
-func DeleteBooking(ctx context.Context, db *sql.DB, id string) error {
-	_, err := db.ExecContext(ctx, "DELETE FROM bookings WHERE id = $1", id)
+func DeleteBooking(ctx context.Context, db *sql.DB, userId string, id string) error {
+	_, err := db.ExecContext(ctx, "DELETE FROM bookings WHERE user_id = $1 AND id = $2", userId, id)
 	return err
 }
 
-func DeleteBookings(ctx context.Context, db *sql.DB, id string) error {
-	_, err := db.ExecContext(ctx, "DELETE FROM bookings WHERE standing_order_id = (SELECT standing_order_id FROM bookings WHERE id = $1) AND date >= (SELECT date FROM bookings WHERE id = $1)", id)
+func DeleteBookings(ctx context.Context, db *sql.DB, userId string, id string) error {
+	_, err := db.ExecContext(ctx, "DELETE FROM bookings WHERE standing_order_id = (SELECT standing_order_id FROM bookings WHERE user_id = $1 AND id = $2) AND date >= (SELECT date FROM bookings WHERE user_id = $1 AND id = $2)", userId, id)
 	return err
 }
 
-func QueryBalances(ctx context.Context, db *sql.DB, endDate time.Time) ([]model.AccountBalance, error) {
-	rows, err := db.QueryContext(ctx, "SELECT account_id, name, SUM(amount) + (SELECT starting_balance FROM accounts WHERE id = b.account_id) as balance FROM bookings b JOIN accounts on b.account_id = accounts.id WHERE date <= $1 GROUP BY account_id, name", endDate)
+func QueryBalances(ctx context.Context, db *sql.DB, userId string, endDate time.Time) ([]model.AccountBalance, error) {
+	rows, err := db.QueryContext(ctx, "SELECT account_id, name, SUM(amount) + (SELECT starting_balance FROM accounts WHERE user_id = $1 AND id = b.account_id) as balance FROM bookings b JOIN accounts on b.account_id = accounts.id WHERE b.user_id = $1 AND date <= $2 GROUP BY account_id, name", userId, endDate)
 	if err != nil {
 		return nil, err
 	}
@@ -212,7 +212,7 @@ func QueryBalances(ctx context.Context, db *sql.DB, endDate time.Time) ([]model.
 	return result, nil
 }
 
-func QueryMonthStatistics(ctx context.Context, db *sql.DB, startDate, endDate time.Time) ([]model.MonthStatistic, error) {
+func QueryMonthStatistics(ctx context.Context, db *sql.DB, userId string, startDate, endDate time.Time) ([]model.MonthStatistic, error) {
 
 	rows, err := db.QueryContext(ctx, `SELECT CASE
 								   WHEN sum(negative_bookings.amount) IS NULL
@@ -230,7 +230,7 @@ func QueryMonthStatistics(ctx context.Context, db *sql.DB, startDate, endDate ti
 												   to_char(date, 'MM')::INTEGER as month,
 												   extract(year from date)      as year
 											FROM bookings
-											WHERE date BETWEEN $1 AND $2
+											WHERE user_id = $1 AND date BETWEEN $2 AND $3
 											  AND amount < 0
 											GROUP BY month, year) as negative_bookings
 										   ON series.month = negative_bookings.month
@@ -238,12 +238,12 @@ func QueryMonthStatistics(ctx context.Context, db *sql.DB, startDate, endDate ti
 												   to_char(date, 'MM')::INTEGER as month,
 												   extract(year from date)      as year
 											FROM bookings
-											WHERE date BETWEEN $1 AND $2
+											WHERE user_id = $1 AND date BETWEEN $2 AND $3
 											  AND amount >= 0
 											GROUP BY month, year) as positive_bookings
 										   ON series.month = positive_bookings.month
 						GROUP BY series.month
-						ORDER BY series.month DESC;`, startDate, endDate)
+						ORDER BY series.month DESC;`, userId, startDate, endDate)
 
 	if err != nil {
 		return nil, err
@@ -271,15 +271,15 @@ func QueryMonthStatistics(ctx context.Context, db *sql.DB, startDate, endDate ti
 	return result, nil
 }
 
-func QueryCategoryStatistic(ctx context.Context, db *sql.DB, startDate, endDate time.Time) ([]model.CategoryStatistic, error) {
+func QueryCategoryStatistic(ctx context.Context, db *sql.DB, userId string, startDate, endDate time.Time) ([]model.CategoryStatistic, error) {
 
 	rows, err := db.QueryContext(ctx, `SELECT c.name, ABS(SUM(amount)) as category_sum
 									FROM bookings
 									JOIN categories c on bookings.category_id = c.id
-									WHERE date between $1 AND $2
-									AND account_id = (SELECT id FROM accounts WHERE is_main = true)
+									WHERE c.user_id = $1 AND date BETWEEN $2 AND $3
+									AND account_id = (SELECT id FROM accounts WHERE accounts.user_id = $1 AND is_main = true)
 									GROUP BY category_id, c.name
-									ORDER BY category_sum DESC;`, startDate, endDate)
+									ORDER BY category_sum DESC;`, userId, startDate, endDate)
 
 	if err != nil {
 		return nil, err

@@ -129,7 +129,8 @@ func createAccount(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		createdAccount, err := service.CreateAccount(ctx.Request.Context(), db, mapper.AccountVoToEntity(accountVo))
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
+		createdAccount, err := service.CreateAccount(ctx.Request.Context(), db, accessTokenClaim.Id, mapper.AccountVoToEntity(accountVo))
 		if err != nil {
 			log.Println(err)
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
@@ -150,8 +151,9 @@ func createAccount(db *sql.DB) gin.HandlerFunc {
 // @Router /api/accounts [get]
 func getAccounts(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
 
-		accounts, err := service.GetAccounts(ctx.Request.Context(), db)
+		accounts, err := service.GetAccounts(ctx.Request.Context(), db, accessTokenClaim.Id)
 		if err != nil {
 			log.Println(err)
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
@@ -181,7 +183,9 @@ func createCategory(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		createdCategory, err := service.CreateCategory(ctx.Request.Context(), db, mapper.CategoryVoToEntity(categoryVo))
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
+
+		createdCategory, err := service.CreateCategory(ctx.Request.Context(), db, accessTokenClaim.Id, mapper.CategoryVoToEntity(categoryVo))
 		if err != nil {
 			log.Println(err)
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
@@ -212,7 +216,9 @@ func updateCategory(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		updatedCategory, err := service.UpdateCategory(ctx.Request.Context(), db, id, mapper.CategoryVoToEntity(categoryVo))
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
+
+		updatedCategory, err := service.UpdateCategory(ctx.Request.Context(), db, accessTokenClaim.Id, id, mapper.CategoryVoToEntity(categoryVo))
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
@@ -233,7 +239,9 @@ func updateCategory(db *sql.DB) gin.HandlerFunc {
 func getCategories(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		categories, err := service.GetCategories(ctx.Request.Context(), db)
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
+
+		categories, err := service.GetCategories(ctx.Request.Context(), db, accessTokenClaim.Id)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
@@ -261,7 +269,9 @@ func createBooking(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		createdBooking, err := service.CreateBooking(ctx.Request.Context(), db, mapper.BookingVoToEntity(bookingVo))
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
+
+		createdBooking, err := service.CreateBooking(ctx.Request.Context(), db, accessTokenClaim.Id, mapper.BookingVoToEntity(bookingVo))
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
@@ -294,7 +304,9 @@ func updateBooking(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		updatedBooking, err := service.UpdateBooking(ctx.Request.Context(), db, id, mapper.BookingVoToEntity(bookingVo), updateStrategy)
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
+
+		updatedBooking, err := service.UpdateBooking(ctx.Request.Context(), db, accessTokenClaim.Id, id, mapper.BookingVoToEntity(bookingVo), updateStrategy)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
@@ -331,7 +343,9 @@ func getBookings(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		bookings, err := service.GetBookings(ctx.Request.Context(), db, startDate, endDate)
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
+
+		bookings, err := service.GetBookings(ctx.Request.Context(), db, accessTokenClaim.Id, startDate, endDate)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
@@ -354,7 +368,9 @@ func deleteBooking(db *sql.DB) gin.HandlerFunc {
 		id := ctx.Param("id")
 		deleteStrategy := ctx.DefaultQuery("deleteStrategy", service.DeleteStrategyOne)
 
-		err := service.DeleteBooking(ctx.Request.Context(), db, id, deleteStrategy)
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
+
+		err := service.DeleteBooking(ctx.Request.Context(), db, accessTokenClaim.Id, id, deleteStrategy)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
@@ -375,7 +391,9 @@ func deleteBooking(db *sql.DB) gin.HandlerFunc {
 func getBalances(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		balances, err := service.GetBalances(ctx.Request.Context(), db)
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
+
+		balances, err := service.GetBalances(ctx.Request.Context(), db, accessTokenClaim.Id)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
@@ -404,7 +422,9 @@ func getMonthStatistics(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		bookings, err := service.GetMonthStatistics(ctx.Request.Context(), db, year)
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
+
+		bookings, err := service.GetMonthStatistics(ctx.Request.Context(), db, accessTokenClaim.Id, year)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return
@@ -433,7 +453,9 @@ func getCategoryStatistics(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		categoryStatistics, err := service.GetCategoryStatistics(ctx.Request.Context(), db, year)
+		accessTokenClaim := jwtsecurity.GetAccessTokenFromContext(ctx)
+
+		categoryStatistics, err := service.GetCategoryStatistics(ctx.Request.Context(), db, accessTokenClaim.Id, year)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, model.ErrorVo{Message: err.Error()})
 			return

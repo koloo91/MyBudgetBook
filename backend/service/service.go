@@ -24,37 +24,37 @@ const (
 	DeleteStrategyAll = "ALL"
 )
 
-func CreateAccount(ctx context.Context, db *sql.DB, account model.Account) (model.Account, error) {
-	if err := repository.InsertAccount(ctx, db, account); err != nil {
+func CreateAccount(ctx context.Context, db *sql.DB, userId string, account model.Account) (model.Account, error) {
+	if err := repository.InsertAccount(ctx, db, userId, account); err != nil {
 		return model.Account{}, err
 	}
 	return account, nil
 }
 
-func GetAccounts(ctx context.Context, db *sql.DB) ([]model.Account, error) {
-	return repository.QueryAccounts(ctx, db)
+func GetAccounts(ctx context.Context, db *sql.DB, userId string) ([]model.Account, error) {
+	return repository.QueryAccounts(ctx, db, userId)
 }
 
-func CreateCategory(ctx context.Context, db *sql.DB, category model.Category) (model.Category, error) {
-	if err := repository.InsertCategory(ctx, db, category); err != nil {
+func CreateCategory(ctx context.Context, db *sql.DB, userId string, category model.Category) (model.Category, error) {
+	if err := repository.InsertCategory(ctx, db, userId, category); err != nil {
 		return model.Category{}, err
 	}
 	return category, nil
 }
 
-func UpdateCategory(ctx context.Context, db *sql.DB, id string, category model.Category) (model.Category, error) {
-	if err := repository.UpdateCategory(ctx, db, id, category); err != nil {
+func UpdateCategory(ctx context.Context, db *sql.DB, userId string, id string, category model.Category) (model.Category, error) {
+	if err := repository.UpdateCategory(ctx, db, userId, id, category); err != nil {
 		return model.Category{}, err
 	}
 
-	return repository.GetCategoryById(ctx, db, id)
+	return repository.GetCategoryById(ctx, db, userId, id)
 }
 
-func GetCategories(ctx context.Context, db *sql.DB) ([]model.Category, error) {
-	return repository.QueryCategories(ctx, db)
+func GetCategories(ctx context.Context, db *sql.DB, userId string) ([]model.Category, error) {
+	return repository.QueryCategories(ctx, db, userId)
 }
 
-func CreateBooking(ctx context.Context, db *sql.DB, booking model.Booking) (model.Booking, error) {
+func CreateBooking(ctx context.Context, db *sql.DB, userId string, booking model.Booking) (model.Booking, error) {
 	tx, err := db.Begin()
 
 	if err != nil {
@@ -82,7 +82,7 @@ func CreateBooking(ctx context.Context, db *sql.DB, booking model.Booking) (mode
 
 			daysToAdd := daysToAddForWeekday(newBooking.Date.Weekday())
 			newBooking.Date = newBooking.Date.AddDate(0, 0, daysToAdd)
-			if err := repository.InsertBooking(ctx, tx, newBooking); err != nil {
+			if err := repository.InsertBooking(ctx, tx, userId, newBooking); err != nil {
 				tx.Rollback()
 				return model.Booking{}, err
 			}
@@ -90,7 +90,7 @@ func CreateBooking(ctx context.Context, db *sql.DB, booking model.Booking) (mode
 		}
 	}
 
-	if err := repository.InsertBooking(ctx, tx, booking); err != nil {
+	if err := repository.InsertBooking(ctx, tx, userId, booking); err != nil {
 		tx.Rollback()
 		return model.Booking{}, err
 	}
@@ -98,61 +98,61 @@ func CreateBooking(ctx context.Context, db *sql.DB, booking model.Booking) (mode
 	return booking, tx.Commit()
 }
 
-func UpdateBooking(ctx context.Context, db *sql.DB, id string, booking model.Booking, updateStrategy string) (model.Booking, error) {
+func UpdateBooking(ctx context.Context, db *sql.DB, userId string, id string, booking model.Booking, updateStrategy string) (model.Booking, error) {
 	if updateStrategy == UpdateStrategyOne {
-		return updateSingleBooking(ctx, db, id, booking)
+		return updateSingleBooking(ctx, db, userId, id, booking)
 	} else if updateStrategy == UpdateStrategyAll {
-		return updateAllBookings(ctx, db, id, booking)
+		return updateAllBookings(ctx, db, userId, id, booking)
 	} else {
 		return model.Booking{}, fmt.Errorf("invalid updateStrategy '%s'", updateStrategy)
 	}
 }
 
-func updateSingleBooking(ctx context.Context, db *sql.DB, id string, booking model.Booking) (model.Booking, error) {
-	if err := repository.UpdateBooking(ctx, db, id, booking); err != nil {
+func updateSingleBooking(ctx context.Context, db *sql.DB, userId string, id string, booking model.Booking) (model.Booking, error) {
+	if err := repository.UpdateBooking(ctx, db, userId, id, booking); err != nil {
 		return model.Booking{}, err
 	}
-	return repository.GetBookingById(ctx, db, id)
+	return repository.GetBookingById(ctx, db, userId, id)
 }
 
-func updateAllBookings(ctx context.Context, db *sql.DB, id string, booking model.Booking) (model.Booking, error) {
+func updateAllBookings(ctx context.Context, db *sql.DB, userId string, id string, booking model.Booking) (model.Booking, error) {
 
-	existingBooking, err := repository.GetBookingById(ctx, db, id)
+	existingBooking, err := repository.GetBookingById(ctx, db, userId, id)
 	if err != nil {
 		return model.Booking{}, err
 	}
 
-	if err := repository.UpdateBookings(ctx, db, existingBooking.StandingOrderId, booking); err != nil {
+	if err := repository.UpdateBookings(ctx, db, userId, existingBooking.StandingOrderId, booking); err != nil {
 		return model.Booking{}, err
 	}
 
-	return repository.GetBookingById(ctx, db, id)
+	return repository.GetBookingById(ctx, db, userId, id)
 }
 
-func GetBookings(ctx context.Context, db *sql.DB, startDate time.Time, endDate time.Time) ([]model.Booking, error) {
-	return repository.QueryBookings(ctx, db, startDate, endDate)
+func GetBookings(ctx context.Context, db *sql.DB, userId string, startDate time.Time, endDate time.Time) ([]model.Booking, error) {
+	return repository.QueryBookings(ctx, db, userId, startDate, endDate)
 }
 
-func DeleteBooking(ctx context.Context, db *sql.DB, id string, deleteStrategy string) error {
+func DeleteBooking(ctx context.Context, db *sql.DB, userId string, id string, deleteStrategy string) error {
 	if deleteStrategy == DeleteStrategyOne {
-		return repository.DeleteBooking(ctx, db, id)
+		return repository.DeleteBooking(ctx, db, userId, id)
 	} else if deleteStrategy == DeleteStrategyAll {
-		return repository.DeleteBookings(ctx, db, id)
+		return repository.DeleteBookings(ctx, db, userId, id)
 	} else {
 		return fmt.Errorf("invalid deleteStrategy '%s'", deleteStrategy)
 	}
 }
 
-func GetBalances(ctx context.Context, db *sql.DB) ([]model.AccountBalance, error) {
-	return repository.QueryBalances(ctx, db, EndOfDay().UTC())
+func GetBalances(ctx context.Context, db *sql.DB, userId string) ([]model.AccountBalance, error) {
+	return repository.QueryBalances(ctx, db, userId, EndOfDay().UTC())
 }
 
-func GetMonthStatistics(ctx context.Context, db *sql.DB, year int) ([]model.MonthStatistic, error) {
-	return repository.QueryMonthStatistics(ctx, db, BeginningOfYearWithYear(year), EndOfYearWithYear(year))
+func GetMonthStatistics(ctx context.Context, db *sql.DB, userId string, year int) ([]model.MonthStatistic, error) {
+	return repository.QueryMonthStatistics(ctx, db, userId, BeginningOfYearWithYear(year), EndOfYearWithYear(year))
 }
 
-func GetCategoryStatistics(ctx context.Context, db *sql.DB, year int) ([]model.CategoryStatistic, error) {
-	return repository.QueryCategoryStatistic(ctx, db, BeginningOfYearWithYear(year), EndOfYearWithYear(year))
+func GetCategoryStatistics(ctx context.Context, db *sql.DB, userId string, year int) ([]model.CategoryStatistic, error) {
+	return repository.QueryCategoryStatistic(ctx, db, userId, BeginningOfYearWithYear(year), EndOfYearWithYear(year))
 }
 
 func yearsMonthsDaysToAdd(period string) (years int, months int, days int, err error) {
