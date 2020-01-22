@@ -14,7 +14,7 @@ func (suite *MbbTestSuite) TestCreateBooking() {
 
 	body := []byte(fmt.Sprintf(`{"title": "booking", "amount": -12, "date": "2019-11-08T22:17:20Z", "accountId": "%s", "categoryId": "%s"}`, accountId, categoryId))
 	request, _ := http.NewRequest("POST", "/api/bookings", bytes.NewBuffer(body))
-	request.SetBasicAuth(appUser, appUserPassword)
+	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	recorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(recorder, request)
 
@@ -42,7 +42,7 @@ func (suite *MbbTestSuite) TestGetBookings() {
 	}
 
 	getRequest, _ := http.NewRequest("GET", "/api/bookings?startDate=2019-11-01T00:00:00Z", nil)
-	getRequest.SetBasicAuth(appUser, appUserPassword)
+	getRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	getRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(getRecorder, getRequest)
 
@@ -76,14 +76,14 @@ func (suite *MbbTestSuite) TestUpdateBooking() {
 
 	putBody := []byte(fmt.Sprintf(`{"title": "booking", "amount": -12.1, "date": "2019-11-09T22:17:20Z", "accountId": "%s", "categoryId": "%s"}`, newAccountId, newCategoryId))
 	putRequest, _ := http.NewRequest("PUT", fmt.Sprintf("/api/bookings/%s", bookingId), bytes.NewBuffer(putBody))
-	putRequest.SetBasicAuth(appUser, appUserPassword)
+	putRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	putRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(putRecorder, putRequest)
 
 	suite.Equal(http.StatusOK, putRecorder.Code)
 
 	getRequest, _ := http.NewRequest("GET", "/api/bookings?startDate=2019-11-01T00:00:00Z", nil)
-	getRequest.SetBasicAuth(appUser, appUserPassword)
+	getRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	getRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(getRecorder, getRequest)
 
@@ -111,14 +111,14 @@ func (suite *MbbTestSuite) TestDeleteBooking() {
 	bookingId := suite.createBooking("my title", -12.0, "2019-11-08T22:17:20Z", accountId, categoryId)
 
 	deleteRequest, _ := http.NewRequest("DELETE", fmt.Sprintf("/api/bookings/%s", bookingId), nil)
-	deleteRequest.SetBasicAuth(appUser, appUserPassword)
+	deleteRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	deleteRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(deleteRecorder, deleteRequest)
 
 	suite.Equal(http.StatusNoContent, deleteRecorder.Code)
 
 	getRequest, _ := http.NewRequest("GET", "/api/bookings?startDate=2019-11-01T00:00:00Z", nil)
-	getRequest.SetBasicAuth(appUser, appUserPassword)
+	getRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	getRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(getRecorder, getRequest)
 

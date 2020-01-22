@@ -20,8 +20,7 @@ var (
 	dbPassword = getEnvOrDefault("DB_PASSWORD", "")
 	dbName     = getEnvOrDefault("DB_NAME", "postgres")
 
-	appUser         = getEnvOrDefault("APP_USER", "kolo")
-	appUserPassword = getEnvOrDefault("APP_USER_PASSWORD", "Pass00")
+	jwtKey = []byte(getEnvOrDefault("JWT_KEY", "s3cr3t"))
 )
 
 func main() {
@@ -47,7 +46,7 @@ func main() {
 	db.SetMaxIdleConns(2)
 	db.SetMaxOpenConns(2)
 
-	router := controller.SetupRoutes(db, appUser, appUserPassword)
+	router := controller.SetupRoutes(db, jwtKey)
 
 	router.NoRoute(func(ctx *gin.Context) {
 		ctx.File("./assets/index.html")

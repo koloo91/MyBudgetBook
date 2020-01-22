@@ -12,7 +12,7 @@ func (suite *MbbTestSuite) TestCreateCategory() {
 
 	body := []byte(`{"name": "category_name"}`)
 	request, _ := http.NewRequest("POST", "/api/categories", bytes.NewBuffer(body))
-	request.SetBasicAuth(appUser, appUserPassword)
+	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	recorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(recorder, request)
 
@@ -31,12 +31,12 @@ func (suite *MbbTestSuite) TestGetCategories() {
 
 	body := []byte(`{"name": "category_name"}`)
 	postRequest, _ := http.NewRequest("POST", "/api/categories", bytes.NewBuffer(body))
-	postRequest.SetBasicAuth(appUser, appUserPassword)
+	postRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	postRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(postRecorder, postRequest)
 
 	getRequest, _ := http.NewRequest("GET", "/api/categories", nil)
-	getRequest.SetBasicAuth(appUser, appUserPassword)
+	getRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	getRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(getRecorder, getRequest)
 
@@ -59,7 +59,7 @@ func (suite *MbbTestSuite) TestUpdateCategory() {
 
 	postBody := []byte(`{"name": "category_name"}`)
 	postRequest, _ := http.NewRequest("POST", "/api/categories", bytes.NewBuffer(postBody))
-	postRequest.SetBasicAuth(appUser, appUserPassword)
+	postRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	postRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(postRecorder, postRequest)
 
@@ -68,14 +68,14 @@ func (suite *MbbTestSuite) TestUpdateCategory() {
 
 	putBody := []byte(`{"name": "category_name updated"}`)
 	putRequest, _ := http.NewRequest("PUT", fmt.Sprintf("/api/categories/%s", postResponse["id"]), bytes.NewBuffer(putBody))
-	putRequest.SetBasicAuth(appUser, appUserPassword)
+	putRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	putRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(putRecorder, putRequest)
 
 	suite.Equal(http.StatusOK, putRecorder.Code)
 
 	getRequest, _ := http.NewRequest("GET", "/api/categories", nil)
-	getRequest.SetBasicAuth(appUser, appUserPassword)
+	getRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	getRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(getRecorder, getRequest)
 

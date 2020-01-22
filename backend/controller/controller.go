@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	jwtsecurity "github.com/koloo91/jwt-security"
 	_ "github.com/koloo91/mybudgetbook/docs"
 	"github.com/koloo91/mybudgetbook/mapper"
 	"github.com/koloo91/mybudgetbook/model"
@@ -17,7 +18,7 @@ import (
 	"time"
 )
 
-func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
+func SetupRoutes(db *sql.DB, jwtKey []byte) *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.Use(unhandledErrorHandler())
@@ -30,9 +31,7 @@ func SetupRoutes(db *sql.DB, appUser, appUserPassword string) *gin.Engine {
 	}
 	router.Use(cors.New(corsConfig))
 
-	authorized := router.Group("", gin.BasicAuth(gin.Accounts{
-		appUser: appUserPassword,
-	}))
+	authorized := router.Group("", jwtsecurity.JwtMiddleware(jwtKey))
 
 	authorized.GET("/api/ping", ping())
 

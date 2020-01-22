@@ -3,6 +3,7 @@ package integration_tests
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 )
@@ -11,7 +12,7 @@ func (suite *MbbTestSuite) TestCreateAccount() {
 
 	body := []byte(`{"name": "account_name", "startingBalance": 1200}`)
 	request, _ := http.NewRequest("POST", "/api/accounts", bytes.NewBuffer(body))
-	request.SetBasicAuth(appUser, appUserPassword)
+	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	recorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(recorder, request)
 
@@ -31,12 +32,12 @@ func (suite *MbbTestSuite) TestGetAccounts() {
 
 	body := []byte(`{"name": "account_name", "startingBalance": 1200}`)
 	createRequest, _ := http.NewRequest("POST", "/api/accounts", bytes.NewBuffer(body))
-	createRequest.SetBasicAuth(appUser, appUserPassword)
+	createRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	createRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(createRecorder, createRequest)
 
 	getRequest, _ := http.NewRequest("GET", "/api/accounts", nil)
-	getRequest.SetBasicAuth(appUser, appUserPassword)
+	getRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	getRecorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(getRecorder, getRequest)
 

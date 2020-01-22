@@ -2,6 +2,7 @@ package integration_tests
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 )
@@ -13,7 +14,7 @@ func (suite *MbbTestSuite) TestGetBalances() {
 	suite.createBooking("my title", -12.0, "2019-11-08T22:17:20Z", accountId, categoryId)
 
 	request, _ := http.NewRequest("GET", "/api/balances", nil)
-	request.SetBasicAuth(appUser, appUserPassword)
+	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	recorder := httptest.NewRecorder()
 	suite.router.ServeHTTP(recorder, request)
 
