@@ -1,10 +1,11 @@
 export class User {
   name: string;
-  token?: string;
+  accessToken: string;
+  refreshToken: string;
 
-
-  constructor(name: string, token: string) {
+  constructor(name: string, accessToken: string, refreshToken: string) {
     this.name = name;
-    this.token = token;
+    this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
   }
 }

@@ -17,7 +17,7 @@ export class BalanceService extends BaseService {
   }
 
   getBalances(): Observable<Balance[]> {
-    return this.http.get<PagedEntity<Balance>>(`${environment.host}/api/balances`)
+    return this.http.get<PagedEntity<Balance>>(`${environment.host}/mbb/api/balances`)
       .pipe(
         map(_ => _.content),
         catchError(this.handleError)

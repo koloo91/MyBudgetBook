@@ -17,7 +17,7 @@ export class CategoryService extends BaseService {
   }
 
   getCategories(): Observable<Category[]> {
-    return this.http.get<PagedEntity<Category>>(`${environment.host}/api/categories`)
+    return this.http.get<PagedEntity<Category>>(`${environment.host}/mbb/api/categories`)
       .pipe(
         map(_ => _.content),
         catchError(this.handleError)
@@ -25,14 +25,14 @@ export class CategoryService extends BaseService {
   }
 
   createCategory(category: Category): Observable<Category> {
-    return this.http.post<Category>(`${environment.host}/api/categories`, category)
+    return this.http.post<Category>(`${environment.host}/mbb/api/categories`, category)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   updateCategory(id: string, category: Category): Observable<Category> {
-    return this.http.put<Category>(`${environment.host}/api/categories/${id}`, category)
+    return this.http.put<Category>(`${environment.host}/mbb/api/categories/${id}`, category)
       .pipe(
         catchError(this.handleError)
       );

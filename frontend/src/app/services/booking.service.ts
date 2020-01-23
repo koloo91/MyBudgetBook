@@ -21,7 +21,7 @@ export class BookingService extends BaseService {
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString()
     };
-    return this.http.get<PagedEntity<Booking>>(`${environment.host}/api/bookings`, {params: params})
+    return this.http.get<PagedEntity<Booking>>(`${environment.host}/mbb/api/bookings`, {params: params})
       .pipe(
         map(_ => _.content),
         catchError(this.handleError)
@@ -29,14 +29,14 @@ export class BookingService extends BaseService {
   }
 
   createBooking(booking: Booking): Observable<Booking> {
-    return this.http.post<Booking>(`${environment.host}/api/bookings`, booking)
+    return this.http.post<Booking>(`${environment.host}/mbb/api/bookings`, booking)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   updateBooking(id: string, booking: Booking, updateAll: boolean) {
-    return this.http.put<Booking>(`${environment.host}/api/bookings/${id}`, booking, {
+    return this.http.put<Booking>(`${environment.host}/mbb/api/bookings/${id}`, booking, {
       params: {
         updateStrategy: updateAll ? 'ALL' : 'ONE'
       }
@@ -47,7 +47,7 @@ export class BookingService extends BaseService {
   }
 
   delete(id: string, deleteAll: boolean) {
-    return this.http.delete(`${environment.host}/api/bookings/${id}`,
+    return this.http.delete(`${environment.host}/mbb/api/bookings/${id}`,
       {
         params: {
           deleteStrategy: deleteAll ? 'ALL' : 'ONE'

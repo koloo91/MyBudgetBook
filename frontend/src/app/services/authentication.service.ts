@@ -1,14 +1,18 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, interval, Observable, Subscription} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../models/user.model';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
+import {LoginResponse} from '../models/login_response.model';
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
+  private BASE_URL = `${environment.host}/lgn`;
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
+
+  private refreshTokenInterval: Subscription;
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
@@ -20,19 +24,29 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string): Observable<User> {
-    const header = {Authorization: `Basic ${window.btoa(username + ':' + password)}`};
-    return this.http.get(`${environment.host}/api/ping`, {headers: header})
-      .pipe(map(() => {
-        let user = new User(username, window.btoa(username + ':' + password));
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-        return user;
-      }));
+    return this.http.post<LoginResponse>(`${this.BASE_URL}/api/login`, {name: username, password: password})
+      .pipe(
+        map((response) => {
+          let user = new User(username, response.accessToken, response.refreshToken);
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+          return user;
+        }),
+        tap(() => this.startRefreshInterval())
+      );
+  }
+
+  startRefreshInterval() {
+    this.refreshTokenInterval = interval(60 * 1000)
+      .subscribe(() => {
+        console.log('Will refresh token..');
+      });
   }
 
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this.refreshTokenInterval.unsubscribe();
   }
 }

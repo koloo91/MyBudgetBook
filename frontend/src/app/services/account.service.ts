@@ -17,7 +17,7 @@ export class AccountService extends BaseService {
   }
 
   getAccounts(): Observable<Account[]> {
-    return this.http.get<PagedEntity<Account>>(`${environment.host}/api/accounts`)
+    return this.http.get<PagedEntity<Account>>(`${environment.host}/mbb/api/accounts`)
       .pipe(
         map(_ => _.content),
         catchError(this.handleError)
@@ -25,7 +25,7 @@ export class AccountService extends BaseService {
   }
 
   createAccount(account: Account): Observable<Account> {
-    return this.http.post<Account>(`${environment.host}/api/accounts`, account)
+    return this.http.post<Account>(`${environment.host}/mbb/api/accounts`, account)
       .pipe(
         catchError(this.handleError)
       );

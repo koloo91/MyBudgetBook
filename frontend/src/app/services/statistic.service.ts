@@ -18,7 +18,7 @@ export class StatisticService extends BaseService {
   }
 
   getMonthStatistics(year: number = new Date().getFullYear()): Observable<MonthStatistic[]> {
-    return this.http.get<PagedEntity<MonthStatistic>>(`${environment.host}/api/statistics/month`, {
+    return this.http.get<PagedEntity<MonthStatistic>>(`${environment.host}/mbb/api/statistics/month`, {
       params: {
         year: `${year}`
       }
@@ -29,7 +29,7 @@ export class StatisticService extends BaseService {
   }
 
   getCategoryStatistics(year: number = new Date().getFullYear()): Observable<CategoryStatistic[]> {
-    return this.http.get<PagedEntity<CategoryStatistic>>(`${environment.host}/api/statistics/category`, {
+    return this.http.get<PagedEntity<CategoryStatistic>>(`${environment.host}/mbb/api/statistics/category`, {
       params: {
         year: `${year}`
       }
