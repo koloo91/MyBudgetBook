@@ -1,7 +1,7 @@
 var faker = require('faker');
 
 module.exports = {
-  path: '/api/accounts',
+  path: '/mbb/api/accounts',
   method: 'POST',
   template: {
     id: 1,

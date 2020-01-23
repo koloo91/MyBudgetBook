@@ -1,7 +1,7 @@
 var faker = require('faker');
 
 module.exports = {
-  path: '/api/bookings/:id',
+  path: '/mbb/api/bookings/:id',
   method: 'PUT',
   template: {
     id: faker.random.uuid(),

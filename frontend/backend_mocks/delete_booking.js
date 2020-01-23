@@ -1,5 +1,5 @@
 module.exports = {
-  path: '/api/bookings/:id',
+  path: '/mbb/api/bookings/:id',
   method: 'DELETE',
   template: {}
 };

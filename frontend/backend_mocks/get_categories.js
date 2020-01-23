@@ -1,7 +1,7 @@
 var faker = require('faker');
 
 module.exports = {
-  path: '/api/categories',
+  path: '/mbb/api/categories',
   template: {
     content: function (params) {
       return [
