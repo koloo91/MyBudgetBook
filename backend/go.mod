@@ -11,7 +11,7 @@ require (
 	github.com/go-openapi/swag v0.19.6 // indirect
 	github.com/golang-migrate/migrate/v4 v4.8.0
 	github.com/google/uuid v1.1.1
-	github.com/koloo91/jwt-security v0.0.0-20200122184422-2da7656e44a2
+	github.com/koloo91/jwt-security v1.1.0
 	github.com/kshvakov/clickhouse v1.3.5 // indirect
 	github.com/lib/pq v1.3.0
 	github.com/mailru/easyjson v0.7.0 // indirect
@@ -20,5 +20,6 @@ require (
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.5
 	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect
-	golang.org/x/tools v0.0.0-20200122042241-dc16b66866f1 // indirect
+	golang.org/x/tools v0.0.0-20200124144541-e0a7ba33caea // indirect
+	gopkg.in/yaml.v2 v2.2.8 // indirect
 )
