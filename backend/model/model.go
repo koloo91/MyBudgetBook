@@ -137,3 +137,16 @@ type (
 		Content []CategoryStatisticVo `json:"content"`
 	}
 )
+
+type (
+	InboxEntry struct {
+		Id          string
+		UserId      string
+		BookingDate *time.Time
+		ValueDate   *time.Time
+		IntendedUse string
+		Amount      float64
+		Created     time.Time
+		Updated     time.Time
+	}
+)
