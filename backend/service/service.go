@@ -3,10 +3,12 @@ package service
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/koloo91/mybudgetbook/model"
 	"github.com/koloo91/mybudgetbook/repository"
+	"runtime"
 	"time"
 )
 
@@ -130,7 +132,7 @@ func updateAllBookings(ctx context.Context, db *sql.DB, userId string, id string
 }
 
 func GetBookings(ctx context.Context, db *sql.DB, userId string, startDate time.Time, endDate time.Time) ([]model.Booking, error) {
-	return repository.QueryBookings(ctx, db, userId, startDate, endDate)
+	return repository.QueryBookingsWithStartAndEndDate(ctx, db, userId, startDate, endDate)
 }
 
 func DeleteBooking(ctx context.Context, db *sql.DB, userId string, id string, deleteStrategy string) error {
@@ -153,6 +155,60 @@ func GetMonthStatistics(ctx context.Context, db *sql.DB, userId string, year int
 
 func GetCategoryStatistics(ctx context.Context, db *sql.DB, userId string, year int) ([]model.CategoryStatistic, error) {
 	return repository.QueryCategoryStatistic(ctx, db, userId, BeginningOfYearWithYear(year), EndOfYearWithYear(year))
+}
+
+func GetInboxEntriesWithPossibleMatches(ctx context.Context, db *sql.DB, userId string) ([]model.InboxEntry, error) {
+	bookings, err := repository.QueryBookings(ctx, db, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	inboxEntries, err := repository.QueryInboxEntries(ctx, db, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	workerChannel := make(chan model.InboxEntry, runtime.NumCPU()*2)
+	resultChannel := make(chan model.InboxEntry)
+
+	go func() {
+		for _, inboxEntry := range inboxEntries {
+			workerChannel <- inboxEntry
+		}
+	}()
+
+	go func() {
+		for inboxEntry := range workerChannel {
+			// TODO: start goroutine
+			for _, booking := range bookings {
+				// TODO: define matching
+				// 1. wenn booking date oder value date == date +5
+				//    bei +/- 1 Tag 							+3
+				//    bei +/- 2 Tag 							+1
+				//    sonst 									+0
+				// 2. wenn amount == amount						+5
+				// max 10 Punkte
+				// Schwellwert: 80%
+				// bei 0% anlegen beim Hauptkonto und Kategorie sonstiges
+			}
+		}
+	}()
+
+	results := make([]model.InboxEntry, 0, len(inboxEntries))
+	select {
+	case foo := <-resultChannel:
+		results = append(results, foo)
+		if len(results) == len(inboxEntries) {
+			close(resultChannel)
+			close(workerChannel)
+		}
+	case <-ctx.Done():
+		close(resultChannel)
+		close(workerChannel)
+		return nil, errors.New("timeout")
+	}
+
+	return results, nil
 }
 
 func yearsMonthsDaysToAdd(period string) (years int, months int, days int, err error) {

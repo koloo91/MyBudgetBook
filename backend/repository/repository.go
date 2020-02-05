@@ -141,7 +141,55 @@ func GetBookingById(ctx context.Context, db *sql.DB, userId string, bookingId st
 	}, nil
 }
 
-func QueryBookings(ctx context.Context, db *sql.DB, userId string, startDate time.Time, endDate time.Time) ([]model.Booking, error) {
+func QueryBookings(ctx context.Context, db *sql.DB, userId string) ([]model.Booking, error) {
+	rows, err := db.QueryContext(ctx, `SELECT id,
+												   title,
+												   date,
+												   amount,
+												   category_id,
+												   account_id,
+												   standing_order_id,
+												   standing_order_period,
+												   standing_order_last_day,
+												   created,
+												   updated
+											FROM bookings
+											WHERE user_id = $1
+											ORDER BY date DESC`, userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var id, title, categoryId, accountId, standingOrderId, standingOrderPeriod string
+	var amount float64
+	var date, standingOrderLastDay, created, updated time.Time
+
+	result := make([]model.Booking, 0)
+
+	for rows.Next() {
+		if err := rows.Scan(&id, &title, &date, &amount, &categoryId, &accountId, &standingOrderId, &standingOrderPeriod, &standingOrderLastDay, &created, &updated); err != nil {
+			return nil, err
+		}
+		result = append(result, model.Booking{
+			Id:                   id,
+			Title:                title,
+			Date:                 date,
+			Amount:               amount,
+			CategoryId:           categoryId,
+			AccountId:            accountId,
+			StandingOrderId:      standingOrderId,
+			StandingOrderPeriod:  standingOrderPeriod,
+			StandingOrderLastDay: standingOrderLastDay,
+			Created:              created,
+			Updated:              updated,
+		})
+	}
+
+	return result, nil
+}
+
+func QueryBookingsWithStartAndEndDate(ctx context.Context, db *sql.DB, userId string, startDate time.Time, endDate time.Time) ([]model.Booking, error) {
 	rows, err := db.QueryContext(ctx, "SELECT id, title, date, amount, category_id, account_id, standing_order_id, standing_order_period, standing_order_last_day, created, updated FROM bookings WHERE user_id = $1 AND date BETWEEN $2 AND $3 ORDER BY date DESC", userId, startDate, endDate)
 	if err != nil {
 		return nil, err
@@ -300,6 +348,53 @@ func QueryCategoryStatistic(ctx context.Context, db *sql.DB, userId string, star
 		result = append(result, model.CategoryStatistic{
 			Name: name,
 			Sum:  sum,
+		})
+	}
+
+	return result, nil
+}
+
+func QueryInboxEntries(ctx context.Context, db *sql.DB, userId string) ([]model.InboxEntry, error) {
+	rows, err := db.QueryContext(ctx, `SELECT id,
+												   booking_date,
+												   value_date,
+												   intended_use,
+												   amount,
+												   created,
+												   updated
+											FROM inbox
+											WHERE user_id = $1
+											ORDER BY booking_date DESC`, userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var id, intendedUse string
+	var amount float64
+	var bookingDate, created, updated time.Time
+	var valueDateNullable sql.NullTime
+
+	result := make([]model.InboxEntry, 0)
+
+	for rows.Next() {
+		if err := rows.Scan(&id, &bookingDate, &valueDateNullable, &intendedUse, &amount, &created, &updated); err != nil {
+			return nil, err
+		}
+
+		var valueDate *time.Time
+		if valueDateNullable.Valid {
+			valueDate = &valueDateNullable.Time
+		}
+
+		result = append(result, model.InboxEntry{
+			Id:          id,
+			BookingDate: bookingDate,
+			ValueDate:   valueDate,
+			IntendedUse: intendedUse,
+			Amount:      amount,
+			Created:     created,
+			Updated:     updated,
 		})
 	}
 

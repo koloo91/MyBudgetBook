@@ -142,11 +142,21 @@ type (
 	InboxEntry struct {
 		Id          string
 		UserId      string
-		BookingDate *time.Time
+		BookingDate time.Time
 		ValueDate   *time.Time
 		IntendedUse string
 		Amount      float64
 		Created     time.Time
 		Updated     time.Time
+	}
+
+	InboxEntryVo struct {
+		Id          string     `json:"id"`
+		BookingDate time.Time  `json:"bookingDate"`
+		ValueDate   *time.Time `json:"valueDate"`
+		IntendedUse string     `json:"intendedUse"`
+		Amount      float64    `json:"amount"`
+		Created     time.Time  `json:"created"`
+		Updated     time.Time  `json:"updated"`
 	}
 )
